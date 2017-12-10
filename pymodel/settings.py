@@ -25,19 +25,19 @@ SECRET_KEY = 'x%d9)vcu6y&x^bxv8#r)))(te$3#+cu48413l%l2p(cm^jhh)l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'pymodel.cphillipsdorsett.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'pythonmodels.apps.PythonmodelsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pythonmodels.apps.PythonmodelsConfig',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +123,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
