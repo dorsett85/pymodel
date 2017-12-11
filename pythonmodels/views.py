@@ -56,6 +56,19 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('pythonmodels:results', args=(question.id,)))
 
 
-def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    return render(request, 'pythonmodels/post_list.html', {'posts': posts})
+class PostView(generic.ListView):
+    template_name = 'pythonmodels/post_list.html'
+    context_object_name = 'latest_post_list'
+
+    def get_queryset(self):
+        return Post.objects.filter(
+            published_date__lte=timezone.now()
+        ).order_by('-published_date')
+
+
+class PostDetailView(generic.DetailView):
+    model = Post
+    template_name = 'pythonmodels/post_detail.html'
+
+    def get_queryset(self):
+        return Post.objects.filter(published_date__lte=timezone.now())
