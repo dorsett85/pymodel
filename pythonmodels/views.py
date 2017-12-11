@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question
+from .models import Choice, Question, Post
 
 
 class IndexView(generic.ListView):
@@ -24,6 +24,7 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'pythonmodels/detail.html'
+
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
@@ -53,3 +54,8 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('pythonmodels:results', args=(question.id,)))
+
+
+def post_list(request):
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    return render(request, 'pythonmodels/post_list.html', {'posts': posts})

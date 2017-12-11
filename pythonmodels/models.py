@@ -4,9 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 
-"""
-Dataset model
-"""
+# Dataset model
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
@@ -19,9 +17,7 @@ class Question(models.Model):
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 
-"""
-DatasetVariable model
-"""
+# DatasetVariable model
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
@@ -31,9 +27,7 @@ class Choice(models.Model):
         return self.choice_text
 
 
-"""
-StatModel model
-"""
+# StatModel model
 class Post(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
