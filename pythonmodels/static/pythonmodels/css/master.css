@@ -1,0 +1,46 @@
+body {
+    background-color: #f1f1f1;
+}
+
+.landing {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+/* Set black background color, white text and some padding */
+footer {
+    background-color: #000000;
+    color: white;
+    padding: 15px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+#loginFlash {
+    margin-left: 0;
+    margin-right: 0;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #82ff8d;
+}
+
+#logoutFlash {
+    margin-left: 0;
+    margin-right: 0;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ff9403;
+}

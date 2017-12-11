@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 from .models import Choice, Question, Post
 
@@ -56,8 +57,8 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('pythonmodels:results', args=(question.id,)))
 
 
-class PostView(generic.ListView):
-    template_name = 'pythonmodels/post_list.html'
+class PostListView(generic.ListView):
+    template_name = 'pythonmodels/landing_content/post_list.html'
     context_object_name = 'latest_post_list'
 
     def get_queryset(self):
@@ -68,7 +69,13 @@ class PostView(generic.ListView):
 
 class PostDetailView(generic.DetailView):
     model = Post
-    template_name = 'pythonmodels/post_detail.html'
+    template_name = 'pythonmodels/landing_content/post_detail.html'
 
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=timezone.now())
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context['user_list'] = User.objects.all()
+        return context

@@ -11,15 +11,17 @@
     <link rel="stylesheet" href="{% static 'pythonmodels/css/bootstrap.min.css' %}">
 
     {# Stylesheet links #}
-    <link rel="stylesheet" type="text/css" href="{% static 'pythonmodels/css/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'pythonmodels/css/master.css' %}"/>
 
 </head>
 <body>
 
-{% include 'pythonmodels/header.html' %}
+{% include 'pythonmodels/layout/header.html' %}
 
 {% block content %}
 {% endblock %}
+
+{% include 'pythonmodels/layout/footer.html' %}
 
 
 {# Jquery js #}
@@ -27,6 +29,9 @@
 
 {# Bootstrap js #}
 <script src="{% static 'pythonmodels/js/bootstrap.min.js' %}"></script>
+
+{# Other js #}
+<script src="{% static 'pythonmodels/js/landing.js' %}"></script>
 
 </body>
 </html>

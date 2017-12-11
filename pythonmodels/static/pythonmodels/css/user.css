@@ -1,0 +1,51 @@
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+.row.content {
+    height: 100vh;
+}
+
+/* Set gray background color and 100% height */
+.sidenav {
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+    .row.content {height:auto;}
+}
+
+.userBody {
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    min-height: 100%;
+}
+
+.dropzone {
+     text-align: center;
+     font-size: 18px;
+ }
+
+.datasetDiv {
+    padding-left: 20px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.newDataset {
+     background-color: rgba(1, 201, 0, 0.3);
+ }
+
+.oldDataset {
+    background-color: rgba(0, 166, 201, 0.3);
+}
+
+.pubDataset {
+    background: rgba(0, 66, 201, 0.3);
+}
