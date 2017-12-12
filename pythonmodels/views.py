@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import login, authenticate
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
@@ -6,6 +7,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 from .models import Choice, Question, Post
+from .forms import SignUpForm
 
 
 class IndexView(generic.ListView):
@@ -79,3 +81,23 @@ class PostDetailView(generic.DetailView):
         context = super(PostDetailView, self).get_context_data(**kwargs)
         context['user_list'] = User.objects.all()
         return context
+
+
+def register(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'pythonmodels/registration/registration.html', {'form': form})
+
+
+class UserIndex(generic.ListView):
+    model = User
+    template_name = 'pythonmodels/user_content/userIndex.html'

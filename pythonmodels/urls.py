@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 
 from . import views
 
@@ -14,7 +13,7 @@ urlpatterns = [
     path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
     path('<int:question_id>/vote/', views.vote, name='vote'),
 
-    #path('login/', auth_views.login, name='login'),
-    #path('logout/', auth_views.logout, name='logout'),
+    # Logged in user
+    path('', views.UserIndex.as_view(), name='user_index')
 
 ]
