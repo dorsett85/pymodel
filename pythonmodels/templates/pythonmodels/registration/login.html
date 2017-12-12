@@ -6,11 +6,11 @@
 
     <div class="landing">
 
-        <form id='login' class="col-sm-4" method="POST">
+        <form id='login' class="col-sm-4" method="POST" action="{% url 'pythonmodels:login' %}">
 
             <h1>Login</h1>
 
-            Don't have an account? <a href='{% url 'register' %}'>Register here...</a>
+            Don't have an account? <a href='{% url 'pythonmodels:register' %}'>Register here...</a>
 
             {% csrf_token %}
 

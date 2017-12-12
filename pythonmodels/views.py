@@ -1,6 +1,6 @@
 from django.contrib.auth import login, authenticate
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -83,6 +83,20 @@ class PostDetailView(generic.DetailView):
         return context
 
 
+class Login(generic.TemplateView):
+    template_name = 'pythonmodels/registration/login.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return HttpResponseRedirect(reverse('pythonmodels:home'))
+
+
 def register(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -101,3 +115,9 @@ def register(request):
 class UserIndex(generic.ListView):
     model = User
     template_name = 'pythonmodels/user_content/userIndex.html'
+
+
+class Practice(generic.View):
+    def get(self, request):
+        # <view logic>
+        return HttpResponse('result')

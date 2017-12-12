@@ -18,14 +18,14 @@
                  <ul class="nav navbar-nav navbar-right">
                 {% if not user.is_authenticated %}
 
-                    <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="{% url 'pythonmodels:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     <li><a href="/guest">Guest</a></li>
 
                 {% else %}
 
                     <li><a href="/home/{{ user.username }}">{{ user.username }}</a></li>
                     <li><a href="#" id="logoutBtn">Logout</a></li>
-                    <li><form method='POST' id='logout' action='{% url 'logout' %}'>{% csrf_token %}</form></li>
+                    <li><form method='POST' id='logout' action='{% url 'pythonmodels:logout' %}'>{% csrf_token %}</form></li>
 
                 {% endif %}
 
