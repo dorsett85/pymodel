@@ -11,8 +11,8 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li><a href="{% url 'pythonmodels:about' %}">About</a></li>
+                <li><a href="{% url 'pythonmodels:contact' %}">Contact</a></li>
             </ul>
 
                  <ul class="nav navbar-nav navbar-right">
@@ -23,7 +23,7 @@
 
                 {% else %}
 
-                    <li><a href="/home/{{ user.username }}">{{ user.username }}</a></li>
+                    <li><a href="{% url 'pythonmodels:user_index' user.username %}">{{ user.username }}</a></li>
                     <li><a href="#" id="logoutBtn">Logout</a></li>
                     <li><form method='POST' id='logout' action='{% url 'pythonmodels:logout' %}'>{% csrf_token %}</form></li>
 

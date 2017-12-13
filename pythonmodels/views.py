@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 from .models import Choice, Question, Post
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 
 
 class IndexView(generic.ListView):
@@ -94,7 +94,7 @@ class Login(generic.TemplateView):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         login(request, user)
-        return HttpResponseRedirect(reverse('pythonmodels:home'))
+        return HttpResponseRedirect(reverse('pythonmodels:user_index', args=(username,)))
 
 
 def register(request):
@@ -120,4 +120,4 @@ class UserIndex(generic.ListView):
 class Practice(generic.View):
     def get(self, request):
         # <view logic>
-        return HttpResponse('result')
+        return HttpResponse('noonin')
