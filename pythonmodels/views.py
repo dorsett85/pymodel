@@ -117,7 +117,7 @@ class Register(generic.CreateView):
         return valid
 
     def get_success_url(self):
-        return reverse('pythonmodels:user_index', args=(User.username,))
+        return reverse('pythonmodels:user_index', args=(self.object.username,))
 
 
 class UserIndex(LoginRequiredMixin, generic.ListView):
