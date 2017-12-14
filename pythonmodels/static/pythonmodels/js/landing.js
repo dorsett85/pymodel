@@ -10,9 +10,4 @@ $(document).ready(function() {
         $('#myNavbar').collapse('hide');
     });
 
-    // Submit logout form
-    $('#logoutBtn').click(function() {
-        document.getElementById("logout").submit();
-    });
-
 });

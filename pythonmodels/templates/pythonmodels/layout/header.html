@@ -24,8 +24,7 @@
                 {% else %}
 
                     <li><a href="{% url 'pythonmodels:user_index' user.username %}">{{ user.username }}</a></li>
-                    <li><a href="#" id="logoutBtn">Logout</a></li>
-                    <li><form method='POST' id='logout' action='{% url 'pythonmodels:logout' %}'>{% csrf_token %}</form></li>
+                    <li><a href="{% url 'pythonmodels:logout' %}">Logout</a></li>
 
                 {% endif %}
 

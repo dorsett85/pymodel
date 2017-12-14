@@ -1,15 +1,17 @@
+from __future__ import absolute_import
+from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 
 from .models import Choice, Question, Post
-from .forms import UserCreationForm
+from .forms import LoginForm, RegistrationForm
 
 
 class IndexView(generic.ListView):
@@ -85,26 +87,27 @@ class PostDetailView(generic.DetailView):
         return context
 
 
-class Login(generic.TemplateView):
+class Login(generic.FormView):
+    form_class = LoginForm
     template_name = 'pythonmodels/registration/login.html'
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-    def post(self, request, *args, **kwargs):
-        username = request.POST['username']
-        password = request.POST['password']
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
         user = authenticate(username=username, password=password)
-        if not user:
-            messages.error(request, 'Your login was invalid')
-            return HttpResponseRedirect(reverse('pythonmodels:login'))
+
+        if user is not None and user.is_active:
+            login(self.request, user)
+            return super(Login, self).form_valid(form)
         else:
-            login(request, user)
-            return HttpResponseRedirect(reverse('pythonmodels:user_index', args=(username,)))
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('pythonmodels:user_index', args=('clayton',))
 
 
 class Register(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = RegistrationForm
     model = User
     template_name = 'pythonmodels/registration/register.html'
 

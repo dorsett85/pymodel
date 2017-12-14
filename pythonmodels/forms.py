@@ -1,17 +1,32 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, ButtonHolder, Submit
 
 
-class SignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+class RegistrationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
 
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            'username',
+            'password1',
+            'password2',
+            ButtonHolder(
+                Submit('register', 'Register', css_class='btn-primary')
+            )
+        )
 
 
-class LoginForm(UserCreationForm):
-    username = forms.CharField(max_length=20)
-    password = forms.CharField(max_length=20)
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
 
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            'username',
+            'password',
+            ButtonHolder(
+                Submit('login', 'Login', css_class='btn-primary')
+            )
+        )
