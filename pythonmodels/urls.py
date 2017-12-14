@@ -23,7 +23,7 @@ urlpatterns = [
     # Authentication and registration
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
-    path('register/', views.register, name='register'),
+    path('register/', views.Register.as_view(), name='register'),
 
     # Logged in user
     path('home/<str:username>', views.UserIndex.as_view(), name='user_index'),

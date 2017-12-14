@@ -1,13 +1,15 @@
 from django.contrib.auth import login, authenticate
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from .models import Choice, Question, Post
-from .forms import SignUpForm, LoginForm
+from .forms import UserCreationForm
 
 
 class IndexView(generic.ListView):
@@ -93,26 +95,34 @@ class Login(generic.TemplateView):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        login(request, user)
-        return HttpResponseRedirect(reverse('pythonmodels:user_index', args=(username,)))
-
-
-def register(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+        if not user:
+            messages.error(request, 'Your login was invalid')
+            return HttpResponseRedirect(reverse('pythonmodels:login'))
+        else:
             login(request, user)
-            return redirect('home')
-    else:
-        form = SignUpForm()
-    return render(request, 'pythonmodels/registration/registration.html', {'form': form})
+            return HttpResponseRedirect(reverse('pythonmodels:user_index', args=(username,)))
 
 
-class UserIndex(generic.ListView):
+class Register(generic.CreateView):
+    form_class = UserCreationForm
+    model = User
+    template_name = 'pythonmodels/registration/register.html'
+
+    def form_valid(self, form):
+        valid = super(Register, self).form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        new_user = authenticate(username=username, password=password)
+        login(self.request, new_user)
+        return valid
+
+    def get_success_url(self):
+        return reverse('pythonmodels:user_index', args=(User.username,))
+
+
+class UserIndex(LoginRequiredMixin, generic.ListView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
     model = User
     template_name = 'pythonmodels/user_content/userIndex.html'
 

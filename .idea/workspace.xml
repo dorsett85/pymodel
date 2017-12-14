@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a393ded3-f6d8-4444-bac3-287352a036bc" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/about.html" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/contact.html" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/landing.html" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/pymodel.iml" afterPath="$PROJECT_DIR$/.idea/pymodel.iml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/pymodel/urls.py" afterPath="$PROJECT_DIR$/pymodel/urls.py" />
-      <change beforePath="$PROJECT_DIR$/pythonmodels/forms.py" afterPath="$PROJECT_DIR$/pythonmodels/forms.py" />
-      <change beforePath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/header.html" afterPath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/header.html" />
+      <change beforePath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html" afterPath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html" />
+      <change beforePath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/registration.html" afterPath="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/register.html" />
       <change beforePath="$PROJECT_DIR$/pythonmodels/urls.py" afterPath="$PROJECT_DIR$/pythonmodels/urls.py" />
       <change beforePath="$PROJECT_DIR$/pythonmodels/views.py" afterPath="$PROJECT_DIR$/pythonmodels/views.py" />
     </list>
@@ -53,8 +47,8 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pythonmodels/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="12" column="93" lean-forward="false" selection-start-line="12" selection-start-column="93" selection-end-line="12" selection-end-column="93" />
+            <state relative-caret-position="525">
+              <caret line="25" column="46" lean-forward="false" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -65,8 +59,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pythonmodels/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1323">
-              <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+            <state relative-caret-position="1348">
+              <caret line="114" column="69" lean-forward="true" selection-start-line="114" selection-start-column="69" selection-end-line="114" selection-end-column="69" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -74,31 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="landing.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/landing.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="8" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="login.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="43" lean-forward="false" selection-start-line="0" selection-start-column="43" selection-end-line="0" selection-end-column="43" />
+            <state relative-caret-position="256">
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="31" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -109,6 +83,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="189">
               <caret line="9" column="43" lean-forward="false" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userIndex.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/user_content/userIndex.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="294">
+              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -161,19 +145,20 @@
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/forms.py" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/registration.html" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/master.html" />
-        <option value="$PROJECT_DIR$/pymodel/settings.py" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/user_layout.html" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/user_content/userIndex.html" />
         <option value="$PROJECT_DIR$/pythonmodels/admin.py" />
         <option value="$PROJECT_DIR$/pythonmodels/models.py" />
         <option value="$PROJECT_DIR$/pymodel/urls.py" />
         <option value="$PROJECT_DIR$/pythonmodels/forms.py" />
-        <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/landing.html" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/contact.html" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/about.html" />
         <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/header.html" />
+        <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html" />
+        <option value="$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/register.html" />
         <option value="$PROJECT_DIR$/pythonmodels/urls.py" />
+        <option value="$PROJECT_DIR$/pymodel/settings.py" />
         <option value="$PROJECT_DIR$/pythonmodels/views.py" />
       </list>
     </option>
@@ -253,6 +238,14 @@
               <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="pythonmodels" type="462c0819:PsiDirectoryNode" />
               <item name="layout" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pymodel" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pymodel" type="462c0819:PsiDirectoryNode" />
+              <item name="pythonmodels" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="pythonmodels" type="462c0819:PsiDirectoryNode" />
+              <item name="registration" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -337,13 +330,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928178" sideWeight="0.50208336" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3281768" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30497238" sideWeight="0.49791667" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3281768" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30497238" sideWeight="0.49791667" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1453125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -568,17 +560,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/registration.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="27" column="4" lean-forward="false" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
-          <folding>
-            <element signature="e#459#478#0#HTML" expanded="false" />
-            <element signature="e#632#650#0#HTML" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pythonmodels/static/pythonmodels/css/modelCreate.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -608,14 +589,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pymodel/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2247">
-          <caret line="107" column="27" lean-forward="false" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/landing_content/post_detail.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -640,34 +613,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/user_content/userIndex.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pythonmodels/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
           <caret line="15" column="44" lean-forward="false" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="43" lean-forward="false" selection-start-line="0" selection-start-column="43" selection-end-line="0" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -714,6 +663,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/header.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="9" column="43" lean-forward="false" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pymodel/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -721,6 +678,40 @@
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pythonmodels/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="25" column="46" lean-forward="false" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="43" lean-forward="false" selection-start-line="0" selection-start-column="43" selection-end-line="0" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/registration/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="31" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -732,28 +723,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/header.html">
+    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/user_content/userIndex.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="9" column="43" lean-forward="false" selection-start-line="9" selection-start-column="43" selection-end-line="9" selection-end-column="43" />
+        <state relative-caret-position="294">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pythonmodels/urls.py">
+    <entry file="file://$PROJECT_DIR$/pymodel/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="12" column="93" lean-forward="false" selection-start-line="12" selection-start-column="93" selection-end-line="12" selection-end-column="93" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="284">
+          <caret line="38" column="33" lean-forward="true" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pythonmodels/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1323">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        <state relative-caret-position="1348">
+          <caret line="114" column="69" lean-forward="true" selection-start-line="114" selection-start-column="69" selection-end-line="114" selection-end-column="69" />
           <folding>
             <element signature="e#0#51#0" expanded="true" />
           </folding>

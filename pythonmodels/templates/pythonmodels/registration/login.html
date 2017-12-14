@@ -16,7 +16,8 @@
 
             <div class="form-group">
                 <label for="username">Username</label>
-                <input id="username" type="text" class="form-control" name="username" value="{# old username #}" required
+                <input id="username" type="text" class="form-control" name="username" value="{# old username #}"
+                       required
                        autofocus>
                 {% if error_message %}
                     <div class="error">{{ error_message }}</div>
@@ -30,6 +31,12 @@
                     <div class="error">{{ error_message }}</div>
                 {% endif %}
             </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
 
             <button type="submit" class="btn btn-primary">Login</button>
 
