@@ -12,9 +12,6 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='pythonmodels/landing_content/about.html'), name='about'),
     path('contact/', TemplateView.as_view(template_name='pythonmodels/landing_content/contact.html'), name='contact'),
 
-    path('posts/', views.PostListView.as_view(), name='post_list'),
-    path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
-
     path('polls/', views.IndexView.as_view(), name='polls'),
     path('polls/<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('polls/<int:pk>/results/', views.ResultsView.as_view(), name='results'),

@@ -1,16 +1,16 @@
 from __future__ import absolute_import
 from django.contrib import messages
+from braces import views
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question, Post
+from .models import Choice, Question
 from .forms import LoginForm, RegistrationForm
 
 
@@ -63,33 +63,12 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('pythonmodels:results', args=(question.id,)))
 
 
-class PostListView(generic.ListView):
-    template_name = 'pythonmodels/landing_content/post_list.html'
-    context_object_name = 'latest_post_list'
-
-    def get_queryset(self):
-        return Post.objects.filter(
-            published_date__lte=timezone.now()
-        ).order_by('-published_date')
-
-
-class PostDetailView(generic.DetailView):
-    model = Post
-    template_name = 'pythonmodels/landing_content/post_detail.html'
-
-    def get_queryset(self):
-        return Post.objects.filter(published_date__lte=timezone.now())
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        context['user_list'] = User.objects.all()
-        return context
-
-
-class Login(generic.FormView):
+class Login(views.AnonymousRequiredMixin, views.FormValidMessageMixin, generic.FormView):
+    authenticated_redirect_url = '/'
     form_class = LoginForm
+    form_valid_message = "You have successfully logged in"
     template_name = 'pythonmodels/registration/login.html'
+    success_url = reverse_lazy('pythonmodels:user_index', args=("clayton",))
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -102,14 +81,12 @@ class Login(generic.FormView):
         else:
             return self.form_invalid(form)
 
-    def get_success_url(self):
-        return reverse('pythonmodels:user_index', args=('clayton',))
 
-
-class Register(generic.CreateView):
+class Register(views.AnonymousRequiredMixin, views.FormMessagesMixin, generic.CreateView):
     form_class = RegistrationForm
     model = User
     template_name = 'pythonmodels/registration/register.html'
+    form_valid_message = "You have successfully registered and logged in"
 
     def form_valid(self, form):
         valid = super(Register, self).form_valid(form)

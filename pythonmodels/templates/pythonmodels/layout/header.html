@@ -15,10 +15,11 @@
                 <li><a href="{% url 'pythonmodels:contact' %}">Contact</a></li>
             </ul>
 
-                 <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right">
                 {% if not user.is_authenticated %}
 
-                    <li><a href="{% url 'pythonmodels:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="{% url 'pythonmodels:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                    </li>
                     <li><a href="/guest">Guest</a></li>
 
                 {% else %}
@@ -33,6 +34,12 @@
         </div>
     </div>
 </nav>
+
+{% for message in messages %}
+    <div id="{{ message.tags }}">
+        {{ message }}
+    </div>
+{% endfor %}
 
 {#@if (session()->has('login_success'))#}
 {#    <div id="loginFlash">{{ session('login_success') }}</div>#}
