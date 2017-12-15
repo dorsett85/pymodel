@@ -74,6 +74,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'pymodel.wsgi.application'
 
 
+# Custom messages
+MESSAGE_TAGS = []
+
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 

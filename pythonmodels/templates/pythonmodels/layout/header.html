@@ -36,15 +36,13 @@
 </nav>
 
 {% for message in messages %}
-    <div id="{{ message.tags }}">
-        {{ message }}
-    </div>
+    {% if 'loginFlash' in message.tags %}
+        <div id="loginFlash">
+            {{ message }}
+        </div>
+    {% elif 'logoutFlash' in message.tags %}
+        <div id="logoutFlash">
+            {{ message }}
+        </div>
+    {% endif %}
 {% endfor %}
-
-{#@if (session()->has('login_success'))#}
-{#    <div id="loginFlash">{{ session('login_success') }}</div>#}
-{#@endif#}
-{##}
-{#@if(session()->has('logout_success'))#}
-{#    <div id="logoutFlash">{{ session('logout_success') }}</div>#}
-{#@endif#}

@@ -1,7 +1,7 @@
 from __future__ import absolute_import
-from django.contrib import messages
 from braces import views
-from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
@@ -63,12 +63,30 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('pythonmodels:results', args=(question.id,)))
 
 
-class Login(views.AnonymousRequiredMixin, views.FormValidMessageMixin, generic.FormView):
+class Register(views.AnonymousRequiredMixin, generic.CreateView):
+    authenticated_redirect_url = '/'
+    form_class = RegistrationForm
+    model = User
+    template_name = 'pythonmodels/registration/register.html'
+
+    def form_valid(self, form):
+        valid = super(Register, self).form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        new_user = authenticate(username=username, password=password)
+        login(self.request, new_user)
+        return valid
+
+    def get_success_url(self):
+        login_message = self.object.username + ', you have successfully logged in!'
+        messages.success(self.request, login_message, 'loginFlash')
+        return reverse('pythonmodels:user_index', args=(self.object.username,))
+
+
+class Login(views.AnonymousRequiredMixin, generic.FormView):
     authenticated_redirect_url = '/'
     form_class = LoginForm
-    form_valid_message = "You have successfully logged in"
     template_name = 'pythonmodels/registration/login.html'
-    success_url = reverse_lazy('pythonmodels:user_index', args=("clayton",))
 
     def form_valid(self, form):
         username = form.cleaned_data['username']
@@ -81,23 +99,21 @@ class Login(views.AnonymousRequiredMixin, views.FormValidMessageMixin, generic.F
         else:
             return self.form_invalid(form)
 
-
-class Register(views.AnonymousRequiredMixin, views.FormMessagesMixin, generic.CreateView):
-    form_class = RegistrationForm
-    model = User
-    template_name = 'pythonmodels/registration/register.html'
-    form_valid_message = "You have successfully registered and logged in"
-
-    def form_valid(self, form):
-        valid = super(Register, self).form_valid(form)
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-        new_user = authenticate(username=username, password=password)
-        login(self.request, new_user)
-        return valid
-
     def get_success_url(self):
-        return reverse('pythonmodels:user_index', args=(self.object.username,))
+        login_message = self.request.user.username + ', you have successfully logged in!'
+        messages.success(self.request, login_message, 'loginFlash')
+        return reverse('pythonmodels:user_index', args=(self.request.user.username,))
+
+
+class Logout(LoginRequiredMixin, generic.RedirectView):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+    url = reverse_lazy('pythonmodels:login')
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        messages.info(self.request, 'You have successfully logged out!', 'logoutFlash')
+        return super(Logout, self).get(request, *args, **kwargs)
 
 
 class UserIndex(LoginRequiredMixin, generic.ListView):
