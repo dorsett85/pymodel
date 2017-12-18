@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a393ded3-f6d8-4444-bac3-287352a036bc" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/pymodel.iml" afterPath="$PROJECT_DIR$/.idea/pymodel.iml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/pythonmodels/migrations/0001_initial.py" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/pythonmodels/migrations/0002_auto_20171217_2242.py" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -54,11 +50,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="header.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="header.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/layout/header.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="237">
               <caret line="35" column="6" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="10" lean-forward="true" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -131,6 +137,7 @@
         <option value="$PROJECT_DIR$/pythonmodels/models.py" />
         <option value="$PROJECT_DIR$/pythonmodels/forms.py" />
         <option value="$PROJECT_DIR$/pythonmodels/views.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -404,13 +411,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pythonmodels/templates/pythonmodels/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="7" column="21" lean-forward="false" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pythonmodels/migrations/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -724,6 +724,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="237">
           <caret line="35" column="6" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="10" lean-forward="true" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
           <folding />
         </state>
       </provider>
