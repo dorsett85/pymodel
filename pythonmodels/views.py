@@ -5,13 +5,16 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question
-from .forms import LoginForm, RegistrationForm
+from .models import Choice, Question, Dataset
+from .forms import LoginForm, RegistrationForm, DatasetForm
+
+import os
+from django.conf import settings
 
 
 class IndexView(generic.ListView):
@@ -64,18 +67,19 @@ def vote(request, question_id):
 
 
 class Register(views.AnonymousRequiredMixin, generic.CreateView):
-    authenticated_redirect_url = '/'
     form_class = RegistrationForm
     model = User
     template_name = 'pythonmodels/registration/register.html'
 
     def form_valid(self, form):
-        valid = super(Register, self).form_valid(form)
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
         new_user = authenticate(username=username, password=password)
         login(self.request, new_user)
-        return valid
+        return super(Register, self).form_valid(form)
+
+    def get_authenticated_redirect_url(self):
+        return reverse('pythonmodels:user_index', args=(self.request.user.username,))
 
     def get_success_url(self):
         login_message = self.object.username + ', you have successfully logged in!'
@@ -84,7 +88,6 @@ class Register(views.AnonymousRequiredMixin, generic.CreateView):
 
 
 class Login(views.AnonymousRequiredMixin, generic.FormView):
-    authenticated_redirect_url = '/'
     form_class = LoginForm
     template_name = 'pythonmodels/registration/login.html'
 
@@ -98,6 +101,9 @@ class Login(views.AnonymousRequiredMixin, generic.FormView):
             return super(Login, self).form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def get_authenticated_redirect_url(self):
+        return reverse('pythonmodels:user_index', args=(self.request.user.username,))
 
     def get_success_url(self):
         login_message = self.request.user.username + ', you have successfully logged in!'
@@ -123,7 +129,50 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
     template_name = 'pythonmodels/user_content/userIndex.html'
 
 
+class DataUpload(LoginRequiredMixin, generic.CreateView):
+    login_url = '/login/'
+    form_class = DatasetForm
+    model = Dataset
+    template_name = 'pythonmodels/user_content/dataUpload.html'
+
+    def form_invalid(self, form):
+        response = super(DataUpload, self).form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=500)
+        else:
+            return response
+
+    def form_valid(self, form):
+        if self.request.is_ajax:
+            file = form.cleaned_data['file']
+            dataset = form.save(commit=False)
+            dataset.user_id = self.request.user
+            dataset.name = file
+            dataset.vars = 12
+            dataset.observations = 200
+            dataset.save()
+            return JsonResponse({'success': 'worked'})
+        else:
+            return super(DataUpload, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(DataUpload, self).get_context_data()
+        context['datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
+        context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
+        return context
+
+    def get_success_url(self):
+        return reverse('pythonmodels:data_upload', args=(self.request.user.username,))
+
+
+class CreateModel(generic.View):
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({'Create': 'this will be the create page'})
+
+
 class Practice(generic.View):
-    def get(self, request):
-        # <view logic>
-        return HttpResponse('noonin')
+
+    def get(self, request, *args, **kwargs):
+        os.makedirs('{0}/user_{1}'.format(settings.MEDIA_ROOT, self.request.user.id))
+        return HttpResponse(self.request.user.username)

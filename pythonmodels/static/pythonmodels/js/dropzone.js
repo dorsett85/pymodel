@@ -2,10 +2,10 @@
  * Dropzone configuration
  */
 Dropzone.options.uploadData = {
-    url: window.location.pathname + "/store",
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
+    url: window.location.pathname,
+    // headers: {
+    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    // },
     dictDefaultMessage: "Drag and Drop Dataset Here",
     acceptedFiles: ".csv, .xlsx",
     maxFiles: 1,
@@ -15,6 +15,7 @@ Dropzone.options.uploadData = {
             // Do something
         });
         this.on("success", function (file, response) {
+            console.log(file)
             $('.dz-progress').hide();
             $('.dz-error-mark').hide();
             console.log(response);

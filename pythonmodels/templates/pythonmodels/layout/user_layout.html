@@ -16,7 +16,7 @@
 
 {% block js %}
 
-    {% block pagejss %}{% endblock %}
+    {% block pagejs %}{% endblock %}
 
     {# Highcharts js #}
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -39,10 +39,10 @@
         <div class="row content">
             <div class="col-sm-2 sidenav">
                 <ul class="nav nav-stacked">
-                    <li><a href="/home/{# USER_NAME #}">{# USER_NAME #} Home</a></li>
-                    <li><a href="/home/{# USER_NAME #}/upload">Upload Data</a></li>
-                    <li><a href="/home/{# USER_NAME #}/create">Create Model</a></li>
-                    <li><a href="/home/{# USER_NAME #}}/edit">Edit</a></li>
+                    <li><a href="{% url 'pythonmodels:user_index' user.username %}">{{ user.username }} Home</a></li>
+                    <li><a href="{% url 'pythonmodels:data_upload' user.username %}">Upload Data</a></li>
+                    <li><a href="{% url 'pythonmodels:model_create' user.username %}">Create Model</a></li>
+                    <li><a href="{% url 'pythonmodels:user_index' user.username %}">Edit</a></li>
                 </ul>
             </div>
 

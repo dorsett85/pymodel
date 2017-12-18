@@ -24,8 +24,10 @@ urlpatterns = [
 
     # Logged in user
     path('home/<str:username>', views.UserIndex.as_view(), name='user_index'),
+    path('home/<str:username>/upload/', views.DataUpload.as_view(), name='data_upload'),
+    path('home/<str:username>/create/', views.CreateModel.as_view(), name='model_create'),
 
     # Practice View
-    path('practice/', views.Practice.as_view())
+    path('practice/', views.Practice.as_view(), name='practice')
 
 ]
