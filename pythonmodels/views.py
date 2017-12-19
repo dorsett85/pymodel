@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from braces import views
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +15,7 @@ from .models import Choice, Question, Dataset
 from .forms import LoginForm, RegistrationForm, DatasetForm
 
 import os
-from django.conf import settings
+import pandas as pd
 
 
 class IndexView(generic.ListView):
@@ -150,10 +151,12 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         if self.request.is_ajax:
-            file = form.cleaned_data['file']
+            csv = pd.read_csv(self.request.FILES['file'])
+            print(csv.columns.values)
+            return HttpResponse("Yah guy")
             dataset = form.save(commit=False)
             dataset.user_id = self.request.user
-            dataset.name = file
+            dataset.name = form.cleaned_data['file']
             dataset.vars = 12
             dataset.observations = 200
             dataset.save()

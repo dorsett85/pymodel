@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, ButtonHolder, Submit
+from crispy_forms.layout import Layout, ButtonHolder, Submit, Field
 
 from .models import Dataset
 
@@ -47,16 +47,15 @@ class DatasetForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.attrs = {'id': 'uploadData', 'class': 'dropzone'}
         self.helper.layout = Layout(
-            # 'file',
-            'description',
-            # ButtonHolder(
-            #     Submit('dataUpload', 'Submit', css_class='btn-primary')
-            # )
+            Field(
+                'file', type="hidden"
+            ),
+            # 'description',
         )
 
     class Meta:
         model = Dataset
-        fields = ('file', 'description',)
+        fields = ('file',)
 
     def clean(self):
         file_path = settings.MEDIA_ROOT + '/user_{0}/'.format(self.user_id) + str(self.cleaned_data.get('file'))
