@@ -41,6 +41,7 @@ class LoginForm(AuthenticationForm):
 
 class DatasetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        self.user_id = kwargs.pop('user')
         super(DatasetForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
@@ -58,8 +59,7 @@ class DatasetForm(forms.ModelForm):
         fields = ('file', 'description',)
 
     def clean(self):
-        file_path = settings.MEDIA_ROOT + '/user_{0}/'.format(1) + str(self.cleaned_data.get('file'))
-        print(self.fields)
+        file_path = settings.MEDIA_ROOT + '/user_{0}/'.format(self.user_id) + str(self.cleaned_data.get('file'))
         if os.path.isfile(file_path):
             raise ValidationError('File already exists')
         return self.cleaned_data

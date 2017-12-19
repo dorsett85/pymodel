@@ -11,11 +11,15 @@ Dropzone.options.uploadData = {
     maxFiles: 1,
     addRemoveLinks: true,
     init: function () {
+        this.on('error', function (file, error) {
+            console.log(error);
+            $('.dz-error-message span').html(error.__all__[0])
+        });
         this.on("addedfile", function (file) {
             // Do something
         });
         this.on("success", function (file, response) {
-            console.log(file)
+            console.log(file);
             $('.dz-progress').hide();
             $('.dz-error-mark').hide();
             console.log(response);

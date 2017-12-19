@@ -135,10 +135,16 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
     model = Dataset
     template_name = 'pythonmodels/user_content/dataUpload.html'
 
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super(DataUpload, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.id
+        return kwargs
+
     def form_invalid(self, form):
         response = super(DataUpload, self).form_invalid(form)
         if self.request.is_ajax():
-            return JsonResponse(form.errors, status=500)
+            print(form.errors.as_data())
+            return JsonResponse(form.errors, status=400)
         else:
             return response
 
