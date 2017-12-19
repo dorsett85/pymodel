@@ -1,7 +1,19 @@
 *.pyc
-*~
 __pycache__
 pymodelenv
 db.sqlite3
 /static
 .DS_Store
+
+# extensions to ignore
+*.log
+*.pot
+*.pyc
+*~
+
+
+# directories to ignore
+.idea/
+
+# ignore local settings
+pymodel/settings.py
