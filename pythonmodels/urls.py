@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 
 from . import views
@@ -24,7 +23,10 @@ urlpatterns = [
 
     # Logged in user
     path('home/<str:username>', views.UserIndex.as_view(), name='user_index'),
+
     path('home/<str:username>/upload/', views.DataUpload.as_view(), name='data_upload'),
+    path('datasetdelete/<int:pk>', views.DatasetDelete.as_view(), name='dataset_delete'),
+
     path('home/<str:username>/create/', views.CreateModel.as_view(), name='model_create'),
 
     # Practice View

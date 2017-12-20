@@ -7,7 +7,7 @@ Dropzone.options.uploadData = {
     //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     // },
     dictDefaultMessage: "Drag and Drop Dataset Here",
-    acceptedFiles: ".csv, .xlsx",
+    acceptedFiles: ".csv, .xls, .xlsx",
     maxFiles: 1,
     addRemoveLinks: true,
     init: function () {

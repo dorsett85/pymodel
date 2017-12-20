@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -13,8 +12,8 @@ $(document).ready(function () {
     $('body').on('click', '.deleteBtn', function (e) {
         e.preventDefault();
         console.log($(this).parent().val());
-        $.post({
-            url: window.location.pathname + "/destroy/" + $(this).parent().val(),
+        $.get({
+            url: '/datasetdelete/' + $(this).parent().val(),
             success: function (response) {
                 console.log(response);
                 $('#dataset_' + response.id).fadeOut(500, function () {

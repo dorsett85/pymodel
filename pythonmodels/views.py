@@ -11,11 +11,10 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question, Dataset
+from .models import Choice, Question, Dataset, DatasetVariable
 from .forms import LoginForm, RegistrationForm, DatasetForm
+from pythonmodels.Controllers.data_upload import datasetcreate
 
-import csv
-import io
 import os
 import pandas as pd
 
@@ -153,32 +152,7 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         if self.request.is_ajax:
-            file = form.cleaned_data['file']
-
-            # Check if file is .csv or .xlsx
-            if file.name.endswith('.csv'):
-                csv_file = io.TextIOWrapper(file)
-                dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=";,")
-                csv_file.seek(0)
-                reader = csv.reader(csv_file, dialect)
-                data = []
-
-                for row in reader:
-                    data.append(row)
-
-                Header = data[0]
-                doc = pd.DataFrame(data, columns=Header)
-            elif file.name.endswith('.xlsx'):
-                doc = pd.read_excel(file)
-
-            print(doc.columns.values)
-            dataset = form.save(commit=False)
-            dataset.user_id = self.request.user
-            dataset.name = file
-            dataset.vars = doc.shape[1]
-            dataset.observations = doc.shape[0]
-            dataset.save()
-            return JsonResponse({'success': 'worked'})
+            return datasetcreate(self, form)
         else:
             return super(DataUpload, self).form_valid(form)
 
@@ -190,6 +164,14 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         return reverse('pythonmodels:data_upload', args=(self.request.user.username,))
+
+
+class DatasetDelete(generic.DeleteView):
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object(pk)
+        self.object.delete()
+        payload = {'delete': 'ok'}
+        return JsonResponse(payload)
 
 
 class CreateModel(generic.View):
