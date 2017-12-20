@@ -48,17 +48,17 @@ class DatasetForm(forms.ModelForm):
         self.helper.attrs = {'id': 'uploadData', 'class': 'dropzone'}
         self.helper.layout = Layout(
             Field(
-                'file', type="hidden"
+                'description', type="hidden"
             ),
             # 'description',
         )
 
     class Meta:
         model = Dataset
-        fields = ('file',)
+        fields = ('file', 'description',)
 
     def clean(self):
         file_path = settings.MEDIA_ROOT + '/user_{0}/'.format(self.user_id) + str(self.cleaned_data.get('file'))
         if os.path.isfile(file_path):
-            raise ValidationError('File already exists')
+            raise ValidationError({'file': 'File already exists!'})
         return self.cleaned_data

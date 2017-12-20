@@ -14,6 +14,8 @@ from django.utils import timezone
 from .models import Choice, Question, Dataset
 from .forms import LoginForm, RegistrationForm, DatasetForm
 
+import csv
+import io
 import os
 import pandas as pd
 
@@ -151,14 +153,30 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         if self.request.is_ajax:
-            csv = pd.read_csv(self.request.FILES['file'])
-            print(csv.columns.values)
-            return HttpResponse("Yah guy")
+            file = form.cleaned_data['file']
+
+            # Check if file is .csv or .xlsx
+            if file.name.endswith('.csv'):
+                csv_file = io.TextIOWrapper(file)
+                dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=";,")
+                csv_file.seek(0)
+                reader = csv.reader(csv_file, dialect)
+                data = []
+
+                for row in reader:
+                    data.append(row)
+
+                Header = data[0]
+                doc = pd.DataFrame(data, columns=Header)
+            elif file.name.endswith('.xlsx'):
+                doc = pd.read_excel(file)
+
+            print(doc.columns.values)
             dataset = form.save(commit=False)
             dataset.user_id = self.request.user
-            dataset.name = form.cleaned_data['file']
-            dataset.vars = 12
-            dataset.observations = 200
+            dataset.name = file
+            dataset.vars = doc.shape[1]
+            dataset.observations = doc.shape[0]
             dataset.save()
             return JsonResponse({'success': 'worked'})
         else:

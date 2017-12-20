@@ -13,7 +13,7 @@ Dropzone.options.uploadData = {
     init: function () {
         this.on('error', function (file, error) {
             console.log(error);
-            $('.dz-error-message span').html(error.__all__[0])
+            $('.dz-error-message span').html(error.file)
         });
         this.on("addedfile", function (file) {
             // Do something
