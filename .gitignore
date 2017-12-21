@@ -1,6 +1,7 @@
 *.pyc
 __pycache__
 /static
+/storage/*.key
 .DS_Store
 
 # extensions to ignore
