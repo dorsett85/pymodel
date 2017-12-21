@@ -1,38 +1,31 @@
-$(document).ready(function () {
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    /*
-     * Delete dataset
-     */
-    $('body').on('click', '.deleteBtn', function (e) {
-        e.preventDefault();
-        console.log($(this).parent().val());
-        $.get({
-            url: '/datasetdelete/' + $(this).parent().val(),
-            success: function (response) {
-                console.log(response);
-                $('#dataset_' + response.id).fadeOut(500, function () {
-                    $(this).remove();
-                    if (!$(".newDataset")[0] && !$(".oldDataset")[0]) {
-                        if ($('#noDataset')[0]) {
-                            $('#noDataset').slideDown(500);
-                        } else {
-                            $('<h4 id="noDataset">No datasets uploaded</h4>').hide().insertAfter('#userDataH2').slideDown(500);
-                        }
-                    }
-                });
-
-            },
-            error: function () {
-                console.log("Fail!");
-            }
-        });
-    });
-
-
-});
+/**
+ * Dropzone
+ */
+Dropzone.options.uploadData = {
+    url: window.location.pathname,
+    acceptedFiles: ".csv, .xlsx",
+    maxFiles: 1,
+    addRemoveLinks: true,
+    init: function () {
+        this.on('error', function (file, error) {
+            $('.dz-error-message').children(':first').html(error.file);
+        })
+        this.on("success", function (file, response) {
+            $('.dz-progress').hide();
+            $('.dz-error-mark').hide();
+            console.log(response);
+            $('#newUpload').append(
+                $('<div/>', {'id': 'dataset_' + response[0].pk, 'class': 'row newDataset datasetDiv'}).append(
+                    $('<h4/>').html(response[0].fields.name), [
+                        $('<ul/>').append(
+                            $('<li/>').html('Variables: ' + response[0].fields.vars), [
+                                $('<li/>').html('Observations: ' + response[0].fields.observations)
+                            ]
+                        ),
+                        $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create'}).html('Make Model')
+                    ]
+                ).hide().fadeIn(1000)
+            );
+        })
+    }
+};

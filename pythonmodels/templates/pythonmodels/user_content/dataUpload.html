@@ -8,7 +8,7 @@
 {% block pagecss %}
 
     {# Dropzone css #}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.css">
+    <link rel="stylesheet" href="{% static 'pythonmodels/css/dropzone.min.css' %}">
 
     {# Other user css #}
     <link rel="stylesheet" href="{% static 'pythonmodels/css/dataUpload.css' %}">
@@ -18,11 +18,9 @@
 {% block pagejs %}
 
     {# Dropzone js #}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery-file-upload/2.4.0/cloudinary-jquery-file-upload.min.js"></script>
+    <script src="{% static 'pythonmodels/js/dropzone.min.js' %}"></script>
 
     {# Other user js #}
-    <script src="{% static 'pythonmodels/js/dropzone.js' %}"></script>
     <script src="{% static 'pythonmodels/js/dataUpload.js' %}"></script>
 
 {% endblock %}
@@ -34,75 +32,17 @@
         <h2>Upload Dataset:</h2>
 
         <ul>
-            <li>CSV and XLSX only</li>
+            <li>CSV and Excel only</li>
             <li>Requires headers</li>
-            <li>Click "Remove File" to upload another dataset</li>
+            <li>Click "Remove file" to upload another dataset</li>
         </ul>
 
-        {% crispy form %}
-
-{#        <form class="dropzone" id="uploadData" enctype="multipart/form-data">{% csrf_token %}</form>#}
-
-        <br>
-
-        <div id="newUploads">
-            {# New uploads go here #}
-        </div>
-
-        <hr>
-
-        <div class="col-sm-6">
-            <div class="container-fluid">
-                <h2 id="userDataH2">{{ user.username }}'s Datasets</h2>
-
-                  {% if datasets %}
-                      {% for data in datasets %}
-
-                        <div id="dataset_{{ data.id }}" class="row oldDataset datasetDiv">
-                            <h4>{{ data.name }}</h4>
-                            <ul>
-                                <li>Variables: {{ data.vars }}</li>
-                                <li>Observations: {{ data.observations }}</li>
-                            </ul>
-
-                            <ul class="nav navbar-nav">           
-                                <li><a href="{% url 'pythonmodels:model_create' user.username %}">Make Model</a></li>
-                                   
-                                <li value="{{ data.id }}"><a href="#" class="deleteBtn">Delete Dataset</a></li>
-                            </ul>
-                        </div>
-
-                      {% endfor %}
-                  {% else %}
-                    <h4 id="noDataset">No datasets uploaded</h4>
-                  {% endif %}
-
+        <div class="row">
+            <div class="col-md-5">
+                {% crispy form %}
             </div>
-
-        </div>
-
-        <div class="col-sm-6">
-            <div class="container-fluid">
-                <h2>Pre-loaded Datasets</h2>
-
-                {% if public_datasets %}
-                    {% for data in public_datasets %}
-
-                    <div class="row pubDataset datasetDiv">
-                        <h4>{{ data.name }}</h4>
-                        <ul>
-                            <li>Variables: {{ data.vars }}</li>
-                            <li>Observations: {{ data.observations }}</li>
-                        </ul>
-
-                        <ul class="nav navbar-nav">           
-                            <li><a href="{% url 'pythonmodels:model_create' user.username %}">Make Model</a></li>
-                        </ul>
-                    </div>
-
-                    {% endfor %}
-                {% endif %}
-
+            <div id="newUpload" class="col-md-7">
+                {# New content here #}
             </div>
         </div>
 

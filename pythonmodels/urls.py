@@ -11,12 +11,8 @@ urlpatterns = [
     path('about/', TemplateView.as_view(template_name='pythonmodels/landing_content/about.html'), name='about'),
     path('contact/', TemplateView.as_view(template_name='pythonmodels/landing_content/contact.html'), name='contact'),
 
-    path('polls/', views.IndexView.as_view(), name='polls'),
-    path('polls/<int:pk>/', views.DetailView.as_view(), name='detail'),
-    path('polls/<int:pk>/results/', views.ResultsView.as_view(), name='results'),
-    path('polls/<int:question_id>/vote/', views.vote, name='vote'),
-
     # Authentication and registration
+    path('guest/', views.Guest.as_view(), name='guest'),
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
     path('register/', views.Register.as_view(), name='register'),
@@ -28,6 +24,7 @@ urlpatterns = [
     path('datasetdelete/<int:pk>', views.DatasetDelete.as_view(), name='dataset_delete'),
 
     path('home/<str:username>/create/', views.CreateModel.as_view(), name='model_create'),
+    path('home/<str:username>/create/<int:pk>/', views.CreateModel.as_view(), name='model_create_id'),
 
     # Practice View
     path('practice/', views.Practice.as_view(), name='practice')

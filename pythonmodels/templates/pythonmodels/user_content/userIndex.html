@@ -1,17 +1,90 @@
 {% extends 'pythonmodels/layout/user_layout.html' %}
 
+{% load static %}
+
 {% block title %}PyModels - {{ user.username }}{% endblock %}
+
+{% block pagejs %}
+
+    {# Other user js #}
+
+{% endblock %}
 
 {% block userBody %}
 
     <div id="welcome">
         <h1>Welcome {{ user.username }}</h1>
 
-        Here are your models:
+        Please view your datasets and models below:
 
-{#        @foreach($statModels as $key => $value)#}
-{#            {{ $value->body }}#}
-{#        @endforeach#}
+        <div class="row">
+
+            <div class="col-sm-6">
+                <div class="container-fluid">
+                    <h2 id="userDataH2" value="{{ user.username }}">Your Datasets</h2>
+
+                    {% if datasets %}
+                        {% for data in datasets %}
+
+                            <div id="dataset_{{ data.id }}" class="row oldDataset datasetDiv">
+                                <h4>{{ data.name }}</h4>
+                                <ul>
+                                    <li>Variables: {{ data.vars }}</li>
+                                    <li>Observations: {{ data.observations }}</li>
+                                </ul>
+
+                                <div class="btn-toolbar">
+                                    <a href="{% url 'pythonmodels:model_create_id' user.username data.id %}"
+                                       class="btn btn-default">
+                                        Make Model
+                                    </a>
+                                    <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-default deleteBtn" value="{{ data.id }}">Delete Dataset
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+                    {% else %}
+                        <h4 id="noDataset">No datasets uploaded</h4>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+                <div class="container-fluid">
+                    <h2>Pre-loaded Datasets</h2>
+
+                    {% if public_datasets %}
+                        {% for data in public_datasets %}
+
+                            <div class="row pubDataset datasetDiv">
+                                <h4>{{ data.name }}</h4>
+                                <ul>
+                                    <li>Variables: {{ data.vars }}</li>
+                                    <li>Observations: {{ data.observations }}</li>
+                                </ul>
+
+                                 <div class="btn-toolbar">
+                                    <a href="{% url 'pythonmodels:model_create_id' user.username data.id %}"
+                                       class="btn btn-default">
+                                        Make Model
+                                    </a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
 

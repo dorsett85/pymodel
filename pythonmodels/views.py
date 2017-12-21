@@ -5,67 +5,15 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse, reverse_lazy
-from django.views import generic
-from django.utils import timezone
+from django.views import generic, View
 
-from .models import Choice, Question, Dataset, DatasetVariable
+from .models import Dataset
 from .forms import LoginForm, RegistrationForm, DatasetForm
 from pythonmodels.Controllers.data_upload import datasetcreate
 
 import os
-import pandas as pd
-
-
-class IndexView(generic.ListView):
-    template_name = 'pythonmodels/index.html'
-    context_object_name = 'latest_question_list'
-
-    def get_queryset(self):
-        """
-        Return the last five published questions (not including those set to be
-        published in the future).
-        """
-        return Question.objects.filter(
-            pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
-
-
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = 'pythonmodels/detail.html'
-
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-
-
-class ResultsView(generic.DetailView):
-    model = Question
-    template_name = 'pythonmodels/results.html'
-
-
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(request, 'pythonmodels/detail.html', {
-            'question': question,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('pythonmodels:results', args=(question.id,)))
 
 
 class Register(views.AnonymousRequiredMixin, generic.CreateView):
@@ -87,6 +35,13 @@ class Register(views.AnonymousRequiredMixin, generic.CreateView):
         login_message = self.object.username + ', you have successfully logged in!'
         messages.success(self.request, login_message, 'loginFlash')
         return reverse('pythonmodels:user_index', args=(self.object.username,))
+
+
+class Guest(View):
+    def get(self, request):
+        user = authenticate(username='Guest', password='guest')
+        login(self.request, user)
+        return HttpResponseRedirect(reverse('pythonmodels:user_index', args=['Guest']))
 
 
 class Login(views.AnonymousRequiredMixin, generic.FormView):
@@ -130,6 +85,15 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
     model = User
     template_name = 'pythonmodels/user_content/userIndex.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(UserIndex, self).get_context_data()
+        context['datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
+        context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
+        return context
+
+    def get_success_url(self):
+        return reverse('pythonmodels:data_upload', args=(self.request.user.username,))
+
 
 class DataUpload(LoginRequiredMixin, generic.CreateView):
     login_url = '/login/'
@@ -156,22 +120,18 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
         else:
             return super(DataUpload, self).form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super(DataUpload, self).get_context_data()
-        context['datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
-        context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
-        return context
-
     def get_success_url(self):
         return reverse('pythonmodels:data_upload', args=(self.request.user.username,))
 
 
-class DatasetDelete(generic.DeleteView):
+class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
+    model = Dataset
+
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object(pk)
+        self.object = self.get_object()
+        dataset_id = self.object.pk
         self.object.delete()
-        payload = {'delete': 'ok'}
-        return JsonResponse(payload)
+        return JsonResponse({'id': dataset_id})
 
 
 class CreateModel(generic.View):
