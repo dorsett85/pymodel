@@ -131,6 +131,8 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         dataset_id = self.object.pk
+        user_folder_path = "user_{0}/{1}".format(self.request.user.id, self.object.name)
+        os.remove(os.path.join(settings.MEDIA_ROOT, user_folder_path))
         self.object.delete()
         return JsonResponse({'id': dataset_id})
 
