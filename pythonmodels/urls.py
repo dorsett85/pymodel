@@ -23,7 +23,7 @@ urlpatterns = [
     path('home/<str:username>/upload/', views.DataUpload.as_view(), name='dataset_upload'),
     path('datasetdelete/<int:pk>', views.DatasetDelete.as_view(), name='dataset_delete'),
 
-    path('home/<str:username>/create/<int:pk>', views.CreateModel.as_view(), name='model_create'),
+    path('home/<str:username>/create/<int:pk>', views.ModelCreate.as_view(), name='model_create'),
 
     # Practice View
     path('practice/', views.Practice.as_view(), name='practice')

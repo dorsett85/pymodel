@@ -98,19 +98,20 @@ $(document).ready(function () {
 
 
     /*
-     * Run R script with form input
+     * Run Python script with form input
      */
-    $('#rGet').click(function (e) {
+    $('#pyGet').click(function (e) {
         e.preventDefault();
 
         $.post({
-            url: "/rmodel/" + $('#dataID').val(),
+            url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
             data: $("#modelCreateForm").serialize(),
             success: function (data) {
+                console.log(data)
 
-                // Initial R import data cleanup
-                var rData = JSON.parse(data);
-                console.log(rData);
+                // Initial Python import data cleanup
+                var pyData = JSON.parse(data);
+                console.log(pyData);
 
                 // var matrix = [];
                 // rData.cor_matrix.map(function (data, index) {
@@ -158,7 +159,7 @@ $(document).ready(function () {
                         },
                         name: 'Female',
                         color: 'rgba(223, 83, 83, .5)',
-                        data: rData.augment.map(function (data) {
+                        data: pyData.augment.map(function (data) {
                             return [data[".fitted"], data[".resid"]];
                         })
                     }]
@@ -183,13 +184,13 @@ $(document).ready(function () {
                     },
 
                     xAxis: {
-                        categories: rData.cor_matrix.map(function (data) {
+                        categories: pyData.cor_matrix.map(function (data) {
                             return data._row
                         })
                     },
 
                     yAxis: {
-                        categories: rData.cor_matrix.map(function (data) {
+                        categories: pyData.cor_matrix.map(function (data) {
                             return data._row
                         }),
                         title: null
@@ -213,7 +214,7 @@ $(document).ready(function () {
                     series: [{
                         name: 'Sales per employee',
                         borderWidth: 1,
-                        data: rData.cor_matrix.map(function (data, i) {
+                        data: pyData.cor_matrix.map(function (data, i) {
                             return [i, i, i]
                         }),
                         dataLabels: {

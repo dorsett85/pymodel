@@ -22,7 +22,7 @@ def datasetcreate(self, form):
 
         header = data[0]
         doc = pd.DataFrame(data, columns=header)
-    elif file.name.endswith('.xlsx'):
+    else:
         doc = pd.read_excel(file)
 
     # Save dataset

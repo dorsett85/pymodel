@@ -6,14 +6,13 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 
 from .models import Dataset, DatasetVariable
 from .forms import LoginForm, RegistrationForm, DatasetUploadForm
-from pythonmodels.Controllers.data_upload import datasetcreate
+from pythonmodels.scripts import data_upload
+from pythonmodels.scripts import model_create
 
 import os
 
@@ -118,7 +117,7 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         if self.request.is_ajax:
-            return datasetcreate(self, form)
+            return data_upload.datasetcreate(self, form)
         else:
             return super(DataUpload, self).form_valid(form)
 
@@ -138,29 +137,21 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
         return JsonResponse({'id': dataset_id})
 
 
-class CreateModel(generic.TemplateView):
+class ModelCreate(generic.TemplateView):
     template_name = 'pythonmodels/user_content/modelCreate.html'
 
     def get_context_data(self, **kwargs):
-        context = super(CreateModel, self).get_context_data()
-
-        # If url pk is 0, change it to 1
-        self.kwargs['pk'] = 1 if self.kwargs['pk'] == 0 else self.kwargs['pk']
-
-        # Get all user datasets, and all public datasets
-        context['userDatasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
-        context['publicDatasets'] = Dataset.objects.filter(user_id__isnull=True)
-
-        # Check if the url pk parameter is not in user's or public datasets then get url dataset
-        url_pk = Q(pk=self.kwargs['pk'])
-        user_pk = Q(user_id__id=self.request.user.id)
-        user_null = Q(user_id__isnull=True)
-        context['urlDataset'] = get_object_or_404(Dataset, (url_pk & (user_pk | user_null)))
-
-        return context
+        return model_create.modelcreatecontext(ModelCreate, self, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
+
+            # Run python script if post contains 'dataID'
+            if 'dataID' in self.request.POST:
+                data = model_create.pythonmodel(self.request.POST)
+                return JsonResponse({'data': 'new data'})
+
+            # Update variables on dataset change
             variables_query = DatasetVariable.objects.filter(dataset_id__exact=self.kwargs['pk']).values_list('name')
             variables = [dat for dat in variables_query]
             return JsonResponse(variables, safe=False)

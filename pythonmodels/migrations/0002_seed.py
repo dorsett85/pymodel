@@ -21,7 +21,7 @@ def forwards_func(apps, schema_editor):
     for file in os.listdir(pub_path):
         if file.endswith('csv'):
             data = pd.read_csv(os.path.join(pub_path, file))
-        elif file.endswith('xlsx'):
+        else:
             data = pd.read_excel(os.path.join(pub_path, file))
 
         # Save dataset to database
