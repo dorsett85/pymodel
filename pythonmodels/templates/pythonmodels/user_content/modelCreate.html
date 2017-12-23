@@ -27,6 +27,7 @@
 
 
         <form id="modelCreateForm" role="form" method="post">
+            {% csrf_token %}
             <input id="userName" type="hidden" value="{{ user.username }}">
 
             <div class="form-group">
