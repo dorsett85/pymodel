@@ -147,16 +147,15 @@ class CreateModel(generic.TemplateView):
         # If url pk is 0, change it to 1
         self.kwargs['pk'] = 1 if self.kwargs['pk'] == 0 else self.kwargs['pk']
 
-        # Get the url data, all user datasets, and all public datasets
-        context['urlDataset'] = Dataset.objects.get(pk=self.kwargs['pk'])
+        # Get all user datasets, and all public datasets
         context['userDatasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
         context['publicDatasets'] = Dataset.objects.filter(user_id__isnull=True)
 
-        # Check if the url pk parameter is not in user's or public datasets
+        # Check if the url pk parameter is not in user's or public datasets then get url dataset
         url_pk = Q(pk=self.kwargs['pk'])
         user_pk = Q(user_id__id=self.request.user.id)
         user_null = Q(user_id__isnull=True)
-        get_object_or_404(Dataset, (url_pk & (user_pk | user_null)))
+        context['urlDataset'] = get_object_or_404(Dataset, (url_pk & (user_pk | user_null)))
 
         return context
 
