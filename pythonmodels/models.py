@@ -21,7 +21,7 @@ class Dataset(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self. name
+        return self.name
 
 
 # DatasetVariable model
@@ -33,7 +33,7 @@ class DatasetVariable(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self. name
+        return self.name
 
 
 # StatModel model

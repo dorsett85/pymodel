@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseBadRequest, Http404
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
@@ -137,16 +138,25 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
         return JsonResponse({'id': dataset_id})
 
 
-class CreateModel(generic.DetailView):
+class CreateModel(generic.TemplateView):
     template_name = 'pythonmodels/user_content/modelCreate.html'
-    model = Dataset
 
     def get_context_data(self, **kwargs):
         context = super(CreateModel, self).get_context_data()
-        context['urlDataset'] = get_object_or_404(Dataset, pk=self.kwargs['pk'])
+
+        # If url pk is 0, change it to 1
+        self.kwargs['pk'] = 1 if self.kwargs['pk'] == 0 else self.kwargs['pk']
+
+        # Get the url data, all user datasets, and all public datasets
+        context['urlDataset'] = Dataset.objects.get(pk=self.kwargs['pk'])
         context['userDatasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
         context['publicDatasets'] = Dataset.objects.filter(user_id__isnull=True)
-        print(context['urlDataset'])
+
+        # Check if the url pk parameter is not in user's or public datasets
+        url_pk = Q(pk=self.kwargs['pk'])
+        user_pk = Q(user_id__id=self.request.user.id)
+        user_null = Q(user_id__isnull=True)
+        get_object_or_404(Dataset, (url_pk & (user_pk | user_null)))
 
         return context
 
@@ -154,9 +164,7 @@ class CreateModel(generic.DetailView):
         if self.request.is_ajax():
             variables_query = DatasetVariable.objects.filter(dataset_id__exact=self.kwargs['pk']).values_list('name')
             variables = [dat for dat in variables_query]
-            print(variables)
             return JsonResponse(variables, safe=False)
-
 
 
 class Practice(generic.View):

@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pythonmodels.apps.PythonmodelsConfig',
     'crispy_forms',
-    'django_cleanup',
 ]
 
 MIDDLEWARE = [
