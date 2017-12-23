@@ -1,5 +1,6 @@
 *.pyc
 __pycache__
+pymodelenv
 /static
 /storage/*.key
 .DS_Store
@@ -9,7 +10,6 @@ __pycache__
 *.pot
 *.pyc
 *~
-
 
 # directories to ignore
 .idea/

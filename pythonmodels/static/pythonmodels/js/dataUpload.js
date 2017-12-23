@@ -22,7 +22,7 @@ Dropzone.options.uploadData = {
                                 $('<li/>').html('Observations: ' + response[0].fields.observations)
                             ]
                         ),
-                        $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create'}).html('Make Model')
+                        $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create/' + response[0].pk}).html('Make Model')
                     ]
                 ).hide().fadeIn(1000)
             );

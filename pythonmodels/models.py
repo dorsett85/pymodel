@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-import datetime
-
 
 def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user_id.id, filename)

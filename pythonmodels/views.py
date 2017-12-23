@@ -5,12 +5,13 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, HttpResponseBadRequest, Http404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 
-from .models import Dataset
-from .forms import LoginForm, RegistrationForm, DatasetForm
+from .models import Dataset, DatasetVariable
+from .forms import LoginForm, RegistrationForm, DatasetUploadForm
 from pythonmodels.Controllers.data_upload import datasetcreate
 
 import os
@@ -22,10 +23,8 @@ class Register(views.AnonymousRequiredMixin, generic.CreateView):
     template_name = 'pythonmodels/registration/register.html'
 
     def form_valid(self, form):
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-        new_user = authenticate(username=username, password=password)
-        login(self.request, new_user)
+        user = form.save()
+        login(self.request, user)
         return super(Register, self).form_valid(form)
 
     def get_authenticated_redirect_url(self):
@@ -41,6 +40,8 @@ class Guest(View):
     def get(self, request):
         user = authenticate(username='Guest', password='guest')
         login(self.request, user)
+        login_message = self.request.user.username + ', you have successfully logged in!'
+        messages.success(self.request, login_message, 'loginFlash')
         return HttpResponseRedirect(reverse('pythonmodels:user_index', args=['Guest']))
 
 
@@ -74,8 +75,9 @@ class Logout(LoginRequiredMixin, generic.RedirectView):
     url = reverse_lazy('pythonmodels:login')
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user.username
         logout(request)
-        messages.info(self.request, 'You have successfully logged out!', 'logoutFlash')
+        messages.info(self.request, user + ', you have successfully logged out!', 'logoutFlash')
         return super(Logout, self).get(request, *args, **kwargs)
 
 
@@ -97,11 +99,10 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
 
 class DataUpload(LoginRequiredMixin, generic.CreateView):
     login_url = '/login/'
-    form_class = DatasetForm
-    model = Dataset
+    form_class = DatasetUploadForm
     template_name = 'pythonmodels/user_content/dataUpload.html'
 
-    def get_form_kwargs(self, **kwargs):
+    def get_form_kwargs(self):
         kwargs = super(DataUpload, self).get_form_kwargs()
         kwargs['user'] = self.request.user.id
         return kwargs
@@ -134,10 +135,26 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
         return JsonResponse({'id': dataset_id})
 
 
-class CreateModel(generic.View):
+class CreateModel(generic.DetailView):
+    template_name = 'pythonmodels/user_content/modelCreate.html'
+    model = Dataset
 
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({'Create': 'this will be the create page'})
+    def get_context_data(self, **kwargs):
+        context = super(CreateModel, self).get_context_data()
+        context['urlDataset'] = get_object_or_404(Dataset, pk=self.kwargs['pk'])
+        context['userDatasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
+        context['publicDatasets'] = Dataset.objects.filter(user_id__isnull=True)
+        print(context['urlDataset'])
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            variables_query = DatasetVariable.objects.filter(dataset_id__exact=self.kwargs['pk']).values_list('name')
+            variables = [dat for dat in variables_query]
+            print(variables)
+            return JsonResponse(variables, safe=False)
+
 
 
 class Practice(generic.View):

@@ -1,0 +1,67 @@
+{% extends 'pythonmodels/layout/master.html' %}
+
+{% load static %}
+
+{% block css %}
+
+    {% block pagecss %}{% endblock %}
+
+    {# Datatable css #}
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
+    {# Other user css #}
+    <link rel="stylesheet" href="{% static 'pythonmodels/css/user.css' %}">
+
+{% endblock %}
+
+{% block js %}
+
+    {% block pagejs %}{% endblock %}
+
+    {# Highcharts js #}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+    <script src="//rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="{% static 'pythonmodels/js/highchart.js' %}"></script>
+
+    {# Datatable js #}
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+    {# Other user js #}
+    <script src="{% static 'pythonmodels/js/user.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-2 sidenav">
+                <ul class="nav nav-stacked">
+                    <li><a href="{% url 'pythonmodels:user_index' user.username %}">{{ user.username }} Home</a></li>
+                    <li><a href="{% url 'pythonmodels:dataset_upload' user.username %}">Upload Data</a></li>
+                    <li><a href="{% url 'pythonmodels:model_create' user.username 0 %}">Create Model</a></li>
+                </ul>
+            </div>
+
+            <div class="col-sm-8 text-left userBody">
+                <div class="container-fluid">
+
+                    {% block userBody %}
+                    {% endblock %}
+
+                </div>
+            </div>
+            <div class="col-sm-2 sidenav text-center">
+                <div class="well">
+                    <p>ADS</p>
+                </div>
+                <div class="well">
+                    <p>ADS</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

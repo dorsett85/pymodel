@@ -1,0 +1,109 @@
+{% extends 'pythonmodels/layout/userLayout.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}PyModels - {{ user.username }}{% endblock %}
+
+{% block pagecss %}
+
+    {# Other user css #}
+    <link rel="stylesheet" href="{% static 'pythonmodels/css/modelCreate.css' %}">
+
+{% endblock %}
+
+{% block pagejs %}
+
+    {# Other user js #}
+    <script src="{% static 'pythonmodels/js/modelCreate.js' %}"></script>
+
+{% endblock %}
+
+{% block userBody %}
+
+    <div id="modelBodyDiv">
+
+        <h2>Create a Model</h2>
+
+
+        <form id="modelCreateForm" role="form" method="post">
+            <input id="userName" type="hidden" value="{{ user.username }}">
+
+            <div class="form-group">
+                <label for="dataset">Pick a dataset</label>
+                <select id="dataID" class="form-control" name="dataID">
+                    <optgroup label="{{ user.username }}'s Datasets">
+                        {% if not userDatasets %}
+                            <option disabled>No datasets uploaded</option>
+                        {% else %}
+                            {% for dataset in userDatasets %}
+                                <option value="{{ dataset.id }}">{{ dataset.name }}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </optgroup>
+                    <optgroup label="Public Datasets">
+                        {% for dataset in publicDatasets %}
+                            <option {% if dataset.id == urlDataset.id %}selected{% endif %} value="{{ dataset.id }}">
+                                {{ dataset.name }}
+                            </option>
+                        {% endfor %}
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="modelType">What type of model?</label>
+                <select id="modelType" class="form-control" name="modelType">
+                    <option>Classification</option>
+                    <option>Regression</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <label for="predictorVars">Select predictor variables</label>
+                        <select multiple id="predictorVars" class="form-control" name="predictorVars[]">
+                            {# Fill with Jquery post request #}
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="responseVar">Select response variable</label>
+                        <select id="responseVar" class="form-control" name="responseVar">
+                            {# Fill with Jquery post request #}
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            <button id="rGet" type="submit" class="btn btn-default">Submit</button>
+
+        </form>
+
+    </div>
+
+
+    {# Python model charts #}
+    <div id="modelOutput">
+        <div class="row">
+            <div id="outputHeader" class="text-center">
+                <h3></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="modelCoefs" class="hover stripe row-border compact" cellspacing="0">
+                    {# Python model coefficients #}
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div id="residVsFitted" class="col-md-6"></div>
+            <div id="corMatrix" class="col-md-6"></div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'pythonmodels/layout/user_layout.html' %}
+{% extends 'pythonmodels/layout/userLayout.html' %}
 
 {% load static %}
 
@@ -34,7 +34,7 @@
                                 </ul>
 
                                 <div class="btn-toolbar">
-                                    <a href="{% url 'pythonmodels:model_create_id' user.username data.id %}"
+                                    <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
                                        class="btn btn-default">
                                         Make Model
                                     </a>
@@ -71,7 +71,7 @@
                                 </ul>
 
                                  <div class="btn-toolbar">
-                                    <a href="{% url 'pythonmodels:model_create_id' user.username data.id %}"
+                                    <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
                                        class="btn btn-default">
                                         Make Model
                                     </a>
