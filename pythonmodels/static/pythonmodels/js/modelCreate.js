@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-          /**
+    /**
      * Process to get csrf token in Django
      * @param name
      * @returns {*}
@@ -97,7 +97,7 @@ $(document).ready(function () {
     });
 
 
-    /*
+    /**
      * Run Python script with form input
      */
     $('#pyGet').click(function (e) {
@@ -106,23 +106,47 @@ $(document).ready(function () {
         $.post({
             url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
             data: $("#modelCreateForm").serialize(),
-            success: function (data) {
-                console.log(data)
-
-                // Initial Python import data cleanup
-                var pyData = JSON.parse(data);
+            dataType: 'JSON',
+            success: function (pyData) {
                 console.log(pyData);
 
-                // var matrix = [];
-                // rData.cor_matrix.map(function (data, index) {
-                //     for (i = 0; i < Object.keys(data).length; i++) {
-                //         matrix[index] = [index, index, data[Object.keys(data)[0]], Object.keys(data)[index]]
-                //     }
-                // });
-                // console.log(matrix);
+
+                // Add title for model type
+                $('#outputHeader').find('h3').empty().html("Linear Regression");
+
+                // Add coefficients table
+                var rowTRs = [];
+                $('#modelCoefs').empty();
+                pyData.map(function (coef, idx) {
+
+                    // Add header
+                    if (idx === 0) {
+                        var cols = [];
+                        Object.keys(coef).map(function (header, i) {
+                            cols[i] = '<th>' + header + '</th>'
+                        });
+                        $cols = $('<thead>').append($('<tr>').append(cols.join("")));
+                    }
+                    ;
+
+                    // Add rows
+                    var rowTDs = [];
+                    Object.keys(coef).map(function (row, i) {
+                        rowTDs[i] = '<td>' + coef[row] + '</td>'
+                    });
+                    rowTRs[idx] = '<tr>' + rowTDs.join("") + '</tr>';
+                });
+                $cols.appendTo('#modelCoefs');
+                $('#modelCoefs thead').after($('<tbody>').append(rowTRs.join("")));
+
+                // Convert to datatable
+                $('#modelCoefs').DataTable({
+                    destroy: true,
+                    "sDom": ''
+                });
 
                 // Empty and show highcharts containers
-                $('#residVsFitted, #container2').show().empty();
+                $('#residVsFitted, #corMatrix').show().empty();
 
                 /**
                  * Residuals vs. fitted plot
@@ -135,12 +159,8 @@ $(document).ready(function () {
                     title: {
                         text: 'Residuals vs. Fitted'
                     },
-                    subtitle: {
-                        text: $('#responseVar').val() + ' as a function of ' + $('#predictorVars').val().join(" & ")
-                    },
                     xAxis: {
                         title: {
-                            enabled: true,
                             text: 'Fitted Values'
                         }
                     },
@@ -159,49 +179,57 @@ $(document).ready(function () {
                         },
                         name: 'Female',
                         color: 'rgba(223, 83, 83, .5)',
-                        data: pyData.augment.map(function (data) {
+                        data: pyData.map(function (data) {
                             return [data[".fitted"], data[".resid"]];
                         })
                     }]
                 });
 
                 /**
-                 * Rsquare value
+                 * Correlation matrix
                  */
 
-                Highcharts.chart('container2', {
+                    // Setup correlation matrix data
+                var matrix = [];
+                var count = 0;
+                pyData.cor_matrix.map(function (data, index) {
+                    for (i = 0; i < Object.keys(data).length - 1; i++) {
+                        matrix[count] = [index, i, Math.round(data[Object.keys(data)[i]] * 100) / 100];
+                        count += 1;
+                    }
+                });
 
+                // Create correlation matrix
+                Highcharts.chart('corMatrix', {
                     chart: {
                         type: 'heatmap',
                         marginTop: 40,
                         marginBottom: 80,
                         plotBorderWidth: 1
                     },
-
-
                     title: {
-                        text: 'Sales per employee per weekday'
+                        text: 'Correlation Matrix'
                     },
-
                     xAxis: {
                         categories: pyData.cor_matrix.map(function (data) {
                             return data._row
                         })
                     },
-
                     yAxis: {
                         categories: pyData.cor_matrix.map(function (data) {
                             return data._row
                         }),
                         title: null
                     },
-
                     colorAxis: {
-                        min: 0,
-                        minColor: '#FFFFFF',
-                        maxColor: Highcharts.getOptions().colors[0]
+                        min: -1,
+                        max: 1,
+                        stops: [
+                            [0, '#ff0000'],
+                            [.5, '#FFFFFF'],
+                            [1, '#00FF0B']
+                        ]
                     },
-
                     legend: {
                         align: 'right',
                         layout: 'vertical',
@@ -210,13 +238,10 @@ $(document).ready(function () {
                         y: 25,
                         symbolHeight: 280
                     },
-
                     series: [{
-                        name: 'Sales per employee',
+                        name: 'Correlation',
                         borderWidth: 1,
-                        data: pyData.cor_matrix.map(function (data, i) {
-                            return [i, i, i]
-                        }),
+                        data: matrix,
                         dataLabels: {
                             enabled: true,
                             color: '#000000'
@@ -224,31 +249,7 @@ $(document).ready(function () {
                     }]
 
                 });
-                //     var myChart = Highcharts.chart('container2', {
-                //             chart: {
-                //                 type: 'bar'
-                //             },
-                //             title: {
-                //                 text: 'Fruit Consumption'
-                //             },
-                //             xAxis: {
-                //                 categories: ['Apples', 'Bananas', 'Oranges']
-                //             },
-                //             yAxis: {
-                //                 title: {
-                //                     text: 'Fruit eaten'
-                //                 }
-                //             },
-                //             series: [{
-                //                 name: 'Jane',
-                //                 data: [1, 2, 4]
-                //             }, {
-                //                 name: 'John',
-                //                 data: [5, 7, 3]
-                //             }]
-                //         });
-                //
-                //
+
             },
             error: function () {
                 console.log('Fail!')

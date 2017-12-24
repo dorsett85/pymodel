@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from pythonmodels.models import Dataset
 
+import matplotlib.pyplot as plt
 import os
 import pandas as pd
 
@@ -31,6 +32,8 @@ def pythonmodel(request):
         pd_dat = pd.read_csv(dataset.file.path)
     else:
         pd_dat = pd.read_excel(dataset.file.path)
-    print(pd_dat[request['responseVar']])
+    # print(pd_dat[request['responseVar']])
 
-    return request['dataID']
+
+
+    return pd_dat

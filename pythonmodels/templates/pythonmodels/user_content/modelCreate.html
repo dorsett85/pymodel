@@ -7,12 +7,18 @@
 
 {% block pagecss %}
 
+    {# Datatable css #}
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
     {# Other user css #}
     <link rel="stylesheet" href="{% static 'pythonmodels/css/modelCreate.css' %}">
 
 {% endblock %}
 
 {% block pagejs %}
+
+    {# Datatable js #}
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
     {# Other user js #}
     <script src="{% static 'pythonmodels/js/modelCreate.js' %}"></script>
