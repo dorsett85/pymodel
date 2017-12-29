@@ -149,7 +149,8 @@ class ModelCreate(generic.TemplateView):
             # Run python script if post contains 'dataID'
             if 'dataID' in self.request.POST:
 
-                data = model_create.pythonmodel(self.request.POST).to_json(orient='records')
+                data = model_create.pythonmodel(self.request.POST)
+                return JsonResponse(data)
                 return HttpResponse(data, content_type="application/json")
 
             # Update variables on dataset change

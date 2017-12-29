@@ -49,7 +49,7 @@ $(document).ready(function () {
      * Don't change if it already matches the dataset ID
      */
     function changeURL(IdMatch) {
-        if (/0$/.test(window.location.pathname)) {
+        if (/\/0$/.test(window.location.pathname)) {
             window.history.pushState("", "", window.location.pathname.replace(/\d+$/, $('#dataID').val()));
         } else if (!IdMatch) {
             window.history.pushState("", "", window.location.pathname.replace(/\d+$/, $('#dataID').val()));
@@ -103,6 +103,10 @@ $(document).ready(function () {
     $('#pyGet').click(function (e) {
         e.preventDefault();
 
+        // Start spinner icon while dashboard loads, disable button
+        $('#fa-spinner').addClass('fa fa-spinner fa-spin');
+        $('#pyGet').attr('disabled', true);
+
         $.post({
             url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
             data: $("#modelCreateForm").serialize(),
@@ -110,6 +114,9 @@ $(document).ready(function () {
             success: function (pyData) {
                 console.log(pyData);
 
+                // Stop spinner after chart loads, enable button
+                $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
+                $('#pyGet').attr('disabled', false);
 
                 // Add title for model type
                 $('#outputHeader').find('h3').empty().html("Linear Regression");
@@ -117,7 +124,7 @@ $(document).ready(function () {
                 // Add coefficients table
                 var rowTRs = [];
                 $('#modelCoefs').empty();
-                pyData.map(function (coef, idx) {
+                pyData.coefs.map(function (coef, idx) {
 
                     // Add header
                     if (idx === 0) {
@@ -141,12 +148,13 @@ $(document).ready(function () {
 
                 // Convert to datatable
                 $('#modelCoefs').DataTable({
-                    destroy: true,
-                    "sDom": ''
+                    destroy: true
+                    // "sDom": ''
                 });
 
                 // Empty and show highcharts containers
                 $('#residVsFitted, #corMatrix').show().empty();
+
 
                 /**
                  * Residuals vs. fitted plot
@@ -179,8 +187,8 @@ $(document).ready(function () {
                         },
                         name: 'Female',
                         color: 'rgba(223, 83, 83, .5)',
-                        data: pyData.map(function (data) {
-                            return [data[".fitted"], data[".resid"]];
+                        data: pyData.residual.map(function (data) {
+                            return [data.pred, data.resid];
                         })
                     }]
                 });
@@ -189,18 +197,18 @@ $(document).ready(function () {
                  * Correlation matrix
                  */
 
-                    // Setup correlation matrix data
+                // Setup correlation matrix data
                 var matrix = [];
                 var count = 0;
-                pyData.cor_matrix.map(function (data, index) {
-                    for (i = 0; i < Object.keys(data).length - 1; i++) {
+                pyData.corr_matrix.map(function (data, index) {
+                    for (i = 0; i < Object.keys(data).length; i++) {
                         matrix[count] = [index, i, Math.round(data[Object.keys(data)[i]] * 100) / 100];
                         count += 1;
                     }
                 });
 
                 // Create correlation matrix
-                Highcharts.chart('corMatrix', {
+                Highcharts.chart('corrMatrix', {
                     chart: {
                         type: 'heatmap',
                         marginTop: 40,
@@ -211,13 +219,13 @@ $(document).ready(function () {
                         text: 'Correlation Matrix'
                     },
                     xAxis: {
-                        categories: pyData.cor_matrix.map(function (data) {
-                            return data._row
+                        categories: pyData.corr_matrix.map(function (data, i) {
+                            return Object.keys(data)[i]
                         })
                     },
                     yAxis: {
-                        categories: pyData.cor_matrix.map(function (data) {
-                            return data._row
+                        categories: pyData.corr_matrix.map(function (data, i) {
+                            return Object.keys(data)[i]
                         }),
                         title: null
                     },
@@ -247,15 +255,19 @@ $(document).ready(function () {
                             color: '#000000'
                         }
                     }]
-
                 });
-
             },
-            error: function () {
-                console.log('Fail!')
+            error: function (data, error) {
+
+                // Stop spinner after chart loads, enable button
+                $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
+                $('#pyGet').attr('disabled', false);
+
+                console.log(error)
             }
-        })
-        ;
+        });
+
+
     })
 
 
