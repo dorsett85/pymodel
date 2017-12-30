@@ -141,17 +141,14 @@ class ModelCreate(generic.TemplateView):
     template_name = 'pythonmodels/user_content/modelCreate.html'
 
     def get_context_data(self, **kwargs):
-        return model_create.modelcreatecontext(ModelCreate, self, **kwargs)
+        return model_create.model_create_context(ModelCreate, self, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
 
-            # Run python script if post contains 'dataID'
+            # Run pythonmodel function if form is submitted
             if 'dataID' in self.request.POST:
-
-                data = model_create.pythonmodel(self.request.POST)
-                return JsonResponse(data)
-                return HttpResponse(data, content_type="application/json")
+                return model_create.pythonmodel(self.request.POST)
 
             # Update variables on dataset change
             variables_query = DatasetVariable.objects.filter(dataset_id__exact=self.kwargs['pk']).values_list('name')

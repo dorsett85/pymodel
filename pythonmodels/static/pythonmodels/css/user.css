@@ -49,3 +49,7 @@
 .pubDataset {
     background: rgba(0, 66, 201, 0.3);
 }
+
+#createModelErrors {
+    margin-top: 10px;
+}

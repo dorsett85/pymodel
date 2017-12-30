@@ -62,6 +62,10 @@ $(document).ready(function () {
      */
     function populateVars() {
         changeURL(new RegExp($('#dataID').val() + "$"));
+
+        // Remove errors
+        $('#createModelErrors').remove();
+
         $.post({
             url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
             success: function (data) {
@@ -107,6 +111,9 @@ $(document).ready(function () {
         $('#fa-spinner').addClass('fa fa-spinner fa-spin');
         $('#pyGet').attr('disabled', true);
 
+        // Remove errors
+        $('#createModelErrors').remove();
+
         $.post({
             url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
             data: $("#modelCreateForm").serialize(),
@@ -119,7 +126,9 @@ $(document).ready(function () {
                 $('#pyGet').attr('disabled', false);
 
                 // Add title for model type
-                $('#outputHeader').find('h3').empty().html("Linear Regression");
+                $('#outputHeader').find('h3').empty().html($('#modelType').val()).append(
+                    $('<h4>').html('Predicting ' + $('#responseVar').val())
+                );
 
                 // Add coefficients table
                 var rowTRs = [];
@@ -197,7 +206,7 @@ $(document).ready(function () {
                  * Correlation matrix
                  */
 
-                // Setup correlation matrix data
+                    // Setup correlation matrix data
                 var matrix = [];
                 var count = 0;
                 pyData.corr_matrix.map(function (data, index) {
@@ -259,11 +268,20 @@ $(document).ready(function () {
             },
             error: function (data, error) {
 
-                // Stop spinner after chart loads, enable button
+                // Stop spinner and enable button
                 $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
                 $('#pyGet').attr('disabled', false);
 
-                console.log(error)
+                // Show errors
+                $('#modelCreateForm').after(
+                    $('<div>').attr(
+                        {id: 'createModelErrors', class: 'alert alert-danger'}
+                    ).append(
+                        $('<ul>').append($('<li>').html(data.responseJSON.predictor_error))
+                    )
+                );
+
+                console.log(data.responseJSON.predictor_error)
             }
         });
 

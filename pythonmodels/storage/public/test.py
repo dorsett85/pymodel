@@ -53,8 +53,10 @@ diamonds_x = diamonds_dummy.drop('price', axis=1)
 diamonds_y = diamonds_dummy['price']
 
 # statsmodels module
-lm_fit = sm.OLS(diamonds_y, sm.add_constant(diamonds_x).rename).fit()
-
+lm_fit = sm.OLS(diamonds_y, sm.add_constant(diamonds_x)).fit()
+plt.scatter(lm_fit.fittedvalues, lm_fit.resid)
+plt.ylim(0.0000000001, -0.0000000001)
+plt.show()
 
 # sklearn module
 lm = LinearRegression().fit(diamonds_x, diamonds_y)
