@@ -44,15 +44,19 @@ def pythonmodel(request):
     # Return error if response variable is in the predictor variables
     if resp_var in pred_vars:
         return JsonResponse(
-            {'predictor_error': 'Predictor variables cannot contain the response variable'},
+            {'error': 'predictorVars', 'message': 'Predictor variables cannot contain the response variable'},
             status=400
         )
 
-    # Select columns based on user input, remove NaN's
+    # Select columns based on user input, remove NaN's, create design matrix and add constant to predictor variables
     var_names = pred_vars + [resp_var]
-    df_clean = pd.get_dummies(pd_dat[var_names].dropna())
+    df_clean = pd_dat[var_names].dropna()
+    df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1))
+    df_x = sm.add_constant(df_x).rename(columns={'const': '(Intercept)'})
     df_y = df_clean[resp_var]
-    df_x = sm.add_constant(df_clean.drop(df_y.name, axis=1)).rename(columns={'const': '(Intercept)'})
+
+    # Create correlation matrix
+    corr_matrix = df_clean.corr().to_dict(orient='records')
 
     """
     Return model that user selected
@@ -60,6 +64,14 @@ def pythonmodel(request):
 
     # Simple linear regression
     if request['modelType'] == 'Simple Linear Regression':
+
+        # Check for errors
+        if df_y.dtype not in ['float64', 'int64']:
+            return JsonResponse(
+                {'error': 'responseVar', 'message': 'Response variable must be numeric for this model type'},
+                status=400
+            )
+
         lm_fit = sm.OLS(df_y, df_x).fit()
 
         # Get table and plot output as dictionary
@@ -75,7 +87,5 @@ def pythonmodel(request):
             'pred': np.round(lm_fit.fittedvalues, 2),
             'resid': np.round(lm_fit.resid, 2)
         }).to_dict(orient='records')
-
-        corr_matrix = df_clean.corr().to_dict(orient='records')
 
         return JsonResponse({'residual': fit_vs_resid, 'coefs': coefs, 'corr_matrix': corr_matrix})

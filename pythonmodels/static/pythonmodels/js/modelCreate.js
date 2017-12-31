@@ -100,6 +100,13 @@ $(document).ready(function () {
         populateVars();
     });
 
+    /**
+     * Remove form errors when form is changed
+     */
+    $('#modelCreateForm').change(function () {
+        $('.formErrorHighlight').removeClass('formErrorHighlight');
+        $('#createModelErrors').remove();
+    })
 
     /**
      * Run Python script with form input
@@ -121,11 +128,12 @@ $(document).ready(function () {
             success: function (pyData) {
                 console.log(pyData);
 
-                // Stop spinner after chart loads, enable button
+                // Stop spinner after chart loads, enable button, add <hr>
                 $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
                 $('#pyGet').attr('disabled', false);
+                $('#outputDivider').attr('hidden', false);
 
-                // Add title for model type
+                // Add title for model type and response variable
                 $('#outputHeader').find('h3').empty().html($('#modelType').val()).append(
                     $('<h4>').html('Predicting ' + $('#responseVar').val())
                 );
@@ -277,11 +285,13 @@ $(document).ready(function () {
                     $('<div>').attr(
                         {id: 'createModelErrors', class: 'alert alert-danger'}
                     ).append(
-                        $('<ul>').append($('<li>').html(data.responseJSON.predictor_error))
+                        $('<ul>').append($('<li>').html(data.responseJSON.message))
                     )
                 );
 
-                console.log(data.responseJSON.predictor_error)
+                // Highlight form input containing the error
+                $('#' + data.responseJSON.error).addClass('formErrorHighlight');
+
             }
         });
 
