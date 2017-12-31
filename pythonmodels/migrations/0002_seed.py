@@ -9,7 +9,6 @@ import shutil
 
 
 def forwards_func(apps, schema_editor):
-
     # Create Clayton superuser and Guest user
     User = apps.get_model('auth', 'User')
     User.objects.create(username='Clayton', password=make_password('Phillydor85!'), is_superuser=True, is_staff=True)
@@ -21,25 +20,25 @@ def forwards_func(apps, schema_editor):
     for file in os.listdir(pub_path):
         if file.endswith('csv'):
             data = pd.read_csv(os.path.join(pub_path, file))
-        else:
+        elif file.endswith('xlsx'):
             data = pd.read_excel(os.path.join(pub_path, file))
 
-        # Save dataset to database
-        dataset = Dataset.objects.create(
-            name=file,
-            file=os.path.join(pub_path, file),
-            vars=data.shape[1],
-            observations=data.shape[0],
-        )
+        if file.endswith(('csv', 'xlsx')):
+            # Save dataset to database
+            dataset = Dataset.objects.create(
+                name=file,
+                file=os.path.join(pub_path, file),
+                vars=data.shape[1],
+                observations=data.shape[0],
+            )
 
-        # Save variables from new dataset to database
-        newdataset = Dataset.objects.get(id=dataset.id)
-        for column in data.columns.values:
-            DatasetVariable.objects.create(dataset_id=newdataset, name=column)
+            # Save variables from new dataset to database
+            newdataset = Dataset.objects.get(id=dataset.id)
+            for column in data.columns.values:
+                DatasetVariable.objects.create(dataset_id=newdataset, name=column)
 
 
 def reverse_func(apps, schema_editor):
-
     # Remove users and associated storage
     User = apps.get_model('auth', 'User')
     User.objects.all().delete()
@@ -50,7 +49,6 @@ def reverse_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('pythonmodels', '0001_initial'),
     ]
