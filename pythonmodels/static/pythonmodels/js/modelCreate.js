@@ -37,6 +37,13 @@ $(document).ready(function () {
         }
     });
 
+    /**
+     * MathJax inline math setup
+     */
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$']]}
+    });
+
 
     /**
      * Hide Highcharts containers on load
@@ -134,87 +141,104 @@ $(document).ready(function () {
                 $('#outputDivider').attr('hidden', false);
 
                 // Add title for model type and response variable
-                $('#outputHeader').find('h3').empty().html($('#modelType').val()).append(
+                $('#outputHeader').find('h2').empty().html($('#modelType').val()).append(
                     $('<h4>').html('Predicting ' + $('#responseVar').val())
                 );
 
-                // Add coefficients table
-                var rowTRs = [];
-                $('#modelCoefs').empty();
-                pyData.coefs.map(function (coef, idx) {
+                /**
+                 * Add summary statistics table
+                 * Update MathJax after success
+                 */
+                $('#summaryStats').empty();
 
-                    // Add header
-                    if (idx === 0) {
-                        var cols = [];
-                        Object.keys(coef).map(function (header, i) {
-                            cols[i] = '<th>' + header + '</th>'
-                        });
-                        $cols = $('<thead>').append($('<tr>').append(cols.join("")));
-                    }
-                    ;
+                $statsTableHead = $('<thead>').append($('<tr>'));
+                $statsTableBody = $('<tbody>').append($('<tr>'));
 
-                    // Add rows
-                    var rowTDs = [];
-                    Object.keys(coef).map(function (row, i) {
-                        rowTDs[i] = '<td>' + coef[row] + '</td>'
-                    });
-                    rowTRs[idx] = '<tr>' + rowTDs.join("") + '</tr>';
+                $.map(pyData.stats, function (stat, idx) {
+                    $statsTableHead.find('tr').append($('<th>').html(idx).attr('scope', 'col'));
+                    $statsTableBody.find('tr').append($('<td>').html(stat));
                 });
-                $cols.appendTo('#modelCoefs');
-                $('#modelCoefs thead').after($('<tbody>').append(rowTRs.join("")));
+                $('#summaryStats').append($statsTableHead, [$statsTableBody]);
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('summaryStats')]);
+
+                /**
+                 * Add coefficients table
+                 */
+                if ($.fn.DataTable.isDataTable('#modelCoefs')) {
+                    var table = $('#modelCoefs').DataTable();
+                    table.destroy();
+                    $('#modelCoefs').empty();
+                };
+
+                $statsTableHead = $('<thead>').append($('<tr>'));
+                $statsTableBody = $('<tbody>');
+
+                pyData.coefs.map(function (coef, idx) {
+                    if (idx === 0) {
+                        Object.keys(coef).map(function (header, i) {
+                            $statsTableHead.find('tr').append($('<th>').html(header));
+                        })
+                    }
+                    $statsTableBody.append($('<tr>'));
+                    Object.keys(coef).map(function (row, i) {
+                        $statsTableBody.find('tr').last().append($('<td>').html(coef[row]));
+                    })
+                });
+                $('#modelCoefs').append($statsTableHead, [$statsTableBody]);
 
                 // Convert to datatable
                 $('#modelCoefs').DataTable({
-                    destroy: true
-                    // "sDom": ''
+                    "dom": 'tipr'
                 });
-
-                // Empty and show highcharts containers
-                $('#residVsFitted, #corMatrix').show().empty();
-
 
                 /**
                  * Residuals vs. fitted plot
                  */
-                var residVsFitted = Highcharts.chart('residVsFitted', {
-                    chart: {
-                        type: 'scatter',
-                        zoomType: 'xy'
-                    },
-                    title: {
-                        text: 'Residuals vs. Fitted'
-                    },
-                    xAxis: {
-                        title: {
-                            text: 'Fitted Values'
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Residuals'
-                        }
-                    },
-                    legend: {enabled: false},
-                    series: [{
-                        regression: true,
-                        regressionSettings: {
-                            type: 'polynomial',
-                            color: 'rgba(223, 183, 83, .9)',
-                            dashStyle: 'dash'
+                $('#residVsFitted').show().empty();
+                if (pyData.model === 'ols') {
+                    var residVsFitted = Highcharts.chart('residVsFitted', {
+                        chart: {
+                            type: 'scatter',
+                            zoomType: 'xy'
                         },
-                        name: 'Female',
-                        color: 'rgba(223, 83, 83, .5)',
-                        data: pyData.residual.map(function (data) {
-                            return [data.pred, data.resid];
-                        })
-                    }]
-                });
+                        title: {
+                            text: 'Residuals vs. Fitted'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Fitted Values'
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Residuals'
+                            }
+                        },
+                        legend: {enabled: false},
+                        series: [{
+                            regression: true,
+                            regressionSettings: {
+                                name: 'Polynomial line',
+                                type: 'polynomial',
+                                color: 'rgba(223, 183, 83, .9)',
+                                dashStyle: 'dash',
+                            },
+                            name: 'Residual vs. Fitted',
+                            color: 'rgba(223, 83, 83, .5)',
+                            data: pyData.residual.map(function (data) {
+                                return [data.pred, data.resid];
+                            })
+                        }]
+                    });
+                }
+
 
                 /**
                  * Correlation matrix
                  */
+                $('#corMatrix').show().empty();
 
-                    // Setup correlation matrix data
+                // Setup correlation matrix data
                 var matrix = [];
                 var count = 0;
                 pyData.corr_matrix.map(function (data, index) {

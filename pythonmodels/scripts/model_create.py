@@ -8,6 +8,7 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import warnings
 
 
 def model_create_context(ModelCreate, self, **kwargs):
@@ -41,8 +42,13 @@ def pythonmodel(request):
     pred_vars = request.getlist('predictorVars[]')
     resp_var = request['responseVar']
 
-    # Return error if response variable is in the predictor variables
-    if resp_var in pred_vars:
+    # Return error if no predictor variables selected or response variable is in the predictor variables
+    if not pred_vars:
+        return JsonResponse(
+            {'error': 'predictorVars', 'message': 'Select at least one predictor variable'},
+            status=400
+        )
+    elif resp_var in pred_vars:
         return JsonResponse(
             {'error': 'predictorVars', 'message': 'Predictor variables cannot contain the response variable'},
             status=400
@@ -72,15 +78,24 @@ def pythonmodel(request):
                 status=400
             )
 
+        # Fit model and get statistics output as dictionary
         lm_fit = sm.OLS(df_y, df_x).fit()
 
-        # Get table and plot output as dictionary
+        stats = OrderedDict({
+            'Observations': lm_fit.nobs,
+            '$r^2$': np.round(lm_fit.rsquared, 3),
+            'adj $r^2$': np.round(lm_fit.rsquared_adj, 3),
+            'mse': np.round(lm_fit.mse_model, 3),
+            'aic': np.round(lm_fit.aic, 3),
+            'bic': np.round(lm_fit.bic, 3)
+        })
+
         coefs = pd.DataFrame(OrderedDict({
             '': lm_fit.params.index,
             'coef estimate': np.round(lm_fit.params, 3),
             'std error': np.round(lm_fit.bse, 3),
             't value': np.round(lm_fit.tvalues, 3),
-            'p value': np.round(lm_fit.pvalues, 3)
+            'p>|t|': np.round(lm_fit.pvalues, 4)
         })).to_dict(orient='records')
 
         fit_vs_resid = pd.DataFrame({
@@ -88,4 +103,75 @@ def pythonmodel(request):
             'resid': np.round(lm_fit.resid, 2)
         }).to_dict(orient='records')
 
-        return JsonResponse({'residual': fit_vs_resid, 'coefs': coefs, 'corr_matrix': corr_matrix})
+        return JsonResponse({
+            'model': 'ols',
+            'stats': stats,
+            'coefs': coefs,
+            'residual': fit_vs_resid,
+            'corr_matrix': corr_matrix
+        })
+
+    # Multinomial logistic
+    elif request['modelType'] == 'Multinomial Logistic':
+
+        # Check for errors
+        if df_y.dtype not in ['object']:
+            return JsonResponse(
+                {'error': 'responseVar', 'message': 'Response variable must be categorical'},
+                status=400
+            )
+
+        # Loop through all fit methods until one doesn't cause a warning
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+
+            for i in ['newton', 'nm', 'bfgs', 'lbfgs', 'powell', 'cg', 'ncg']:
+                try:
+                    mnlogit_fit = sm.MNLogit(df_y, df_x).fit(method=i)
+                except Warning:
+                    continue
+                else:
+                    break
+
+        stats = OrderedDict({
+            'Observations': mnlogit_fit.nobs,
+            'pseudo $r^2$': np.round(mnlogit_fit.prsquared, 3),
+            'classification error': '{:.2%}'.format(np.round(np.mean(mnlogit_fit.resid_misclassified), 4)),
+            'aic': np.round(mnlogit_fit.aic, 3),
+            'bic': np.round(mnlogit_fit.bic, 3)
+        })
+
+        # Create logistic regession coefficients table
+        mnlogit_coefs = pd.DataFrame()
+        coef_inputs = {
+            'coef estimates': np.round(mnlogit_fit.params, 3),
+            'std error': np.round(mnlogit_fit.bse, 3),
+            'z value': np.round(mnlogit_fit.tvalues, 3),
+            'p>|z|': np.round(mnlogit_fit.pvalues, 4)
+        }
+
+        for key, value in coef_inputs.items():
+            tmpDat = value
+            tmpDat.columns = df_y.unique()[1:]
+            tmpDat = tmpDat.assign(name=tmpDat.index)
+            tmpDat = tmpDat.rename(columns={'name': ''})
+            tmpDat = pd.melt(tmpDat, id_vars='', var_name='class', value_name=key)
+            if mnlogit_coefs.empty:
+                mnlogit_coefs = mnlogit_coefs.append(tmpDat)
+            else:
+                mnlogit_coefs = pd.merge(mnlogit_coefs, tmpDat, on=['', 'class'])
+
+        coefs = mnlogit_coefs.to_dict(orient='records')
+
+        # fit_vs_resid = pd.DataFrame({
+        #     'pred': np.round(mnlogit_fit.fittedvalues, 2),
+        #     'resid': np.round(mnlogit_fit.resid, 2)
+        # }).to_dict(orient='records')
+
+        return JsonResponse({
+            'model': 'mnlogit',
+            'stats': stats,
+            'coefs': coefs,
+            'residual': 1,
+            'corr_matrix': corr_matrix
+        })

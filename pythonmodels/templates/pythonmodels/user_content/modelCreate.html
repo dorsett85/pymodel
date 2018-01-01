@@ -65,7 +65,7 @@
                         <option value="Simple Linear Regression">Simple Linear</option>
                     </optgroup>
                     <optgroup label="Classification">
-                        <option>Logistic</option>
+                        <option value="Multinomial Logistic">Multinomial Logistic</option>
                     </optgroup>
                 </select>
             </div>
@@ -73,14 +73,14 @@
             <div class="form-group">
                 <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <label for="predictorVars">Select predictor variables</label>
                         <select multiple id="predictorVars" class="form-control" name="predictorVars[]">
                             {# Fill with Jquery post request #}
                         </select>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <label for="responseVar">Select response variable</label>
                         <select id="responseVar" class="form-control" name="responseVar">
                             {# Fill with Jquery post request #}
@@ -102,9 +102,20 @@
         <div id="modelOutput">
             <div class="row">
                 <div id="outputHeader" class="text-center">
-                    <h3></h3>
+                    <h2>
+                        {# Model type header #}
+                    </h2>
                 </div>
             </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                   <table id="summaryStats" class="table">
+                        {# Python model summary stats #}
+                    </table>
+                </div>
+            </div>
+            <br>
             <div class="row">
                 <div class="col-md-12">
                     <table id="modelCoefs" class="hover stripe row-border compact" cellspacing="0">
@@ -112,6 +123,7 @@
                     </table>
                 </div>
             </div>
+            <br>
             <div class="row">
                 <div id="residVsFitted" class="col-md-6"></div>
                 <div id="corrMatrix" class="col-md-6"></div>

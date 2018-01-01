@@ -1,6 +1,4 @@
-
 # Setup
-from collections import OrderedDict
 from pymodel import settings
 from sklearn.linear_model import LinearRegression
 
@@ -9,7 +7,7 @@ import numpy as np
 import os
 import pandas as pd
 import statsmodels.api as sm
-
+import warnings
 
 # Import diamonds to pandas
 diamonds = pd.read_csv(os.path.join(settings.MEDIA_ROOT, 'public/diamonds.csv'))
@@ -27,13 +25,12 @@ print(diamonds.dtypes)  # column types
 print(diamonds['clarity'].describe())
 print(diamonds['clarity'].unique())
 
-
 #####
 # Selecting columns and/or rows
 #####
 
 # Selecting by rows or columns
-print(diamonds[:100]) # first 100 rows
+print(diamonds[:100])  # first 100 rows
 print(diamonds['price'].__class__)  # price column as time series
 print(diamonds[['price']].__class__)  # price column as dataframe
 print(diamonds[['carat', 'clarity']])  # multiple column selection
@@ -42,7 +39,6 @@ print(diamonds[['carat', 'clarity']])  # multiple column selection
 print(diamonds.iloc[:20, 2:3])  # columns and rows by index
 print(diamonds.loc[:, ['carat', 'clarity']])  # columns and rows by name
 print(diamonds.ix[500:, ['cut', 'color']])  # columns and rows by index or name
-
 
 #####
 # Linear model example with dummy encoding
@@ -67,5 +63,21 @@ diamonds_x['resid'] = diamonds_y.values - pred
 diamonds_x.plot()
 plt.show()
 
-
 #####
+# Multinomial logistic regression example with dummy encoding
+#####
+iris = pd.DataFrame(sm.datasets.get_rdataset('iris').data)
+
+with warnings.catch_warnings():
+    warnings.simplefilter("error")
+
+    for i in ['newton', 'nm', 'bfgs', 'lbfgs', 'powell', 'cg', 'ncg']:
+        try:
+            logit_fit = sm.MNLogit(iris['Species'], sm.add_constant(iris.iloc[:, :4])).fit(method=i)
+        except Warning:
+            continue
+        else:
+            break
+
+
+logit_fit = sm.MNLogit(diamonds['cut'], pd.get_dummies(diamonds['color'])).fit()
