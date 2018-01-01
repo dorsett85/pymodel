@@ -81,14 +81,14 @@ def pythonmodel(request):
         # Fit model and get statistics output as dictionary
         lm_fit = sm.OLS(df_y, df_x).fit()
 
-        stats = OrderedDict({
+        stats = {
             'Observations': lm_fit.nobs,
             '$r^2$': np.round(lm_fit.rsquared, 3),
             'adj $r^2$': np.round(lm_fit.rsquared_adj, 3),
             'mse': np.round(lm_fit.mse_model, 3),
             'aic': np.round(lm_fit.aic, 3),
             'bic': np.round(lm_fit.bic, 3)
-        })
+        }
 
         coefs = pd.DataFrame(OrderedDict({
             '': lm_fit.params.index,
