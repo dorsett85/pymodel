@@ -81,14 +81,14 @@ def pythonmodel(request):
         # Fit model and get statistics output as dictionary
         lm_fit = sm.OLS(df_y, df_x).fit()
 
-        stats = {
+        stats = OrderedDict({
             'Observations': lm_fit.nobs,
             '$r^2$': np.round(lm_fit.rsquared, 3),
             'adj $r^2$': np.round(lm_fit.rsquared_adj, 3),
             'mse': np.round(lm_fit.mse_model, 3),
             'aic': np.round(lm_fit.aic, 3),
             'bic': np.round(lm_fit.bic, 3)
-        }
+        })
 
         coefs = pd.DataFrame(OrderedDict({
             '': lm_fit.params.index,
@@ -103,13 +103,13 @@ def pythonmodel(request):
             'resid': np.round(lm_fit.resid, 2)
         }).to_dict(orient='records')
 
-        return JsonResponse({
+        return JsonResponse(OrderedDict({
             'model': 'ols',
             'stats': stats,
             'coefs': coefs,
             'residual': fit_vs_resid,
             'corr_matrix': corr_matrix
-        })
+        }))
 
     # Multinomial logistic
     elif request['modelType'] == 'Multinomial Logistic':
