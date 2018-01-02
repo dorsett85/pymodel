@@ -103,13 +103,13 @@ def pythonmodel(request):
             'resid': np.round(lm_fit.resid, 2)
         }).to_dict(orient='records')
 
-        return JsonResponse(OrderedDict({
+        return JsonResponse({
             'model': 'ols',
             'stats': stats,
             'coefs': coefs,
             'residual': fit_vs_resid,
             'corr_matrix': corr_matrix
-        }))
+        })
 
     # Multinomial logistic
     elif request['modelType'] == 'Multinomial Logistic':

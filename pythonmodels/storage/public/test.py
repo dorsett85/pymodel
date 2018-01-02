@@ -12,6 +12,7 @@ import warnings
 # Import diamonds to pandas
 diamonds = pd.read_csv(os.path.join(settings.MEDIA_ROOT, 'public/diamonds.csv'))
 
+
 #####
 # Summary info
 #####
@@ -24,6 +25,7 @@ print(diamonds.dtypes)  # column types
 # Individual columns
 print(diamonds['clarity'].describe())
 print(diamonds['clarity'].unique())
+
 
 #####
 # Selecting columns and/or rows
@@ -40,8 +42,9 @@ print(diamonds.iloc[:20, 2:3])  # columns and rows by index
 print(diamonds.loc[:, ['carat', 'clarity']])  # columns and rows by name
 print(diamonds.ix[500:, ['cut', 'color']])  # columns and rows by index or name
 
+
 #####
-# Linear model example with dummy encoding
+# Linear model example
 #####
 diamonds_dummy = pd.get_dummies(diamonds.dropna())
 
@@ -62,6 +65,7 @@ diamonds_x['resid'] = diamonds_y.values - pred
 
 diamonds_x.plot()
 plt.show()
+
 
 #####
 # Multinomial logistic regression example with dummy encoding
