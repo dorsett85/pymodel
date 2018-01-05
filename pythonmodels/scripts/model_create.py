@@ -31,7 +31,6 @@ def model_create_context(ModelCreate, self, **kwargs):
 
 
 def pythonmodel(request):
-
     # Load dataset to memory, get predictor and response variables
     dataset = Dataset.objects.get(pk=request['dataID'])
     if dataset.name.endswith('.csv'):
@@ -121,7 +120,7 @@ def pythonmodel(request):
                 status=400
             )
 
-        # Loop through all fit methods until one doesn't cause a warning
+        # Loop through all fit methods until one doesn't cause a warning.  If none work, return an error message.
         with warnings.catch_warnings():
             warnings.simplefilter("error")
 
@@ -133,6 +132,18 @@ def pythonmodel(request):
                 else:
                     break
 
+            try:
+                mnlogit_fit
+            except NameError:
+                return JsonResponse(
+                    {'error': 'predictorVars',
+                     'message': '8 algorithms tried and all contained warnings.  Try choosing variables with '
+                                'fewer categorical levels, different combinations of categorical variables or another '
+                                'model type.'},
+                    status=400
+                )
+
+
         stats = OrderedDict({
             'Observations': mnlogit_fit.nobs,
             'pseudo $r^2$': np.round(mnlogit_fit.prsquared, 3),
@@ -140,6 +151,7 @@ def pythonmodel(request):
             'aic': np.round(mnlogit_fit.aic, 3),
             'bic': np.round(mnlogit_fit.bic, 3)
         })
+
 
         # Create logistic regession coefficients table
         mnlogit_coefs = pd.DataFrame()

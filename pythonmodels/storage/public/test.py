@@ -11,6 +11,7 @@ import warnings
 
 # Import diamonds to pandas
 diamonds = pd.read_csv(os.path.join(settings.MEDIA_ROOT, 'public/diamonds.csv'))
+dmds_clean = diamonds.dropna()
 
 
 #####
@@ -75,13 +76,16 @@ iris = pd.DataFrame(sm.datasets.get_rdataset('iris').data)
 with warnings.catch_warnings():
     warnings.simplefilter("error")
 
+    errs = []
     for i in ['newton', 'nm', 'bfgs', 'lbfgs', 'powell', 'cg', 'ncg']:
         try:
-            logit_fit = sm.MNLogit(iris['Species'], sm.add_constant(iris.iloc[:, :4])).fit(method=i)
-        except Warning:
+            logit_fit = sm.MNLogit(dmds_clean['cut'], sm.add_constant(pd.get_dummies(dmds_clean.loc[:, ['depth', 'clarity']]))).fit(method=i)
+        except Warning as w:
             continue
         else:
             break
+
+
 
 
 logit_fit = sm.MNLogit(diamonds['cut'], pd.get_dummies(diamonds['color'])).fit()
