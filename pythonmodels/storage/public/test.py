@@ -69,23 +69,22 @@ plt.show()
 
 
 #####
-# Multinomial logistic regression example with dummy encoding
+# Multinomial logistic regression example
 #####
-iris = pd.DataFrame(sm.datasets.get_rdataset('iris').data)
+var_names = ['cut', 'clarity', 'depth']
+df_clean = diamonds[var_names].dropna()
+df_x = pd.get_dummies(df_clean.drop('cut', axis=1))
+df_x = sm.add_constant(df_x).rename(columns={'const': '(Intercept)'})
+df_y = df_clean['cut']
 
 with warnings.catch_warnings():
     warnings.simplefilter("error")
 
-    errs = []
     for i in ['newton', 'nm', 'bfgs', 'lbfgs', 'powell', 'cg', 'ncg']:
         try:
-            logit_fit = sm.MNLogit(dmds_clean['cut'], sm.add_constant(pd.get_dummies(dmds_clean.loc[:, ['depth', 'clarity']]))).fit(method=i)
+            logit_fit = sm.MNLogit(df_y, df_x).fit(method='newton')
         except Warning as w:
             continue
         else:
             break
 
-
-
-
-logit_fit = sm.MNLogit(diamonds['cut'], pd.get_dummies(diamonds['color'])).fit()

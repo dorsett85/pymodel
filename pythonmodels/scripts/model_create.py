@@ -127,6 +127,8 @@ def pythonmodel(request):
             for i in ['newton', 'nm', 'bfgs', 'lbfgs', 'powell', 'cg', 'ncg']:
                 try:
                     mnlogit_fit = sm.MNLogit(df_y, df_x).fit(method=i)
+                    np.round(mnlogit_fit.params, 3)
+                    np.round(mnlogit_fit.bse, 3)
                 except Warning:
                     continue
                 else:
@@ -134,15 +136,15 @@ def pythonmodel(request):
 
             try:
                 mnlogit_fit
-            except NameError:
+                np.round(mnlogit_fit.params, 3)
+                np.round(mnlogit_fit.bse, 3)
+            except (NameError, Warning):
                 return JsonResponse(
                     {'error': 'predictorVars',
                      'message': '8 algorithms tried and all contained warnings.  Try choosing variables with '
-                                'fewer categorical levels, different combinations of categorical variables or another '
-                                'model type.'},
+                                'fewer categorical levels, more numerical variables or another model type.'},
                     status=400
                 )
-
 
         stats = OrderedDict({
             'Observations': mnlogit_fit.nobs,
@@ -151,7 +153,6 @@ def pythonmodel(request):
             'aic': np.round(mnlogit_fit.aic, 3),
             'bic': np.round(mnlogit_fit.bic, 3)
         })
-
 
         # Create logistic regession coefficients table
         mnlogit_coefs = pd.DataFrame()
