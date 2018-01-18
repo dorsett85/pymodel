@@ -181,10 +181,10 @@ def pythonmodel(request):
         #     'resid': np.round(mnlogit_fit.resid, 2)
         # }).to_dict(orient='records')
 
-        return JsonResponse({
+        return JsonResponse(OrderedDict({
             'model': 'mnlogit',
             'stats': stats,
             'coefs': coefs,
             'residual': 1,
             'corr_matrix': corr_matrix
-        })
+        }))
