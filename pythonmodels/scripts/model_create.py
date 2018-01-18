@@ -146,13 +146,21 @@ def pythonmodel(request):
                     status=400
                 )
 
-        stats = OrderedDict({
-            'Observations': mnlogit_fit.nobs,
-            'pseudo $r^2$': np.round(mnlogit_fit.prsquared, 3),
-            'classification error': '{:.2%}'.format(np.round(np.mean(mnlogit_fit.resid_misclassified), 4)),
-            'aic': np.round(mnlogit_fit.aic, 3),
-            'bic': np.round(mnlogit_fit.bic, 3)
-        })
+        stats = OrderedDict()
+        stats['Observations'] = mnlogit_fit.nobs
+        stats['pseudo $r^2$'] = np.round(mnlogit_fit.prsquared, 3)
+        stats['classification error'] = '{:.2%}'.format(np.round(np.mean(mnlogit_fit.resid_misclassified), 4))
+        stats['aic'] = np.round(mnlogit_fit.aic, 3)
+        stats['bic'] = np.round(mnlogit_fit.bic, 3)
+
+
+        #     OrderedDict({
+        #     'Observations': mnlogit_fit.nobs,
+        #     'pseudo $r^2$': np.round(mnlogit_fit.prsquared, 3),
+        #     'classification error': '{:.2%}'.format(np.round(np.mean(mnlogit_fit.resid_misclassified), 4)),
+        #     'aic': np.round(mnlogit_fit.aic, 3),
+        #     'bic': np.round(mnlogit_fit.bic, 3)
+        # })
 
         # Create logistic regession coefficients table
         mnlogit_coefs = pd.DataFrame()
