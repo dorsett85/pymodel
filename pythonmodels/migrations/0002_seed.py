@@ -23,19 +23,18 @@ def forwards_func(apps, schema_editor):
         elif file.endswith('xlsx'):
             data = pd.read_excel(os.path.join(pub_path, file))
 
-        if file.endswith(('csv', 'xlsx')):
-            # Save dataset to database
-            dataset = Dataset.objects.create(
-                name=file,
-                file=os.path.join(pub_path, file),
-                vars=data.shape[1],
-                observations=data.shape[0],
-            )
+        # Save dataset to database
+        dataset = Dataset.objects.create(
+            name=file,
+            file=os.path.join(pub_path, file),
+            vars=data.shape[1],
+            observations=data.shape[0],
+        )
 
-            # Save variables from new dataset to database
-            newdataset = Dataset.objects.get(id=dataset.id)
-            for column in data.columns.values:
-                DatasetVariable.objects.create(dataset_id=newdataset, name=column)
+        # Save variables from new dataset to database
+        newdataset = Dataset.objects.get(id=dataset.id)
+        for column in data.columns.values:
+            DatasetVariable.objects.create(dataset_id=newdataset, name=column)
 
 
 def reverse_func(apps, schema_editor):
