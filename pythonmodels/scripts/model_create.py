@@ -89,26 +89,17 @@ def pythonmodel(request):
             'bic': np.round(lm_fit.bic, 3)
         })
 
-        coefs = pd.DataFrame(OrderedDict({
-            '': lm_fit.params.index,
-            'coef estimate': np.round(lm_fit.params, 3),
-            'std error': np.round(lm_fit.bse, 3),
-            't value': np.round(lm_fit.tvalues, 3),
-            'p>|t|': np.round(lm_fit.pvalues, 4)
-        })).to_dict(orient='records')
-
         fit_vs_resid = pd.DataFrame({
             'pred': np.round(lm_fit.fittedvalues, 2),
             'resid': np.round(lm_fit.resid, 2)
         }).to_dict(orient='records')
 
-        return JsonResponse({
+        return JsonResponse(OrderedDict({
             'model': 'ols',
             'stats': stats,
-            'coefs': coefs,
             'residual': fit_vs_resid,
             'corr_matrix': corr_matrix
-        })
+        }))
 
     # Multinomial logistic
     elif request['modelType'] == 'Multinomial Logistic':
@@ -154,28 +145,6 @@ def pythonmodel(request):
             'bic': np.round(mnlogit_fit.bic, 3)
         })
 
-        # Create logistic regession coefficients table
-        mnlogit_coefs = pd.DataFrame()
-        coef_inputs = {
-            'coef estimates': np.round(mnlogit_fit.params, 3),
-            'std error': np.round(mnlogit_fit.bse, 3),
-            'z value': np.round(mnlogit_fit.tvalues, 3),
-            'p>|z|': np.round(mnlogit_fit.pvalues, 4)
-        }
-
-        for key, value in coef_inputs.items():
-            tmpDat = value
-            tmpDat.columns = df_y.unique()[1:]
-            tmpDat = tmpDat.assign(name=tmpDat.index)
-            tmpDat = tmpDat.rename(columns={'name': ''})
-            tmpDat = pd.melt(tmpDat, id_vars='', var_name='class', value_name=key)
-            if mnlogit_coefs.empty:
-                mnlogit_coefs = mnlogit_coefs.append(tmpDat)
-            else:
-                mnlogit_coefs = pd.merge(mnlogit_coefs, tmpDat, on=['', 'class'])
-
-        coefs = mnlogit_coefs.to_dict(orient='records')
-
         # fit_vs_resid = pd.DataFrame({
         #     'pred': np.round(mnlogit_fit.fittedvalues, 2),
         #     'resid': np.round(mnlogit_fit.resid, 2)
@@ -184,7 +153,6 @@ def pythonmodel(request):
         return JsonResponse(OrderedDict({
             'model': 'mnlogit',
             'stats': stats,
-            'coefs': coefs,
             'residual': 1,
             'corr_matrix': corr_matrix
         }))

@@ -162,36 +162,6 @@ $(document).ready(function () {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('summaryStats')]);
 
                 /**
-                 * Add coefficients table
-                 */
-                if ($.fn.DataTable.isDataTable('#modelCoefs')) {
-                    var table = $('#modelCoefs').DataTable();
-                    table.destroy();
-                    $('#modelCoefs').empty();
-                };
-
-                $statsTableHead = $('<thead>').append($('<tr>'));
-                $statsTableBody = $('<tbody>');
-
-                pyData.coefs.map(function (coef, idx) {
-                    if (idx === 0) {
-                        Object.keys(coef).map(function (header, i) {
-                            $statsTableHead.find('tr').append($('<th>').html(header));
-                        })
-                    }
-                    $statsTableBody.append($('<tr>'));
-                    Object.keys(coef).map(function (row, i) {
-                        $statsTableBody.find('tr').last().append($('<td>').html(coef[row]));
-                    })
-                });
-                $('#modelCoefs').append($statsTableHead, [$statsTableBody]);
-
-                // Convert to datatable
-                $('#modelCoefs').DataTable({
-                    "dom": 'tipr'
-                });
-
-                /**
                  * Residuals vs. fitted plot
                  */
                 $('#residVsFitted').show().empty();
