@@ -6,10 +6,8 @@ from . import views
 app_name = 'pythonmodels'
 urlpatterns = [
 
-    # Landing pages
+    # Landing page
     path('', TemplateView.as_view(template_name='pythonmodels/landing_content/landing.html'), name='landing'),
-    path('about/', TemplateView.as_view(template_name='pythonmodels/landing_content/about.html'), name='about'),
-    path('contact/', TemplateView.as_view(template_name='pythonmodels/landing_content/contact.html'), name='contact'),
 
     # Authentication and registration
     path('guest/', views.Guest.as_view(), name='guest'),
