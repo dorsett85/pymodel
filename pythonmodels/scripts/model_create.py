@@ -118,7 +118,6 @@ def pythonmodel(request):
             for i in ['newton', 'nm', 'bfgs', 'lbfgs', 'powell', 'cg', 'ncg']:
                 try:
                     mnlogit_fit = sm.MNLogit(df_y, df_x).fit(method=i)
-                    np.round(mnlogit_fit.params, 3)
                     np.round(mnlogit_fit.bse, 3)
                 except Warning:
                     continue
@@ -127,7 +126,6 @@ def pythonmodel(request):
 
             try:
                 mnlogit_fit
-                np.round(mnlogit_fit.params, 3)
                 np.round(mnlogit_fit.bse, 3)
             except (NameError, Warning):
                 return JsonResponse(

@@ -91,6 +91,7 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
         context = super(UserIndex, self).get_context_data()
         context['datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
         context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
+        print(context['public_datasets'])
         return context
 
     def get_success_url(self):
