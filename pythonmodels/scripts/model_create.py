@@ -89,6 +89,30 @@ def pythonmodel(request):
             'bic': np.round(lm_fit.bic, 3)
         })
 
+        import collections
+
+        print('Regular dictionary:')
+        d = {}
+        d['a'] = 'A'
+        d['b'] = 'B'
+        d['c'] = 'C'
+        d['d'] = 'D'
+        d['e'] = 'E'
+
+        for k, v in d.items():
+            print(k, v)
+
+        print('\nOrderedDict:')
+        d = collections.OrderedDict()
+        d['a'] = 'A'
+        d['b'] = 'B'
+        d['c'] = 'C'
+        d['d'] = 'D'
+        d['e'] = 'E'
+
+        for k, v in d.items():
+            print(k, v)
+
         fit_vs_resid = pd.DataFrame({
             'pred': np.round(lm_fit.fittedvalues, 2),
             'resid': np.round(lm_fit.resid, 2)
