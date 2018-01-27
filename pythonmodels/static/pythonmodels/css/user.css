@@ -6,7 +6,6 @@
 /* Set gray background color and 100% height */
 .sidenav {
     padding-top: 20px;
-    background-color: #f1f1f1;
     height: 100%;
 }
 
@@ -19,9 +18,12 @@
     .row.content {height:auto;}
 }
 
+.userNav > li > a {
+    font-size: 20px;
+}
+
 .userBody {
     background-color: white;
-    padding-top: 20px;
     padding-bottom: 20px;
     min-height: 100%;
 }
