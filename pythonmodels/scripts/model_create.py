@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from pythonmodels.models import Dataset
 from sklearn.linear_model import LinearRegression
@@ -80,17 +80,6 @@ def pythonmodel(request):
         # Fit model and get statistics output as dictionary
         lm_fit = sm.OLS(df_y, df_x).fit()
 
-        stats = OrderedDict({
-            'Observations': lm_fit.nobs,
-            '$r^2$': np.round(lm_fit.rsquared, 3),
-            'adj $r^2$': np.round(lm_fit.rsquared_adj, 3),
-            'mse': np.round(lm_fit.mse_model, 3),
-            'aic': np.round(lm_fit.aic, 3),
-            'bic': np.round(lm_fit.bic, 3)
-        })
-
-        print(stats)
-
         stats = OrderedDict()
         stats['Observations'] = lm_fit.nobs
         stats['$r^2$'] = np.round(lm_fit.rsquared, 3)
@@ -99,43 +88,17 @@ def pythonmodel(request):
         stats['aic'] = np.round(lm_fit.aic, 3)
         stats['bic'] = np.round(lm_fit.bic, 3)
 
-        print(stats)
-
-        # print('Regular dictionary:')
-        # d = {}
-        # d['a'] = 'A'
-        # d['b'] = 'B'
-        # d['c'] = 'C'
-        # d['d'] = 'D'
-        # d['e'] = 'E'
-        #
-        # for k, v in d.items():
-        #     print(k, v)
-        #
-        #
-        # print('\nOrderedDict:')
-        # d = OrderedDict()
-        # d['a'] = 'A'
-        # d['b'] = 'B'
-        # d['c'] = 'C'
-        # d['d'] = 'D'
-        # d['e'] = 'E'
-        #
-        # for k, v in d.items():
-        #     print(k, v)
-
-
         fit_vs_resid = pd.DataFrame({
             'pred': np.round(lm_fit.fittedvalues, 2),
             'resid': np.round(lm_fit.resid, 2)
         }).to_dict(orient='records')
 
-        return JsonResponse(OrderedDict({
+        return JsonResponse({
             'model': 'ols',
             'stats': stats,
             'residual': fit_vs_resid,
             'corr_matrix': corr_matrix
-        }))
+        })
 
     # Multinomial logistic
     elif request['modelType'] == 'Multinomial Logistic':
@@ -171,22 +134,21 @@ def pythonmodel(request):
                     status=400
                 )
 
-        stats = OrderedDict({
-            'Observations': mnlogit_fit.nobs,
-            'pseudo $r^2$': np.round(mnlogit_fit.prsquared, 3),
-            'classification error': '{:.2%}'.format(np.round(np.mean(mnlogit_fit.resid_misclassified), 4)),
-            'aic': np.round(mnlogit_fit.aic, 3),
-            'bic': np.round(mnlogit_fit.bic, 3)
-        })
+        stats = OrderedDict()
+        stats['Observations'] = mnlogit_fit.nobs
+        stats['pseudo $r^2$'] = np.round(mnlogit_fit.prsquared, 3)
+        stats['classification error'] = '{:.2%}'.format(np.round(np.mean(mnlogit_fit.resid_misclassified), 4))
+        stats['aic'] = np.round(mnlogit_fit.aic, 3)
+        stats['bic'] = np.round(mnlogit_fit.bic, 3)
 
         # fit_vs_resid = pd.DataFrame({
         #     'pred': np.round(mnlogit_fit.fittedvalues, 2),
         #     'resid': np.round(mnlogit_fit.resid, 2)
         # }).to_dict(orient='records')
 
-        return JsonResponse(OrderedDict({
+        return JsonResponse({
             'model': 'mnlogit',
             'stats': stats,
             'residual': 1,
             'corr_matrix': corr_matrix
-        }))
+        })
