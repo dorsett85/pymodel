@@ -91,30 +91,39 @@ def pythonmodel(request):
 
         print(stats)
 
+        stats = OrderedDict()
+        stats['Observations'] = lm_fit.nobs
+        stats['$r^2$'] = np.round(lm_fit.rsquared, 3)
+        stats['adj $r^2$'] = np.round(lm_fit.rsquared_adj, 3)
+        stats['mse'] = np.round(lm_fit.mse_model, 3)
+        stats['aic'] = np.round(lm_fit.aic, 3)
+        stats['bic'] = np.round(lm_fit.bic, 3)
+
+        print(stats)
+
         # print('Regular dictionary:')
-        d = {}
-        d['a'] = 'A'
-        d['b'] = 'B'
-        d['c'] = 'C'
-        d['d'] = 'D'
-        d['e'] = 'E'
-
-        for k, v in d.items():
-            print(k, v)
-
-        print('\nOrderedDict:')
-        d = OrderedDict()
-        d['a'] = 'A'
-        d['b'] = 'B'
-        d['c'] = 'C'
-        d['d'] = 'D'
-        d['e'] = 'E'
-
-        for k, v in d.items():
-            print(k, v)
-
-        # for k in json.dumps(d):
+        # d = {}
+        # d['a'] = 'A'
+        # d['b'] = 'B'
+        # d['c'] = 'C'
+        # d['d'] = 'D'
+        # d['e'] = 'E'
+        #
+        # for k, v in d.items():
         #     print(k, v)
+        #
+        #
+        # print('\nOrderedDict:')
+        # d = OrderedDict()
+        # d['a'] = 'A'
+        # d['b'] = 'B'
+        # d['c'] = 'C'
+        # d['d'] = 'D'
+        # d['e'] = 'E'
+        #
+        # for k, v in d.items():
+        #     print(k, v)
+
 
         fit_vs_resid = pd.DataFrame({
             'pred': np.round(lm_fit.fittedvalues, 2),
