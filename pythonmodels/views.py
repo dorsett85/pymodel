@@ -11,29 +11,22 @@ from django.views import generic, View
 
 from .models import Dataset, DatasetVariable
 from .forms import LoginForm, RegistrationForm, DatasetUploadForm
-from pythonmodels.scripts import data_upload
-from pythonmodels.scripts import model_create
+from pythonmodels.scripts import data_upload, model_create, landing
 
 import os
 
 
-class Register(views.AnonymousRequiredMixin, generic.CreateView):
-    form_class = RegistrationForm
-    model = User
-    template_name = 'pythonmodels/registration/register.html'
+class Landing(generic.TemplateView):
+    template_name = 'pythonmodels/landing_content/landing.html'
 
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return super(Register, self).form_valid(form)
-
-    def get_authenticated_redirect_url(self):
-        return reverse('pythonmodels:user_index', args=(self.request.user.username,))
-
-    def get_success_url(self):
-        login_message = self.object.username + ', you have successfully logged in!'
-        messages.success(self.request, login_message, 'loginFlash')
-        return reverse('pythonmodels:user_index', args=(self.object.username,))
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.is_ajax():
+            if "chart2" not in self.request.GET:
+                return landing.landing_charts(True)
+            else:
+                return landing.landing_charts(False)
+        else:
+            return super(Landing, self).render_to_response(context, **response_kwargs)
 
 
 class Guest(View):
@@ -67,6 +60,25 @@ class Login(views.AnonymousRequiredMixin, generic.FormView):
         login_message = self.request.user.username + ', you have successfully logged in!'
         messages.success(self.request, login_message, 'loginFlash')
         return reverse('pythonmodels:user_index', args=(self.request.user.username,))
+
+
+class Register(views.AnonymousRequiredMixin, generic.CreateView):
+    form_class = RegistrationForm
+    model = User
+    template_name = 'pythonmodels/registration/register.html'
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super(Register, self).form_valid(form)
+
+    def get_authenticated_redirect_url(self):
+        return reverse('pythonmodels:user_index', args=(self.request.user.username,))
+
+    def get_success_url(self):
+        login_message = self.object.username + ', you have successfully logged in!'
+        messages.success(self.request, login_message, 'loginFlash')
+        return reverse('pythonmodels:user_index', args=(self.object.username,))
 
 
 class Logout(LoginRequiredMixin, generic.RedirectView):

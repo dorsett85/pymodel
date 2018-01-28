@@ -1,3 +1,16 @@
-<footer class="container-fluid">
-    <p>Created by Clayton Phillips-Dorsett</p>
+{% load static %}
+
+<footer class="">
+    <div id="cpdLink">
+        <a href="https://www.cphillipsdorsett.com" target="_blank">Created by Clayton Phillips-Dorsett</a>
+    </div>
+    <div id="footerImg">
+        <div id="pythonImg">
+            <a href="https://www.python.org" target="_blank"><img src="{% static 'pythonmodels/img/python.png' %}"></a>
+        </div>
+        <div id="djangoImg">
+            <a href="https://www.djangoproject.com" target="_blank"><img
+                    src="{% static 'pythonmodels/img/django.png' %}"></a>
+        </div>
+    </div>
 </footer>

@@ -37,6 +37,7 @@ $(document).ready(function () {
         }
     });
 
+
     /**
      * MathJax inline math setup
      */
@@ -106,6 +107,7 @@ $(document).ready(function () {
         $('#responseVar').empty();
         populateVars();
     });
+
 
     /**
      * Remove form errors when form is changed

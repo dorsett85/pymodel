@@ -2,8 +2,42 @@
 
 {% block content %}
 
-    <div class="landing">
-        <p>Supercharged Data Modeling and Visualization</p>
+    <div class="landing col-md-8 col-md-offset-2">
+        <div class="landingContainer" style="width: 100%">
+            <div class="text-center">
+                <h1 id="landingTitle">Supercharged Data Modeling and Visualization</h1>
+                <br>
+                <br>
+            </div>
+            <div id="featureList" class="col-md-8 col-md-offset-2">
+                <p>QuickModel Features:</p>
+                <ul>
+                    <li>Upload your own dataset</li>
+                    <li>Run classification and regression models</li>
+                    <li>Explore feature with interactive visualizations</li>
+                </ul>
+                <hr>
+            </div>
+            <div class="row landingPlots">
+                <div id="plot1" class="col-md-6"></div>
+                <div id="plot2" class="col-md-6"></div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <h2>Select an Option Below to Begin</h2>
+            </div>
+            <div class="col-md-8 col-md-offset-2 landingBtns">
+                <div class="btn-group-justified">
+                    <a href="{% url 'pythonmodels:guest' %}" class="btn btn-lg btn-info">Get Started <i
+                            class="fas fa-chart-line"></i></a>
+                    <a href="{% url 'pythonmodels:login' %}" class="btn btn-lg btn-default">Login <i
+                            class="fas fa-sign-in-alt"></i></a>
+                    <a href="{% url 'pythonmodels:register' %}" class="btn btn-lg btn-success">Register <i
+                            class="fas fa-user-plus"></i></a>
+                </div>
+
+            </div>
+        </div>
     </div>
 
 {% endblock %}

@@ -7,7 +7,7 @@ app_name = 'pythonmodels'
 urlpatterns = [
 
     # Landing page
-    path('', TemplateView.as_view(template_name='pythonmodels/landing_content/landing.html'), name='landing'),
+    path('', views.Landing.as_view(), name='landing'),
 
     # Authentication and registration
     path('guest/', views.Guest.as_view(), name='guest'),
