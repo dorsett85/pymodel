@@ -35,8 +35,9 @@ $(document).ready(function () {
                 return [points[keys[0]], points[keys[1]]]
             });
 
-            $('#plot1').height(250);
-            $('#plot2').height(250);
+            // Remove load spinner
+            $('.landingSpinner').hide();
+            $('#plot1, #plot2').height(400);
 
             // Create highcharts global theme
             Highcharts.createElement('link', {
@@ -86,7 +87,8 @@ $(document).ready(function () {
                     tickColor: '#707073',
                     title: {
                         style: {
-                            color: '#A0A0A3'
+                            color: '#A0A0A3',
+                            fontSize: '14px'
                         }
                     }
                 },
@@ -103,7 +105,8 @@ $(document).ready(function () {
                     tickWidth: 1,
                     title: {
                         style: {
-                            color: '#A0A0A3'
+                            color: '#A0A0A3',
+                            fontSize: '14px'
                         }
                     }
                 },

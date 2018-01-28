@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="landing col-md-8 col-md-offset-2">
-        <div class="landingContainer" style="width: 100%">
+        <div class="landingContainer">
             <div class="text-center">
                 <h1 id="landingTitle">Supercharged Data Modeling and Visualization</h1>
                 <br>
@@ -16,17 +16,22 @@
                     <li>Run classification and regression models</li>
                     <li>Explore feature with interactive visualizations</li>
                 </ul>
-                <hr>
             </div>
-            <div class="row landingPlots">
-                <div id="plot1" class="col-md-6"></div>
-                <div id="plot2" class="col-md-6"></div>
+            <div class="container-fluid">
+                <div class="col-md-12"><hr></div>
             </div>
-            <hr>
-            <div class="text-center">
-                <h2>Select an Option Below to Begin</h2>
+            <div class="col-md-12 text-center landingSpinner">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
             </div>
-            <div class="col-md-8 col-md-offset-2 landingBtns">
+            <div id="plot1" class="col-md-6"></div>
+            <div id="plot2" class="col-md-6"></div>
+            <div class="container-fluid">
+                <div class="col-md-12"><hr></div>
+            </div>
+            <div class="col-md-12 text-center bottomH1">
+                <h1>Select an Option Below to Begin</h1>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
                 <div class="btn-group-justified">
                     <a href="{% url 'pythonmodels:guest' %}" class="btn btn-lg btn-info">Get Started <i
                             class="fas fa-chart-line"></i></a>

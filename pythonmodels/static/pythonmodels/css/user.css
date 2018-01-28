@@ -21,14 +21,21 @@
     font-size: 20px;
 }
 
+.userNav > li > a:hover {
+    border-bottom: #2aabd2 solid;
+}
+
 .userNav > li.active > a, .userNav > li.active > a:hover {
     border-bottom: orangered solid;
 }
 
 .userBody {
-    background-color: white;
     padding-bottom: 20px;
     min-height: 100%;
+}
+
+#welcome {
+    margin-top: 50px;
 }
 
 .dropzone {
