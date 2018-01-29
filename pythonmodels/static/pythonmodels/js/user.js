@@ -38,8 +38,10 @@ $(document).ready(function () {
     });
 
 
-    // Submit logout form
-    $('.deleteBtn').click(function () {
+    /**
+     * Delete user dataset
+     */
+    $('.userBody').on('click', '.deleteBtn', function () {
         $(this).parent().submit('submit', function (e) {
             e.preventDefault();
             $.post({
@@ -48,7 +50,6 @@ $(document).ready(function () {
                     console.log(error);
                 },
                 success: function (data) {
-                    console.log(data);
                     $('#dataset_' + data.id).fadeOut(500, function () {
                         $(this).remove();
                         if (!$(".newDataset")[0] && !$(".oldDataset")[0]) {

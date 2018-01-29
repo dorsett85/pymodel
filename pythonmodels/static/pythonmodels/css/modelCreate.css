@@ -1,3 +1,11 @@
 
+#modelBodyDiv {
+    margin-top: 50px;
+}
 
-
+.formErrorHighlight {
+    box-shadow: 0px 0px 10px 10px #ac2925;
+}
+#createModelErrors {
+    margin-top: 10px;
+}

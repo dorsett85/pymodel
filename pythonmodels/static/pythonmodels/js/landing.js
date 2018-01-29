@@ -37,7 +37,7 @@ $(document).ready(function () {
 
             // Remove load spinner
             $('.landingSpinner').hide();
-            $('#plot1, #plot2').height(400);
+            $('#plot1, #plot2').height(300);
 
             // Create highcharts global theme
             Highcharts.createElement('link', {

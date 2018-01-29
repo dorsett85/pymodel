@@ -47,6 +47,11 @@
             </div>
         </div>
 
+        <form id="deleteUpload" method="post">
+            {% csrf_token %}
+            <button class="btn btn-default deleteBtn">Delete Dataset
+            </button>
+        </form>
 
     </div>
 

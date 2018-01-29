@@ -42,8 +42,7 @@
                                     </a>
                                     <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-default deleteBtn" value="{{ data.id }}">Delete Dataset
-                                        </button>
+                                        <button class="btn btn-default deleteBtn">Delete Dataset</button>
                                     </form>
                                 </div>
 

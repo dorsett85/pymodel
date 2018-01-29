@@ -1,5 +1,4 @@
-from django.core import serializers
-from django.http import HttpResponse
+from django.http import JsonResponse
 from pythonmodels.models import Dataset, DatasetVariable
 import csv
 import io
@@ -38,6 +37,6 @@ def datasetcreate(self, form):
     for column in doc.columns.values:
         DatasetVariable.objects.create(dataset_id=newdataset, name=column)
 
-    return HttpResponse(serializers.serialize('json', [newdataset,]), content_type='application/json')
+    return JsonResponse(newdataset)
 
 
