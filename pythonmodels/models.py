@@ -29,6 +29,7 @@ class DatasetVariable(models.Model):
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
+    type = models.TextField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

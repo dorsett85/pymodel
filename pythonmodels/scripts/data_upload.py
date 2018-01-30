@@ -20,23 +20,41 @@ def datasetcreate(self, form):
             data.append(row)
 
         header = data[0]
-        doc = pd.DataFrame(data, columns=header)
+        df = pd.DataFrame(data, columns=header)
     else:
-        doc = pd.read_excel(file)
+        df = pd.read_excel(file)
 
     # Save dataset
     dataset = form.save(commit=False)
     dataset.user_id = self.request.user
     dataset.name = file
-    dataset.vars = doc.shape[1]
-    dataset.observations = doc.shape[0]
+    dataset.vars = df.shape[1]
+    dataset.observations = df.shape[0]
     dataset.save()
+
+    # Reload dataset if it's a csv to get appropriate dtypes
+    if file.name.endswith('.csv'):
+        df = pd.read_csv(dataset.file.path)
 
     # Save variables from new dataset
     newdataset = Dataset.objects.get(id=dataset.id)
-    for column in doc.columns.values:
-        DatasetVariable.objects.create(dataset_id=newdataset, name=column)
+    for column in df:
+        if df[column].dtype == 'O':
+            var_type = 'Chartacter'
+        elif df[column].dtype in ['float64', 'int64']:
+            var_type = 'Numeric'
+        elif df[column].dtype == 'datetime64[ns]':
+            var_type = 'Datetime'
+        DatasetVariable.objects.create(dataset_id=newdataset, name=column, type=var_type)
 
-    return JsonResponse(newdataset)
+    # Get dataset variable data
+    df_vars = DatasetVariable.objects.filter(dataset_id=newdataset).values('id', 'name', 'type')
+    var_info = {value['id']: {'name': value['name'], 'type': value['type']} for value in df_vars}
 
-
+    return JsonResponse({
+        'pk': newdataset.id,
+        'name': newdataset.name,
+        'vars': newdataset.vars,
+        'observations': newdataset.observations,
+        'var_info': var_info
+    })

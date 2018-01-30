@@ -14,20 +14,23 @@ Dropzone.options.uploadData = {
             $('.dz-progress').hide();
             $('.dz-error-mark').hide();
             console.log(response);
+            $.each(response.var_info, function (key, value) {
+                console.log(value.name, value.type);
+            });
 
             // Create make model button and clone hidden deleteUpload form
-            var $makeModel = $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create/' + response[0].pk})
+            var $makeModel = $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create/' + response.pk})
             $makeModel.html('Make Model');
-            var $deleteUpload = $('#deleteUpload').clone().attr({'action': '/datasetdelete/' + response[0].pk});
+            var $deleteUpload = $('#deleteUpload').clone().attr({'action': '/datasetdelete/' + response.pk});
             $deleteUpload.css("visibility", "visible");
 
             // Create new upload div
             $('#newUpload').append(
-                $('<div/>', {'id': 'dataset_' + response[0].pk, 'class': 'row newDataset datasetDiv'}).append(
-                    '<h4>' + response[0].fields.name + '</h4> \
+                $('<div/>', {'id': 'dataset_' + response.pk, 'class': 'row newDataset datasetDiv'}).append(
+                    '<h4>' + response.name + '</h4> \
                     <ul> \
-                        <li>Variables: ' + response[0].fields.vars + '</li> \
-                        <li>Observations: ' + response[0].fields.observations + '</li> \
+                        <li>Variables: ' + response.vars + '</li> \
+                        <li>Observations: ' + response.observations + '</li> \
                     </ul>',
                     [$('<div/>', {'class': 'btn-toolbar'}).append($makeModel, [$deleteUpload])]
                 ).hide().fadeIn(1000)

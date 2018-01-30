@@ -19,22 +19,28 @@ def forwards_func(apps, schema_editor):
 
     for file in os.listdir(pub_path):
         if file.endswith('csv'):
-            data = pd.read_csv(os.path.join(pub_path, file))
+            df = pd.read_csv(os.path.join(pub_path, file))
         elif file.endswith('xlsx'):
-            data = pd.read_excel(os.path.join(pub_path, file))
+            df = pd.read_excel(os.path.join(pub_path, file))
 
         # Save dataset to database
         dataset = Dataset.objects.create(
             name=file,
             file=os.path.join(pub_path, file),
-            vars=data.shape[1],
-            observations=data.shape[0],
+            vars=df.shape[1],
+            observations=df.shape[0],
         )
 
         # Save variables from new dataset to database
         newdataset = Dataset.objects.get(id=dataset.id)
-        for column in data.columns.values:
-            DatasetVariable.objects.create(dataset_id=newdataset, name=column)
+        for column in df:
+            if df[column].dtype == 'O':
+                var_type = 'Chartacter'
+            elif df[column].dtype in ['float64', 'int64']:
+                var_type = 'Numeric'
+            elif df[column].dtype == 'datetime64[ns]':
+                var_type = 'Datetime'
+            DatasetVariable.objects.create(dataset_id=newdataset, name=column, type=var_type)
 
 
 def reverse_func(apps, schema_editor):
