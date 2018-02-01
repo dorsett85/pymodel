@@ -62,7 +62,7 @@ def pythonmodel(request):
 
     # Create correlation matrix
     corr_df = df_clean.corr().round(2)
-    corr_matrix = corr_df.to_dict(orient='records').round(2)
+    corr_matrix = corr_df.to_dict(orient='records')
     import json
     corr_matrix = json.loads(corr_df.to_json(orient='records'))
     print(corr_df.to_json(orient='records'))
