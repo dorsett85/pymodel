@@ -64,7 +64,7 @@ def pythonmodel(request):
     corr_matrix = df_clean.corr().to_dict(orient='records')
     import json
     corr_matrix = json.loads(df_clean.corr().to_json(orient='records'))
-    print(json.loads(df_clean.corr().to_json(orient='records')))
+    print(df_clean.corr().to_json(orient='records'))
     print(corr_matrix)
 
     """
