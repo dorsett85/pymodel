@@ -215,7 +215,7 @@ $(document).ready(function () {
                 var count = 0;
                 pyData.corr_matrix.map(function (data, index) {
                     for (i = 0; i < Object.keys(data).length; i++) {
-                        matrix[count] = [index, i, Math.round(data[Object.keys(data)[i]] * 100) / 100];
+                        matrix[count] = [index, i, data[Object.keys(data)[i]]];
                         count += 1;
                     }
                 });
