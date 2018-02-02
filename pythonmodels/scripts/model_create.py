@@ -63,11 +63,11 @@ def pythonmodel(request):
     # Create correlation matrix
     corr_df = df_clean.corr().round(2)
     corr_matrix = corr_df.to_dict(orient='records')
-    import json
-    corr_matrix = json.loads(corr_df.to_json(orient='records'))
-    print(corr_df.to_json(orient='records'))
-    print(corr_matrix)
-    corr_dict = OrderedDict({key: value.tolist() for key, value in corr_df.items()})
+
+    corr_list = corr_df.values.tolist()
+    corr_dict = OrderedDict()
+    for cols, values in zip(corr_df, corr_list):
+        corr_dict[cols] = values
 
     """
     Return model that user selected
