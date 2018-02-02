@@ -211,10 +211,10 @@ $(document).ready(function () {
                 $('#corMatrix').show().empty();
 
                 // Setup correlation matrix data
-                var $corr_keys = Object.keys(pyData.corr_matrix);
+                var corr_keys = Object.keys(pyData.corr_matrix);
                 var matrix = [];
                 var count = 0;
-                $.each($corr_keys, function (key, value) {
+                $.each(corr_keys, function (key, value) {
                     $.each(pyData.corr_matrix[value], function (idx, val) {
                         matrix[count] = [key, idx, val];
                         count+= 1;
@@ -233,10 +233,10 @@ $(document).ready(function () {
                         text: 'Correlation Matrix'
                     },
                     xAxis: {
-                        categories: $corr_keys
+                        categories: corr_keys
                     },
                     yAxis: {
-                        categories: $corr_keys,
+                        categories: corr_keys,
                         title: null
                     },
                     colorAxis: {

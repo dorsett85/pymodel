@@ -17,11 +17,11 @@ $(document).ready(function () {
         $('#myNavbar').collapse('hide');
     });
 
-    // increase height of login and registration pages
+    // Decrease height of login and registration pages
     var lh = $('.loginRegistration').height();
     var hh = $('.header').height();
     var fh = $('footer').height();
-    $('.loginRegistration').h
+    $('.loginRegistration').height(lh - hh - fh - 19.6);
 
 
     /**

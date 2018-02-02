@@ -9,3 +9,8 @@
 #createModelErrors {
     margin-top: 10px;
 }
+
+#residVsFitted, #corrMatrix {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
