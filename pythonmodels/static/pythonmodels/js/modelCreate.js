@@ -213,12 +213,23 @@ $(document).ready(function () {
                 // Setup correlation matrix data
                 var matrix = [];
                 var count = 0;
-                pyData.corr_matrix.map(function (data, index) {
-                    for (i = 0; i < Object.keys(data).length; i++) {
-                        matrix[count] = [index, i, data[Object.keys(data)[i]]];
-                        count += 1;
-                    }
-                });
+
+                var mat = [];
+                var loop = 0
+                $.each(Object.keys(pyData.corr_matrix), function (key, value) {
+                    $.each(pyData.corr_matrix[value], function (idx, val) {
+                        mat[loop] = [key, idx, val];
+                        loop += 1;
+                    });
+                })
+                console.log(mat);
+
+                // pyData.corr_matrix.map(function (data, index) {
+                //     for (i = 0; i < Object.keys(data).length; i++) {
+                //         matrix[count] = [index, i, data[Object.keys(data)[i]]];
+                //         count += 1;
+                //     }
+                // });
 
                 // Create correlation matrix
                 Highcharts.chart('corrMatrix', {
@@ -232,14 +243,16 @@ $(document).ready(function () {
                         text: 'Correlation Matrix'
                     },
                     xAxis: {
-                        categories: pyData.corr_matrix.map(function (data, i) {
-                            return Object.keys(data)[i]
-                        })
+                        categories: Object.keys(pyData.corr_matrix)
+                            // pyData.corr_matrix.map(function (data, i) {
+                            // return Object.keys(data)[i]
+                        // })
                     },
                     yAxis: {
-                        categories: pyData.corr_matrix.map(function (data, i) {
-                            return Object.keys(data)[i]
-                        }),
+                        categories: Object.keys(pyData.corr_matrix),
+                        //     pyData.corr_matrix.map(function (data, i) {
+                        //     return Object.keys(data)[i]
+                        // }),
                         title: null
                     },
                     colorAxis: {
@@ -262,7 +275,7 @@ $(document).ready(function () {
                     series: [{
                         name: 'Correlation',
                         borderWidth: 1,
-                        data: matrix,
+                        data: mat,
                         dataLabels: {
                             enabled: true,
                             color: '#000000'

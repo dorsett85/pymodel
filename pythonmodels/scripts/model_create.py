@@ -67,6 +67,7 @@ def pythonmodel(request):
     corr_matrix = json.loads(corr_df.to_json(orient='records'))
     print(corr_df.to_json(orient='records'))
     print(corr_matrix)
+    corr_dict = OrderedDict({key: value.tolist() for key, value in corr_df.items()})
 
     """
     Return model that user selected
@@ -102,7 +103,7 @@ def pythonmodel(request):
             'model': 'ols',
             'stats': stats,
             'residual': fit_vs_resid,
-            'corr_matrix': corr_matrix
+            'corr_matrix': corr_dict
         })
 
     # Multinomial logistic
