@@ -40,11 +40,11 @@ def datasetcreate(self, form):
     newdataset = Dataset.objects.get(id=dataset.id)
     for column in df:
         if df[column].dtype == 'O':
-            var_type = 'Chartacter'
+            var_type = 'chartacter'
         elif df[column].dtype in ['float64', 'int64']:
-            var_type = 'Numeric'
+            var_type = 'numeric'
         elif df[column].dtype == 'datetime64[ns]':
-            var_type = 'Datetime'
+            var_type = 'datetime'
         DatasetVariable.objects.create(dataset_id=newdataset, name=column, type=var_type)
 
     # Get dataset variable data

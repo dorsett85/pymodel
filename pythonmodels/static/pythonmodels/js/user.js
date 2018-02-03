@@ -39,6 +39,12 @@ $(document).ready(function () {
 
 
     /**
+     * Add toggle to dataset variables
+     */
+
+
+
+    /**
      * Delete user dataset
      */
     $('.userBody').on('click', '.deleteBtn', function () {
