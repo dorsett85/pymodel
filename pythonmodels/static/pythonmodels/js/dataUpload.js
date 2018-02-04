@@ -20,7 +20,7 @@ Dropzone.options.uploadData = {
             var $makeModel = $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create/' + data.pk});
             $makeModel.html('Make Model');
             var $listVars = $('<li/>', {
-                'class': 'listVars',
+                'class': 'varsToggle',
                 'css': {'cursor': 'pointer'},
                 'text': 'Variable Names '
             }).append(
@@ -58,9 +58,5 @@ Dropzone.options.uploadData = {
 
 $(document).ready(function () {
 
-    $('#newUpload').on('click', '.listVars', function () {
-        $(this).next().toggle();
-        $(this).find('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down')
-    });
 
 });

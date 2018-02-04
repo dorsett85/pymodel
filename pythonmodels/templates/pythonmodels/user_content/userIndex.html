@@ -31,8 +31,18 @@
                             <div id="dataset_{{ data.id }}" class="row oldDataset datasetDiv">
                                 <h4>{{ data.name }}</h4>
                                 <ul>
-                                    <li>Variables: {{ data.vars }}</li>
-                                    <li>Observations: {{ data.observations }}</li>
+                                    <li>Number of Variables: {{ data.vars }}</li>
+                                    <li>Number of Observations: {{ data.observations }}</li>
+                                    <li class="varsToggle">
+                                        Variable Names <i class="fas fa-arrow-alt-circle-right"></i>
+                                    </li>
+                                    <ul class="listVars">
+                                        {% for variable in data.datasetvariable_set.all %}
+                                            {% if True %}
+                                                <li>{{ variable.name }}: {{ variable.type }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
                                 </ul>
 
                                 <div class="btn-toolbar">
@@ -61,26 +71,34 @@
                 <div class="container-fluid">
                     <h2>Pre-loaded Datasets</h2>
 
-                    {% if public_datasets %}
-                        {% for data in public_datasets %}
+                    {% for data in public_datasets %}
 
-                            <div class="row pubDataset datasetDiv">
-                                <h4>{{ data.name }}</h4>
-                                <ul>
-                                    <li>Variables: {{ data.vars }}</li>
-                                    <li>Observations: {{ data.observations }}</li>
+                        <div class="row pubDataset datasetDiv">
+                            <h4>{{ data.name }}</h4>
+                            <ul>
+                                <li>Number of Variables: {{ data.vars }}</li>
+                                <li>Number of Observations: {{ data.observations }}</li>
+                                <li class="varsToggle">
+                                    Variable Names <i class="fas fa-arrow-alt-circle-right"></i>
+                                </li>
+                                <ul class="listVars">
+                                    {% for variable in data.datasetvariable_set.all %}
+                                        {% if True %}
+                                            <li>{{ variable.name }}: {{ variable.type }}</li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
+                            </ul>
 
-                                 <div class="btn-toolbar">
-                                    <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
-                                       class="btn btn-default">
-                                        Make Model
-                                    </a>
-                                </div>
+                            <div class="btn-toolbar">
+                                <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
+                                   class="btn btn-default">
+                                    Make Model
+                                </a>
                             </div>
+                        </div>
 
-                        {% endfor %}
-                    {% endif %}
+                    {% endfor %}
 
                 </div>
             </div>

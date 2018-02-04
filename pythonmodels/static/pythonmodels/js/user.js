@@ -41,7 +41,10 @@ $(document).ready(function () {
     /**
      * Add toggle to dataset variables
      */
-
+    $('.userBody').on('click', '.varsToggle', function () {
+        $(this).next().toggle();
+        $(this).find('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down')
+    });
 
 
     /**
@@ -58,7 +61,7 @@ $(document).ready(function () {
                 success: function (data) {
                     $('#dataset_' + data.id).fadeOut(500, function () {
                         $(this).remove();
-                        if (!$(".newDataset")[0] && !$(".oldDataset")[0]) {
+                        if (!$(".oldDataset")[0]) {
                             if ($('#noDataset')[0]) {
                                 $('#noDataset').slideDown(500);
                             } else {

@@ -45,14 +45,18 @@
     border-radius: 5px;
 }
 
-.newDataset {
-     background-color: rgba(1, 201, 0, 0.3);
- }
-
 .oldDataset {
     background-color: rgba(0, 166, 201, 0.3);
 }
 
 .pubDataset {
     background: rgba(0, 66, 201, 0.3);
+}
+
+.varsToggle {
+    cursor: pointer;
+}
+
+.listVars {
+    display: none;
 }
