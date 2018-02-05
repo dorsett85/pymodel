@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-      /**
+    /**
      * Process to get csrf token in Django
      * @param name
      * @returns {*}
@@ -42,8 +42,13 @@ $(document).ready(function () {
      * Add toggle to dataset variables
      */
     $('.userBody').on('click', '.varsToggle', function () {
-        $(this).next().toggle();
-        $(this).find('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down')
+        $(this).children('ol').toggle();
+        $(this).children('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down')
+    });
+
+    $('.userBody').on('click', '.infoToggle', function () {
+        $(this).children('ol').toggle();
+        $(this).children('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down')
     });
 
 

@@ -25,37 +25,11 @@
                 <div class="container-fluid">
                     <h2 id="userDataH2">Your Datasets</h2>
 
-                    {% if datasets %}
-                        {% for data in datasets %}
+                    {% if user_datasets %}
+                        {% for data in user_datasets %}
 
                             <div id="dataset_{{ data.id }}" class="row oldDataset datasetDiv">
-                                <h4>{{ data.name }}</h4>
-                                <ul>
-                                    <li>Number of Variables: {{ data.vars }}</li>
-                                    <li>Number of Observations: {{ data.observations }}</li>
-                                    <li class="varsToggle">
-                                        Variable Names <i class="fas fa-arrow-alt-circle-right"></i>
-                                    </li>
-                                    <ul class="listVars">
-                                        {% for variable in data.datasetvariable_set.all %}
-                                            {% if True %}
-                                                <li>{{ variable.name }}: {{ variable.type }}</li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ul>
-                                </ul>
-
-                                <div class="btn-toolbar">
-                                    <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
-                                       class="btn btn-default">
-                                        Make Model
-                                    </a>
-                                    <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-default deleteBtn">Delete Dataset</button>
-                                    </form>
-                                </div>
-
+                                {% include 'pythonmodels/user_content/datasetInfo.html' %}
                             </div>
 
                         {% endfor %}
@@ -74,28 +48,7 @@
                     {% for data in public_datasets %}
 
                         <div class="row pubDataset datasetDiv">
-                            <h4>{{ data.name }}</h4>
-                            <ul>
-                                <li>Number of Variables: {{ data.vars }}</li>
-                                <li>Number of Observations: {{ data.observations }}</li>
-                                <li class="varsToggle">
-                                    Variable Names <i class="fas fa-arrow-alt-circle-right"></i>
-                                </li>
-                                <ul class="listVars">
-                                    {% for variable in data.datasetvariable_set.all %}
-                                        {% if True %}
-                                            <li>{{ variable.name }}: {{ variable.type }}</li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </ul>
-
-                            <div class="btn-toolbar">
-                                <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
-                                   class="btn btn-default">
-                                    Make Model
-                                </a>
-                            </div>
+                            {% include 'pythonmodels/user_content/datasetInfo.html' %}
                         </div>
 
                     {% endfor %}

@@ -53,10 +53,10 @@
     background: rgba(0, 66, 201, 0.3);
 }
 
-.varsToggle {
+.varsToggle, .infoToggle {
     cursor: pointer;
 }
 
-.listVars {
+.listVars, .varsInfo {
     display: none;
 }

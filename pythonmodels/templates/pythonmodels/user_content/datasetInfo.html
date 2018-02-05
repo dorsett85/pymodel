@@ -1,0 +1,48 @@
+<h4>{{ data.name }}</h4>
+<ul>
+    <li>Number of Variables: {{ data.vars }}</li>
+    <li>Number of Observations: {{ data.observations }}</li>
+    <li class="varsToggle">Variable Info <i class="fas fa-arrow-alt-circle-right"></i>
+        <ol class="listVars">
+            {% for variable in data.datasetvariable_set.all %}
+                <li class="infoToggle">{{ variable.name }}
+                    <i class="fas fa-arrow-alt-circle-right"></i>
+                    <ul class="varsInfo">
+                        <li>{{ variable.type }}</li>
+                        <li>Non-NA's: {{ variable.count }}</li>
+                        <li>NA's: {{ variable.nan }}</li>
+                        {% if variable.type in char_types %}
+                            <li>Unique Values: {{ variable.unique }}</li>
+                            <li>Most Frequent: {{ variable.top }} ({{ variable.freq }})</li>
+                            {% if variable.type == 'datetime' %}
+                                <li>Earliest: {{ variable.first_date }}</li>
+                                <li>Latest: {{ variable.last_date }}</li>
+                            {% endif %}
+                        {% endif %}
+                        {% if variable.type == 'numeric' %}
+                            <li>Mean: {{ variable.mean }}</li>
+                            <li>Std: {{ variable.std }}</li>
+                            <li>Min: {{ variable.min }}</li>
+                            <li>Q1: {{ variable.Q1 }}</li>
+                            <li>Median: {{ variable.median }}</li>
+                            <li>Q3: {{ variable.Q3 }}</li>
+                            <li>Max: {{ variable.max }}</li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ol>
+    </li>
+</ul>
+
+<div class="btn-toolbar">
+    <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
+       class="btn btn-default">
+        Make Model
+    </a>
+
+    <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
+        {% csrf_token %}
+        <button class="btn btn-default deleteBtn">Delete Dataset</button>
+    </form>
+</div>
