@@ -2,12 +2,17 @@
 <ul>
     <li>Number of Variables: {{ data.vars }}</li>
     <li>Number of Observations: {{ data.observations }}</li>
-    <li class="varsToggle">Variable Info <i class="fas fa-arrow-alt-circle-right"></i>
+    <li>
+        <span class="varsToggle">
+            Variable Info <i class="fas fa-arrow-alt-circle-right"></i>
+        </span>
         <ol class="listVars">
             {% for variable in data.datasetvariable_set.all %}
-                <li class="infoToggle">{{ variable.name }}
-                    <i class="fas fa-arrow-alt-circle-right"></i>
-                    <ul class="varsInfo">
+                <li>
+                    <span class="varsToggle">
+                        {{ variable.name }} <i class="fas fa-arrow-alt-circle-right"></i>
+                    </span>
+                    <ul class="listVars">
                         <li>{{ variable.type }}</li>
                         <li>Non-NA's: {{ variable.count }}</li>
                         <li>NA's: {{ variable.nan }}</li>
@@ -41,8 +46,10 @@
         Make Model
     </a>
 
-    <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
-        {% csrf_token %}
-        <button class="btn btn-default deleteBtn">Delete Dataset</button>
-    </form>
+    {% if data.user_id is not None %}
+        <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
+            {% csrf_token %}
+            <button class="btn btn-default deleteBtn">Delete Dataset</button>
+        </form>
+    {% endif %}
 </div>

@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from pythonmodels.models import Dataset, DatasetVariable
+from pythonmodels.models import Dataset
+from pythonmodels.scripts.helper_funs import new_dataset_variables
 import csv
 import io
 import pandas as pd
@@ -25,31 +26,27 @@ def datasetcreate(self, form):
         df = pd.read_excel(file)
 
     # Save dataset
-    dataset = form.save(commit=False)
-    dataset.user_id = self.request.user
-    dataset.name = file
-    dataset.vars = df.shape[1]
-    dataset.observations = df.shape[0]
-    dataset.save()
+    newdataset = form.save(commit=False)
+    newdataset.user_id = self.request.user
+    newdataset.name = file
+    newdataset.vars = df.shape[1]
+    newdataset.observations = df.shape[0]
+    newdataset.save()
 
     # Reload dataset if it's a csv to get appropriate dtypes
     if file.name.endswith('.csv'):
-        df = pd.read_csv(dataset.file.path)
+        df = pd.read_csv(newdataset.file.path)
 
     # Save variables from new dataset
-    newdataset = Dataset.objects.get(id=dataset.id)
-    for column in df:
-        if df[column].dtype == 'O':
-            var_type = 'chartacter'
-        elif df[column].dtype in ['float64', 'int64']:
-            var_type = 'numeric'
-        elif df[column].dtype == 'datetime64[ns]':
-            var_type = 'datetime'
-        DatasetVariable.objects.create(dataset_id=newdataset, name=column, type=var_type)
+    new_dataset_variables(df, newdataset)
 
     # Get dataset variable data
-    df_vars = DatasetVariable.objects.filter(dataset_id=newdataset).values('id', 'name', 'type')
-    var_info = {value['id']: {'name': value['name'], 'type': value['type']} for value in df_vars}
+    newdataset = Dataset.objects.get(id=newdataset.id)
+    vars_query = newdataset.datasetvariable_set.all().values()
+    var_info = {}
+    for i in vars_query:
+        var_info.update({i['id']: {key: value for (key, value) in i.items()}})
+    print(var_info)
 
     return JsonResponse({
         'pk': newdataset.id,

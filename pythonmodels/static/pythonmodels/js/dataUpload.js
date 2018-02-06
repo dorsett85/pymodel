@@ -17,22 +17,22 @@ Dropzone.options.uploadData = {
 
             // Define longer new dataset elements
             var $dataDiv = $('<div/>', {'id': 'dataset_' + data.pk, 'class': 'row newDataset datasetDiv'});
-            var $makeModel = $('<a/>', {'class': 'btn btn-default', 'href': '/home/Clayton/create/' + data.pk});
-            $makeModel.html('Make Model');
-            var $listVars = $('<li/>', {
-                'class': 'varsToggle',
-                'css': {'cursor': 'pointer'},
-                'text': 'Variable Names '
-            }).append(
-                '<i class="fas fa-arrow-alt-circle-right"></i>'
-            );
-            var $dataVariables = $('<ul/>');
+            var $makeModel = $('<a/>', {
+                'class': 'btn btn-default',
+                'href': '/home/Clayton/create/' + data.pk,
+                'text': 'Make Model'});
+
+            var $dataVariables = $('<ol/>', {'class': 'listVars'});
             $.each(data.var_info, function (key, value) {
                 $dataVariables.append(
-                    '<li>' + value.name + ': ' + value.type + '</li>'
+                    '<li>' + value.name + '</li>'
                 )
             });
-            $dataVariables.hide();
+
+            var $listVars = $('<li/>').append(
+                '<span class="varsToggle">Variable Info <i class="fas fa-arrow-alt-circle-right"></i>',
+                $dataVariables
+            );
 
             // Clone hidden deleteUpload form
             var $deleteUpload = $('#deleteUpload').clone().attr({'action': '/datasetdelete/' + data.pk});
@@ -45,8 +45,7 @@ Dropzone.options.uploadData = {
                     $('<ul/>').append(
                         '<li>Number of Variables: ' + data.vars + '</li>',
                         '<li>Number of Observations: ' + data.observations + '</li>',
-                        $listVars,
-                        $dataVariables
+                        $listVars
                     ),
                     $('<div/>', {'class': 'btn-toolbar'}).append($makeModel, $deleteUpload)
                 ).hide().fadeIn(1000)
