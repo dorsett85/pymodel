@@ -44,7 +44,7 @@ $(document).ready(function () {
     $('.userBody').on('click', '.varsToggle', function () {
         $(this).next().toggle();
         $(this).find('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down')
-        $(this).children('.varInfo').toggleClass('fa-plus fa-minus')
+        $(this).children('.varInfoIcon').toggleClass('fa-plus fa-minus')
     });
 
 
