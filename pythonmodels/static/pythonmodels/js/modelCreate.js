@@ -160,7 +160,7 @@ $(document).ready(function () {
                     $statsTableHead.find('tr').append($('<th>').html(idx).attr('scope', 'col'));
                     $statsTableBody.find('tr').append($('<td>').html(stat));
                 });
-                $('#summaryStats').append($statsTableHead, [$statsTableBody]);
+                $('#summaryStats').append($statsTableHead, $statsTableBody);
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('summaryStats')]);
 
                 /**

@@ -8,8 +8,8 @@ Dropzone.options.uploadData = {
     addRemoveLinks: true,
     init: function () {
         this.on('error', function (file, error) {
-            $('.dz-error-message').children(':first').html(error.file);
-        })
+            $('.dz-error-message').children(':first').html(error.file)
+        });
         this.on("success", function (file, data) {
             $('.dz-progress').hide();
             $('.dz-error-mark').hide();
@@ -20,12 +20,35 @@ Dropzone.options.uploadData = {
             var $makeModel = $('<a/>', {
                 'class': 'btn btn-default',
                 'href': '/home/Clayton/create/' + data.pk,
-                'text': 'Make Model'});
+                'text': 'Make Model'
+            });
 
             var $dataVariables = $('<ol/>', {'class': 'listVars'});
-            $.each(data.var_info, function (key, value) {
+            $.each(data.var_info, function (key, variable) {
                 $dataVariables.append(
-                    '<li>' + value.name + '</li>'
+                    $('<li/>').append(
+                        '<span class="varsToggle">' + variable.name + ' <i class="varInfoIcon fas fa-plus"></i></span>',
+                        $('<ul/>', {'class': 'listVars'}).append(
+                            '<li>' + variable.type + '</li>',
+                            '<li>Non-NA\'s: ' + variable.count + '</li>',
+                            '<li>NA\'s: ' + variable.nan + '</li>',
+                            (variable.type in {'boolean': 0, 'character': 0, 'datetime': 0} ?
+                                    '<li>Unique Values: ' + variable.unique + '</li>' +
+                                    '<li>Most Frequent: ' + variable.top + ' (' + variable.freq + ')</li>' +
+                                    (variable.type === 'datetime' ?
+                                        '<li>Earliest: ' + variable.first_date + '</li>' +
+                                        '<li>Latest: ' + variable.last_date + '</li>' : '') :
+                                    (variable.type === 'numeric' ?
+                                        '<li>Mean: ' + variable.mean + '</li>' +
+                                        '<li>Std: ' + variable.std + '</li>' +
+                                        '<li>Min: ' + variable.min + '</li>' +
+                                        '<li>Q1: ' + variable.Q1 + '</li>' +
+                                        '<li>Median: ' + variable.median + '</li>' +
+                                        '<li>Q3: ' + variable.Q3 + '</li>' +
+                                        '<li>Max: ' + variable.max + '</li>' : '')
+                            )
+                        )
+                    )
                 )
             });
 

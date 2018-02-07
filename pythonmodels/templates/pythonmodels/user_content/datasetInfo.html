@@ -10,7 +10,7 @@
             {% for variable in data.datasetvariable_set.all %}
                 <li>
                     <span class="varsToggle">
-                        {{ variable.name }} <i class="fas fa-arrow-alt-circle-right"></i>
+                        {{ variable.name }} <i class="varInfoIcon fas fa-plus"></i>
                     </span>
                     <ul class="listVars">
                         <li>{{ variable.type }}</li>

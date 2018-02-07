@@ -60,3 +60,9 @@
 .listVars {
     display: none;
 }
+
+.varInfoIcon {
+    position: relative;
+    font-size: 50%;
+    top: -2px;
+}
