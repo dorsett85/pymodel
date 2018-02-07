@@ -28,7 +28,7 @@
                     {% if user_datasets %}
                         {% for data in user_datasets %}
 
-                            <div id="dataset_{{ data.id }}" class="row oldDataset datasetDiv">
+                            <div class="row oldDataset datasetDiv">
                                 {% include 'pythonmodels/user_content/datasetInfo.html' %}
                             </div>
 
@@ -38,7 +38,6 @@
                     {% endif %}
 
                 </div>
-
             </div>
 
             <div class="col-sm-6">
@@ -47,7 +46,7 @@
 
                     {% for data in public_datasets %}
 
-                        <div class="row pubDataset datasetDiv">
+                        <div class="row pubDataset card">
                             {% include 'pythonmodels/user_content/datasetInfo.html' %}
                         </div>
 
@@ -55,6 +54,7 @@
 
                 </div>
             </div>
+
         </div>
 
     </div>

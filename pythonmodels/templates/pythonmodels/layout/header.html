@@ -1,32 +1,37 @@
-<nav class="navbar navbar-inverse header" role="navigation">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-target="#myNavbar" data-toggle="collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <ul class="nav navbar-nav navbar-left">
-            <a class="navbar-brand" href="/"><i class="fas fa-fighter-jet"></i> QuickModel</a>
-        </ul>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
+<nav class="navbar navbar-expand-md navbar-dark header">
+    <a class="navbar-brand mr-auto" href="/"><i class="fas fa-fighter-jet"></i> QuickModel</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <ul class="nav navbar-nav navbar-right">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         <ul class="navbar-nav ml-auto">
             {% if not user.is_authenticated %}
 
-                <li><a href="{% url 'pythonmodels:login' %}">Login <i class="fas fa-sign-in-alt"></i></a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pythonmodels:login' %}">
+                        Login <i class="fas fa-sign-in-alt"></i>
+                    </a>
                 </li>
-                <li><a href="{% url 'pythonmodels:guest' %}">Guest</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pythonmodels:guest' %}">Guest</a>
+                </li>
 
             {% else %}
 
-                <li><a href="{% url 'pythonmodels:user_index' user.username %}">{{ user.username }}</a></li>
-                <li><a href="{% url 'pythonmodels:logout' %}">Logout <i class="fas fa-sign-out-alt"></i></a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pythonmodels:user_index' user.username %}">
+                        {{ user.username }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pythonmodels:logout' %}">
+                        Logout <i class="fas fa-sign-out-alt"></i>
+                    </a></li>
 
             {% endif %}
-
         </ul>
-
     </div>
 </nav>
 

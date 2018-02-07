@@ -2,14 +2,16 @@
 
 {% block content %}
 
-    <div class="landing col-md-8 col-md-offset-2">
-        <div class="landingContainer">
+    <div class="landing col-md-8 offset-md-2">
+        <div class="row">
             <div class="text-center">
                 <h1 id="landingTitle">Supercharged Data Modeling and Visualization</h1>
                 <br>
                 <br>
             </div>
-            <div id="featureList" class="col-md-8 col-md-offset-2">
+        </div>
+        <div class="row">
+            <div id="featureList" class="col-md-8 offset-md-2">
                 <p>QuickModel Features:</p>
                 <ul>
                     <li>Upload your own dataset</li>
@@ -17,31 +19,43 @@
                     <li>Explore features with interactive visualizations</li>
                 </ul>
             </div>
-            <div class="container-fluid">
-                <div class="col-md-12"><hr></div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <hr>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-12 text-center landingSpinner">
                 <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
             </div>
+        </div>
+        <div class="row">
             <div id="plot1" class="col-md-6"></div>
             <div id="plot2" class="col-md-6"></div>
-            <div class="container-fluid">
-                <div class="col-md-12"><hr></div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <hr>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-12 text-center bottomH1">
                 <h1>Select an Option Below to Begin</h1>
             </div>
-            <div class="col-md-8 col-md-offset-2">
-                <div class="btn-group-justified">
-                    <a href="{% url 'pythonmodels:guest' %}" class="btn btn-lg btn-info">Get Started <i
-                            class="fas fa-chart-line"></i></a>
-                    <a href="{% url 'pythonmodels:login' %}" class="btn btn-lg btn-default">Login <i
-                            class="fas fa-sign-in-alt"></i></a>
-                    <a href="{% url 'pythonmodels:register' %}" class="btn btn-lg btn-success">Register <i
-                            class="fas fa-user-plus"></i></a>
-                </div>
+        </div>
 
-            </div>
+        <div class="row justify-content-center">
+            <a href="{% url 'pythonmodels:guest' %}" class="btn btn-lg btn-info">Get Started <i
+                    class="fas fa-chart-line"></i></a>
+            <a href="{% url 'pythonmodels:login' %}" class="btn btn-lg btn-light">Login <i
+                    class="fas fa-sign-in-alt"></i></a>
+            <a href="{% url 'pythonmodels:register' %}" class="btn btn-lg btn-success">Register <i
+                    class="fas fa-user-plus"></i></a>
         </div>
     </div>
 

@@ -18,10 +18,13 @@ $(document).ready(function () {
     });
 
     // Decrease height of login and registration pages
+    var wh = $(window).height();
     var lh = $('.loginRegistration').height();
     var hh = $('.header').height();
     var fh = $('footer').height();
-    $('.loginRegistration').height(lh - hh - fh - 19.6);
+    if (wh > (lh + hh + fh)) {
+            $('.loginRegistration').height(wh - hh - fh - 235);
+    }
 
 
     /**
