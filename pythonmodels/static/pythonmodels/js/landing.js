@@ -17,14 +17,11 @@ $(document).ready(function () {
         $('#myNavbar').collapse('hide');
     });
 
-    // Decrease height of login and registration pages
+    // Extend minimum height of master to body to at least minimum of window
     var wh = $(window).height();
-    var lh = $('.loginRegistration').height();
     var hh = $('.header').height();
     var fh = $('footer').height();
-    if (wh > (lh + hh + fh)) {
-            $('.loginRegistration').height(wh - hh - fh - 235);
-    }
+    $('#masterBody').css({minHeight: wh - hh - fh - 20});
 
 
     /**

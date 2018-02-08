@@ -15,13 +15,18 @@ Dropzone.options.uploadData = {
             $('.dz-error-mark').hide();
             console.log(data);
 
-            // Define longer new dataset elements
-            var $dataDiv = $('<div/>', {'id': 'dataset_' + data.pk, 'class': 'row newDataset datasetDiv'});
-            var $makeModel = $('<a/>', {
-                'class': 'btn btn-default',
-                'href': '/home/Clayton/create/' + data.pk,
-                'text': 'Make Model'
-            });
+            /**
+             * Define longer new dataset elements
+             * @type {jQuery|HTMLElement}
+             */
+
+                // new dataset card and card-header
+            var $dataDiv = $('<div/>', {'id': 'dataset_' + data.pk, 'class': 'card border-dark datasetDiv'});
+            var $dataHeader = $('<h4/>', {
+                'class': 'card-header newDataset'
+            }).append(
+                '<i class="fas fa-table"></i> ' + data.name
+            );
 
             var $dataVariables = $('<ol/>', {'class': 'listVars'});
             $.each(data.var_info, function (key, variable) {
@@ -52,25 +57,41 @@ Dropzone.options.uploadData = {
                 )
             });
 
+            // Make variable info list
             var $listVars = $('<li/>').append(
                 '<span class="varsToggle">Variable Info <i class="fas fa-arrow-alt-circle-right"></i>',
                 $dataVariables
             );
 
-            // Clone hidden deleteUpload form
-            var $deleteUpload = $('#deleteUpload').clone().attr({'action': '/datasetdelete/' + data.pk});
-            $deleteUpload.css("visibility", "visible");
+            // Make model button and clone hidden deleteUpload form
+            var $dataButtons = $('<div/>', {'class': 'btn-toolbar'}).append(
+                $('<a/>', {
+                    'class': 'btn btn-dark buttonSpace',
+                    'href': '/home/Clayton/create/' + data.pk,
+                    'text': 'Make Model'
+                }),
+                $('#deleteUpload').clone().attr({
+                    'action': '/datasetdelete/' + data.pk
+                }).css("visibility", "visible")
+            );
 
-            // Create new upload div
+            // Make card body
+            var $dataBody = $('<div/>', {'class': 'card-body'}).append(
+                $('<ul/>', {'class': 'list-unstyled'}).append(
+                    '<li>Number of Variables <span class="badge badge-dark">' + data.vars + '</span></li>',
+                    '<li>Number of Observations <span class="badge badge-dark">' + data.observations + '</span></li>',
+                    $listVars
+                ),
+                $dataButtons
+            );
+
+            /**
+             * Create new upload div
+             */
             $('#newUpload').prepend(
                 $dataDiv.append(
-                    '<h3>' + data.name + '</h3>',
-                    $('<ul/>').append(
-                        '<li>Number of Variables: ' + data.vars + '</li>',
-                        '<li>Number of Observations: ' + data.observations + '</li>',
-                        $listVars
-                    ),
-                    $('<div/>', {'class': 'btn-toolbar'}).append($makeModel, $deleteUpload)
+                    $dataHeader,
+                    $dataBody
                 ).hide().fadeIn(1000)
             );
         })

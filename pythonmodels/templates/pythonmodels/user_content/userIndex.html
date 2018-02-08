@@ -24,11 +24,13 @@
             <div class="col-sm-6">
                 <div class="container-fluid">
                     <h2 id="userDataH2">Your Datasets</h2>
+                    <br>
 
                     {% if user_datasets %}
                         {% for data in user_datasets %}
 
-                            <div class="row oldDataset datasetDiv">
+                            <div id="dataset_{{ data.id }}" class="card border-dark datasetDiv">
+                                <h4 class="card-header oldDataset"><i class="fas fa-table"></i> {{ data.name }}</h4>
                                 {% include 'pythonmodels/user_content/datasetInfo.html' %}
                             </div>
 
@@ -43,13 +45,13 @@
             <div class="col-sm-6">
                 <div class="container-fluid">
                     <h2>Pre-loaded Datasets</h2>
+                    <br>
 
                     {% for data in public_datasets %}
-
-                        <div class="row pubDataset card">
+                        <div class="card border-dark datasetDiv">
+                            <h4 class="card-header pubDataset"><i class="fas fa-table"></i> {{ data.name }}</h4>
                             {% include 'pythonmodels/user_content/datasetInfo.html' %}
                         </div>
-
                     {% endfor %}
 
                 </div>

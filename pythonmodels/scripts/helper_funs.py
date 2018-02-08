@@ -1,3 +1,4 @@
+from numpy import round
 from pythonmodels.models import DatasetVariable
 
 
@@ -28,12 +29,12 @@ def new_dataset_variables(df, newdataset):
 
         elif col.dtype in ['float64', 'int64']:
             new_dataset_variable.type = 'numeric'
-            new_dataset_variable.mean = col_info['mean']
-            new_dataset_variable.std = col_info['std']
-            new_dataset_variable.min = col_info['min']
-            new_dataset_variable.Q1 = col_info['25%']
-            new_dataset_variable.median = col_info['50%']
-            new_dataset_variable.Q3 = col_info['75%']
-            new_dataset_variable.max = col_info['max']
+            new_dataset_variable.mean = round(col_info['mean'], 3)
+            new_dataset_variable.std = round(col_info['std'], 3)
+            new_dataset_variable.min = round(col_info['min'], 3)
+            new_dataset_variable.Q1 = round(col_info['25%'], 3)
+            new_dataset_variable.median = round(col_info['50%'], 3)
+            new_dataset_variable.Q3 = round(col_info['75%'], 3)
+            new_dataset_variable.max = round(col_info['max'], 3)
 
         new_dataset_variable.save()

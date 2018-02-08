@@ -1,65 +1,56 @@
-<h3><i class="fas fa-table"></i> {{ data.name }}</h3>
-<div class="card">
-  <div class="card-header">
-    Featured
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
-<ul class="list-inline">
-    <li class="list-inline-item">Number of Variables: {{ data.vars }}</li>
-    <li>Number of Observations: {{ data.observations }}</li>
-    <li>
+<div class="card-body">
+    <ul class="list-unstyled">
+        <li>Number of Variables <span class="badge badge-dark">{{ data.vars }}</span></li>
+        <li>Number of Observations <span class="badge badge-dark">{{ data.observations }}</span></li>
+        <li>
         <span class="varsToggle">
             Variable Info <i class="fas fa-arrow-alt-circle-right"></i>
         </span>
-        <ol class="listVars">
-            {% for variable in data.datasetvariable_set.all %}
-                <li>
+            <ol class="listVars">
+                {% for variable in data.datasetvariable_set.all %}
+                    <li>
                     <span class="varsToggle">
                         {{ variable.name }} <i class="varInfoIcon fas fa-plus"></i>
                     </span>
-                    <ul class="listVars">
-                        <li>{{ variable.type }}</li>
-                        <li>Non-NA's: {{ variable.count }}</li>
-                        <li>NA's: {{ variable.nan }}</li>
-                        {% if variable.type in char_types %}
-                            <li>Unique Values: {{ variable.unique }}</li>
-                            <li>Most Frequent: {{ variable.top }} ({{ variable.freq }})</li>
-                            {% if variable.type == 'datetime' %}
-                                <li>Earliest: {{ variable.first_date }}</li>
-                                <li>Latest: {{ variable.last_date }}</li>
+                        <ul class="listVars">
+                            <li>{{ variable.type }}</li>
+                            <li>Non-NA's: {{ variable.count }}</li>
+                            <li>NA's: {{ variable.nan }}</li>
+                            {% if variable.type in char_types %}
+                                <li>Unique Values: {{ variable.unique }}</li>
+                                <li>Most Frequent: {{ variable.top }} ({{ variable.freq }})</li>
+                                {% if variable.type == 'datetime' %}
+                                    <li>Earliest: {{ variable.first_date }}</li>
+                                    <li>Latest: {{ variable.last_date }}</li>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                        {% if variable.type == 'numeric' %}
-                            <li>Mean: {{ variable.mean }}</li>
-                            <li>Std: {{ variable.std }}</li>
-                            <li>Min: {{ variable.min }}</li>
-                            <li>Q1: {{ variable.Q1 }}</li>
-                            <li>Median: {{ variable.median }}</li>
-                            <li>Q3: {{ variable.Q3 }}</li>
-                            <li>Max: {{ variable.max }}</li>
-                        {% endif %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ol>
-    </li>
-</ul>
+                            {% if variable.type == 'numeric' %}
+                                <li>Mean: {{ variable.mean }}</li>
+                                <li>Std: {{ variable.std }}</li>
+                                <li>Min: {{ variable.min }}</li>
+                                <li>Q1: {{ variable.Q1 }}</li>
+                                <li>Median: {{ variable.median }}</li>
+                                <li>Q3: {{ variable.Q3 }}</li>
+                                <li>Max: {{ variable.max }}</li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ol>
+        </li>
+    </ul>
 
-<div class="btn-toolbar">
-    <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
-       class="btn btn-default">
-        Make Model
-    </a>
+    <div class="btn-toolbar">
+        <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
+           class="btn btn-dark buttonSpace">
+            Make Model
+        </a>
 
-    {% if data.user_id is not None %}
-        <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
-            {% csrf_token %}
-            <button class="btn btn-default deleteBtn">Delete Dataset</button>
-        </form>
-    {% endif %}
+        {% if data.user_id is not None %}
+            <form method="post" action="{% url 'pythonmodels:dataset_delete' pk=data.id %}">
+                {% csrf_token %}
+                <button class="btn btn-dark deleteBtn">Delete Dataset</button>
+            </form>
+        {% endif %}
+    </div>
 </div>

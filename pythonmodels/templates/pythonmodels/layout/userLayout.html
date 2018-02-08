@@ -38,26 +38,29 @@
             </div>
 
             <div class="col-sm-8 text-left userBody">
-
-                <div class="userNav">
-                    <ul class="nav nav-tabs userNav">
-                        <li><a href="{% url 'pythonmodels:user_index' user.username %}">{{ user.username }} Home
-                            <i class="fas fa-home"></i></a>
-                        </li>
-                        <li><a href="{% url 'pythonmodels:dataset_upload' user.username %}">Upload Data
-                            <i class="fas fa-database"></i></a>
-                        </li>
-                        <li><a href="{% url 'pythonmodels:model_create' user.username 0 %}">Create Model
-                            <i class="fas fa-chart-bar"></i></a>
-                        </li>
-                    </ul>
-                </div>
-
+                <ul class="nav nav-tabs userNav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pythonmodels:user_index' user.username %}">
+                            {{ user.username }} Home <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pythonmodels:dataset_upload' user.username %}">
+                            Upload Data <i class="fas fa-database"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pythonmodels:model_create' user.username 0 %}">
+                            Create Model <i class="fas fa-chart-bar"></i>
+                        </a>
+                    </li>
+                </ul>
                 <div class="container-fluid">
                     {% block userBody %}
                     {% endblock %}
                 </div>
             </div>
+
             <div class="col-sm-2 sidenav text-center">
                 {# Add sidenav content #}
             </div>
