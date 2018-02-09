@@ -23,6 +23,11 @@ $(document).ready(function () {
     var fh = $('footer').height();
     $('#masterBody').css({minHeight: wh - hh - fh - 20});
 
+    // Change height on window resize
+    $(window).on('resize', function () {
+        $('#masterBody').css({minHeight: $(window).height() - hh - fh - 20});
+    })
+
 
     /**
      * Populate landing page charts

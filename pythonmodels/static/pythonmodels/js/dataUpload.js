@@ -17,10 +17,9 @@ Dropzone.options.uploadData = {
 
             /**
              * Define longer new dataset elements
-             * @type {jQuery|HTMLElement}
              */
 
-                // new dataset card and card-header
+            // new dataset card and card-header
             var $dataDiv = $('<div/>', {'id': 'dataset_' + data.pk, 'class': 'card border-dark datasetDiv'});
             var $dataHeader = $('<h4/>', {
                 'class': 'card-header newDataset'
@@ -28,31 +27,72 @@ Dropzone.options.uploadData = {
                 '<i class="fas fa-table"></i> ' + data.name
             );
 
+            // Make variable info div
+
+            // Initiate variables to iterate
+            var $varLi = $('<li/>', {'class': 'list-group-item'});
+            var $varSpan = $('<span/>', {'class': 'font-weight-bold'});
+
+            // Function to return completed variable info item
+            function varInfo(varType, spanText, liText) {
+                var $varItem = $varLi.clone();
+                var $spanItem = $varSpan.clone();
+                if (typeof varType !== 'undefined') {
+                    $varItem.addClass('list-group-item text-center');
+                    if (varType === 'boolean') {
+                        $varItem.addClass('list-group-item-danger')
+                    }
+                    else if (varType === 'character') {
+                        $varItem.addClass('list-group-item-success')
+                    }
+                    else if (varType === 'numeric') {
+                        $varItem.addClass('list-group-item-primary')
+                    }
+                    else {
+                        $varItem.addClass('list-group-item-warning')
+                    }
+                } else {
+                }
+                $varItem.append($spanItem.text(spanText), liText);
+                return $varItem
+            }
+
+            // Declare list and iterate over variable info
             var $dataVariables = $('<ol/>', {'class': 'listVars'});
             $.each(data.var_info, function (key, variable) {
+
+                var $varUl = $('<ul/>', {'class': 'listVars list-group'}).append(
+                    varInfo(variable.type, variable.type),
+                    varInfo(undefined, 'Non-NA\'s: ', variable.count),
+                    varInfo(undefined, 'NA\'s: ', variable.nan)
+                );
+                if (variable.type in {'boolean': 0, 'character': 0, 'datetime': 0}) {
+                    $varUl.append(
+                        varInfo(undefined, 'Non-NA\'s: ', variable.count),
+                        varInfo(undefined, 'Unique Values: ', variable.unique),
+                        varInfo(undefined, 'Most Frequent: ', variable.top + ' (' + variable.freq + ')')
+                    )
+                    if (variable.type === 'datetime') {
+                    $varUl.append(
+                        varInfo(undefined, 'Earliest: ', variable.first_date),
+                        varInfo(undefined, 'Latest: ', variable.last_date)
+                    )}
+                } else if (variable.type === 'numeric') {
+                    $varUl.append(
+                        varInfo(undefined, 'Mean: ', variable.mean),
+                        varInfo(undefined, 'Std: ', variable.std),
+                        varInfo(undefined, 'Min: ', variable.min),
+                        varInfo(undefined, 'Q1: ', variable.Q1),
+                        varInfo(undefined, 'Median: ', variable.median),
+                        varInfo(undefined, 'Q3: ', variable.Q3),
+                        varInfo(undefined, 'Max: ', variable.max)
+                    )
+                }
+
                 $dataVariables.append(
                     $('<li/>').append(
                         '<span class="varsToggle">' + variable.name + ' <i class="varInfoIcon fas fa-plus"></i></span>',
-                        $('<ul/>', {'class': 'listVars'}).append(
-                            '<li>' + variable.type + '</li>',
-                            '<li>Non-NA\'s: ' + variable.count + '</li>',
-                            '<li>NA\'s: ' + variable.nan + '</li>',
-                            (variable.type in {'boolean': 0, 'character': 0, 'datetime': 0} ?
-                                    '<li>Unique Values: ' + variable.unique + '</li>' +
-                                    '<li>Most Frequent: ' + variable.top + ' (' + variable.freq + ')</li>' +
-                                    (variable.type === 'datetime' ?
-                                        '<li>Earliest: ' + variable.first_date + '</li>' +
-                                        '<li>Latest: ' + variable.last_date + '</li>' : '') :
-                                    (variable.type === 'numeric' ?
-                                        '<li>Mean: ' + variable.mean + '</li>' +
-                                        '<li>Std: ' + variable.std + '</li>' +
-                                        '<li>Min: ' + variable.min + '</li>' +
-                                        '<li>Q1: ' + variable.Q1 + '</li>' +
-                                        '<li>Median: ' + variable.median + '</li>' +
-                                        '<li>Q3: ' + variable.Q3 + '</li>' +
-                                        '<li>Max: ' + variable.max + '</li>' : '')
-                            )
-                        )
+                        $varUl
                     )
                 )
             });
