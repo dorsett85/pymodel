@@ -9,7 +9,7 @@ def user_directory_path(instance, filename):
 # Dataset model
 class Dataset(models.Model):
     user_id = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30, help_text="What is the name of your dataset?")
+    name = models.CharField(max_length=50, help_text="What is the name of your dataset?")
     if user_id is not None:
         file = models.FileField(upload_to=user_directory_path, blank=True, null=True)
     else:

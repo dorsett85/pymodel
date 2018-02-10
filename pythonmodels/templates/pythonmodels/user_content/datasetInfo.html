@@ -1,14 +1,18 @@
+{% load crispy_forms_tags %}
+
 <ul class="list-group list-group-flush">
     <li class="list-group-item">
         {% if data.description is None or data.description == '' %}
-            <a href="" class="text-dark">
+            <a href="" class="text-dark addDescrip">
                 <span class="font-weight-bold">Add Description</span>
                 <i class="fas fa-pencil-alt"></i>
             </a>
         {% else %}
-            {{ data.description }}.
-            <a href="" class="text-muted"><i class="fas fa-pencil-alt"></i></a>
+            <span class="datasetDescrip">{{ data.description }}<br></span>
+            <a href="" class="text-muted addDescrip"><i class="fas fa-pencil-alt"></i></a>
         {% endif %}
+
+        {% crispy form %}
     </li>
 </ul>
 <div class="card-body">
@@ -25,7 +29,7 @@
                         <span class="varsToggle">
                             {{ variable.name }} <i class="varInfoIcon fas fa-plus"></i>
                         </span>
-                        <ul class="listVars list-group">
+                        <ul class="listVars list-group varCard">
                             {% if variable.type == "boolean" %}
                                 <li class="list-group-item list-group-item-danger text-center">
                                     <span class="font-weight-bold">{{ variable.type }}</span>

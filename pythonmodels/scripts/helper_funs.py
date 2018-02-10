@@ -1,5 +1,6 @@
+from django.http import JsonResponse
 from numpy import round
-from pythonmodels.models import DatasetVariable
+from pythonmodels.models import Dataset, DatasetVariable
 
 
 def new_dataset_variables(df, newdataset):
@@ -38,3 +39,14 @@ def new_dataset_variables(df, newdataset):
             new_dataset_variable.max = round(col_info['max'], 3)
 
         new_dataset_variable.save()
+
+
+def dataset_description(dataset_id, description):
+    data = Dataset.objects.get(pk=dataset_id)
+    data.description = description
+    data.save()
+
+    return JsonResponse({
+        'datasetFormID': 'dataset_' + str(dataset_id),
+        'datasetDescrip': description
+    })

@@ -19,6 +19,7 @@ urlpatterns = [
     path('home/<str:username>', views.UserIndex.as_view(), name='user_index'),
 
     path('home/<str:username>/upload/', views.DataUpload.as_view(), name='dataset_upload'),
+    path('datasetdescription/<int:pk>', views.DatasetDescription.as_view(), name='dataset_description'),
     path('datasetdelete/<int:pk>', views.DatasetDelete.as_view(), name='dataset_delete'),
 
     path('home/<str:username>/create/<int:pk>', views.ModelCreate.as_view(), name='model_create'),

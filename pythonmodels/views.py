@@ -10,8 +10,8 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 
 from .models import Dataset, DatasetVariable
-from .forms import LoginForm, RegistrationForm, DatasetUploadForm
-from pythonmodels.scripts import data_upload, model_create, landing
+from .forms import LoginForm, RegistrationForm, DatasetUploadForm, DatasetDescriptionForm
+from pythonmodels.scripts import data_upload, model_create, landing, helper_funs
 
 import os
 
@@ -104,6 +104,7 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
         context['user_datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id).order_by('updated_date')
         context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True).order_by('updated_date')
         context['char_types'] = ['boolean', 'character', 'datetime']
+        context['form'] = DatasetDescriptionForm(user=self.request.user.id)
         return context
 
     def get_success_url(self):
@@ -136,6 +137,29 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         return reverse('pythonmodels:data_upload', args=(self.request.user.username,))
+
+
+class DatasetDescription(LoginRequiredMixin, generic.FormView):
+    form_class = DatasetDescriptionForm
+
+    def get_form_kwargs(self):
+        kwargs = super(DatasetDescription, self).get_form_kwargs()
+        kwargs['user'] = self.request.user.id
+        return kwargs
+
+    def form_valid(self, form):
+        if self.request.is_ajax:
+            return helper_funs.dataset_description(self.kwargs['pk'], form.cleaned_data['description'])
+        else:
+            return super(DatasetDescription, self).form_valid(form)
+
+    def form_invalid(self, form):
+        response = super(DatasetDescription, self).form_invalid(form)
+        if self.request.is_ajax():
+            print(form.errors.as_data())
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
 
 
 class DatasetDelete(LoginRequiredMixin, generic.DeleteView):

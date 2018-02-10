@@ -61,7 +61,7 @@ Dropzone.options.uploadData = {
             var $dataVariables = $('<ol/>', {'class': 'listVars'});
             $.each(data.var_info, function (key, variable) {
 
-                var $varUl = $('<ul/>', {'class': 'listVars list-group'}).append(
+                var $varUl = $('<ul/>', {'class': 'listVars list-group varCard'}).append(
                     varInfo(variable.type, variable.type),
                     varInfo(undefined, 'Non-NA\'s: ', variable.count),
                     varInfo(undefined, 'NA\'s: ', variable.nan)

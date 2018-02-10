@@ -59,6 +59,17 @@
     top: -2px;
 }
 
+.varCard {
+    list-style: none;
+    margin-left: -40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.descripForm {
+    display: none;
+}
+
 .list-group-item {
     padding-top: 5px;
     padding-bottom: 5px;
