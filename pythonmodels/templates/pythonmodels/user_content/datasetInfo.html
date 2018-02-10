@@ -2,14 +2,18 @@
 
 <ul class="list-group list-group-flush">
     <li class="list-group-item">
-        {% if data.description is None or data.description == '' %}
+        {% if data.user_id is not None and data.description == '' %}
             <a href="" class="text-dark addDescrip">
                 <span class="font-weight-bold">Add Description</span>
                 <i class="fas fa-pencil-alt"></i>
             </a>
         {% else %}
-            <span class="datasetDescrip">{{ data.description }}<br></span>
-            <a href="" class="text-muted addDescrip"><i class="fas fa-pencil-alt"></i></a>
+            {% if data.user_id is None %}
+                {{ data.description |safe }}
+            {% elif data.user_id is not None %}
+                <span class="font-weight-bold datasetDescrip">{{ data.description }}<br></span>
+                <a href="" class="text-muted addDescrip"><i class="fas fa-pencil-alt"></i></a>
+            {% endif %}
         {% endif %}
 
         {% crispy form %}
@@ -19,91 +23,12 @@
     <ul class="list-unstyled">
         <li>Number of Variables <span class="badge badge-dark">{{ data.vars }}</span></li>
         <li>Number of Observations <span class="badge badge-dark">{{ data.observations }}</span></li>
-        <li>
-            <span class="varsToggle">
-                Variable Info <i class="fas fa-arrow-alt-circle-right"></i>
-            </span>
-            <ol class="listVars">
-                {% for variable in data.datasetvariable_set.all %}
-                    <li>
-                        <span class="varsToggle">
-                            {{ variable.name }} <i class="varInfoIcon fas fa-plus"></i>
-                        </span>
-                        <ul class="listVars list-group varCard">
-                            {% if variable.type == "boolean" %}
-                                <li class="list-group-item list-group-item-danger text-center">
-                                    <span class="font-weight-bold">{{ variable.type }}</span>
-                                </li>
-                            {% elif variable.type == "character" %}
-                                <li class="list-group-item list-group-item-success text-center">
-                                    <span class="font-weight-bold">{{ variable.type }}</span>
-                                </li>
-                            {% elif variable.type == "numeric" %}
-                                <li class="list-group-item list-group-item-primary text-center">
-                                    <span class="font-weight-bold">{{ variable.type }}</span>
-                                </li>
-                            {% else %}
-                                <li class="list-group-item list-group-item-warning text-center">
-                                    <span class="font-weight-bold">{{ variable.type }}</span>
-                                </li>
-                            {% endif %}
-                            <li class="list-group-item">
-                                <span class="font-weight-bold"> Non-NA's:</span> {{ variable.count }}
-                            </li>
-                            <li class="list-group-item">
-                                <span class="font-weight-bold">NA's:</span> {{ variable.nan }}
-                            </li>
-                            {% if variable.type in char_types %}
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Unique Values:</span> {{ variable.unique }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Most Frequent:</span>
-                                    {{ variable.top }} ({{ variable.freq }})
-                                </li>
-                                {% if variable.type == 'datetime' %}
-                                    <li class="list-group-item">
-                                        <span class="font-weight-bold">Earliest:</span> {{ variable.first_date }}
-                                    </li>
-                                    <li class="list-group-item">
-                                        <span class="font-weight-bold">Latest:</span> {{ variable.last_date }}
-                                    </li>
-                                {% endif %}
-                            {% endif %}
-                            {% if variable.type == 'numeric' %}
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Mean:</span> {{ variable.mean }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Std:</span> {{ variable.std }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Min:</span> {{ variable.min }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Q1:</span> {{ variable.Q1 }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Median:</span> {{ variable.median }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Q3:</span> {{ variable.Q3 }}
-                                </li>
-                                <li class="list-group-item">
-                                    <span class="font-weight-bold">Max:</span> {{ variable.max }}
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                {% endfor %}
-            </ol>
-        </li>
     </ul>
 
     <div class="btn-toolbar">
-        <a href="{% url 'pythonmodels:model_create' user.username data.id %}"
+        <a href="{% url 'pythonmodels:dataset_view' user.username data.id %}"
            class="btn btn-dark buttonSpace">
-            Make Model
+            View Dataset
         </a>
 
         {% if data.user_id is not None %}

@@ -3,10 +3,10 @@ $(document).ready(function () {
 
     /**
      * Set active navigation li
-     * Change path if active li is create model tab
+     * Change path if active li is view dataset tab
      */
     var path = window.location.pathname;
-    if (path.match(/create/i)) {
+    if (path.match(/dataset/i)) {
         path = path.replace(/\d+$/, "0")
     }
     var activeTab = $("a[href='" + path + "']").parent();

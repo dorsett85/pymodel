@@ -43,7 +43,7 @@ $(document).ready(function () {
      */
     $('.userBody').on('click', '.addDescrip', function (e) {
         e.preventDefault();
-        if ($(this).prev().attr('class') === 'datasetDescrip') {
+        if ($(this).prev().hasClass('datasetDescrip')) {
             $(this).next().find('.datasetDescripBox').text($(this).prev().text());
             $(this).prev().hide();
         }
@@ -55,7 +55,7 @@ $(document).ready(function () {
         $closestForm = $(this).closest('.descripForm');
         $closestForm.slideUp();
         $closestForm.prev().slideDown();
-        if ($closestForm.prev().prev().attr('class') === 'datasetDescrip') {
+        if ($closestForm.prev().prev().hasClass('datasetDescrip')) {
             $closestForm.prev().prev().slideDown();
         }
     });
@@ -85,8 +85,8 @@ $(document).ready(function () {
                         $updatedDataset.find('.datasetDescrip').empty().hide();
                     } else {
                         var $datasetDescrip = $('<span/>', {
-                            'class': 'datasetDescrip', 'text': data.datasetDescrip
-                        }).hide();
+                            'class': 'font-weight-bold datasetDescrip', 'text': data.datasetDescrip
+                        }).append('<br>').hide();
                         var $addDescripIcon = $('<a/>', {'class': 'text-muted addDescrip', 'href': ""}).append(
                             ' <i class="fas fa-pencil-alt"></i>'
                         ).hide();
@@ -104,17 +104,6 @@ $(document).ready(function () {
                 }
             })
         })
-    });
-
-
-    /**
-     * Add toggle to dataset variables
-     */
-    $('.userBody').on('click', '.varsToggle', function () {
-        $(this).toggleClass('font-weight-bold');
-        $(this).next().toggle();
-        $(this).find('i').toggleClass('fa-arrow-alt-circle-right fa-arrow-alt-circle-down');
-        $(this).children('.varInfoIcon').toggleClass('fa-plus fa-minus')
     });
 
 

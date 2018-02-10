@@ -103,7 +103,6 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
         context = super(UserIndex, self).get_context_data()
         context['user_datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id).order_by('updated_date')
         context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True).order_by('updated_date')
-        context['char_types'] = ['boolean', 'character', 'datetime']
         context['form'] = DatasetDescriptionForm(user=self.request.user.id)
         return context
 
@@ -134,6 +133,11 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
             return data_upload.datasetcreate(self, form)
         else:
             return super(DataUpload, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(DataUpload, self).get_context_data()
+        context['descripForm'] = DatasetDescriptionForm(user=self.request.user.id)
+        return context
 
     def get_success_url(self):
         return reverse('pythonmodels:data_upload', args=(self.request.user.username,))
@@ -174,11 +178,16 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
         return JsonResponse({'id': dataset_id})
 
 
-class ModelCreate(generic.TemplateView):
-    template_name = 'pythonmodels/user_content/modelCreate.html'
+class DatasetViewTest(LoginRequiredMixin, generic.DetailView):
+    template_name = 'pythonmodels/user_content/datasetViewTest.html'
+    model = Dataset
+
+
+class DatasetView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'pythonmodels/user_content/datasetView.html'
 
     def get_context_data(self, **kwargs):
-        return model_create.model_create_context(ModelCreate, self, **kwargs)
+        return model_create.model_create_context(DatasetView, self, **kwargs)
 
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():

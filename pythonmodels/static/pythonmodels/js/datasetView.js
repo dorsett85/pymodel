@@ -75,7 +75,7 @@ $(document).ready(function () {
         $('#createModelErrors').remove();
 
         $.post({
-            url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
+            url: "/home/" + $('#userName').val() + '/dataset/' + $('#dataID').val(),
             success: function (data) {
                 $.each(data, function (i, item) {
                     $('#predictorVars').append($('<option>', {
@@ -114,8 +114,8 @@ $(document).ready(function () {
      */
     $('#modelCreateForm').change(function () {
         $('.formErrorHighlight').removeClass('formErrorHighlight');
-        $('#createModelErrors').remove();
-    })
+        $('#createModelErrors').remove()
+    });
 
     /**
      * Run Python script with form input
@@ -131,7 +131,7 @@ $(document).ready(function () {
         $('#createModelErrors').remove();
 
         $.post({
-            url: "/home/" + $('#userName').val() + '/create/' + $('#dataID').val(),
+            url: "/home/" + $('#userName').val() + '/dataset/' + $('#dataID').val(),
             data: $("#modelCreateForm").serialize(),
             dataType: 'JSON',
             success: function (pyData) {
@@ -143,8 +143,9 @@ $(document).ready(function () {
                 $('#outputDivider').attr('hidden', false);
 
                 // Add title for model type and response variable
-                $('#outputHeader').find('h2').empty().html($('#modelType').val()).append(
-                    $('<h4>').html('Predicting ' + $('#responseVar').val())
+                $('#outputHeader').empty().append(
+                    '<h2>' + $('#modelType').val() + '</h2>',
+                    '<h4>Predicting ' + $('#responseVar').val() + '</h4>'
                 );
 
                 /**
@@ -153,8 +154,8 @@ $(document).ready(function () {
                  */
                 $('#summaryStats').empty();
 
-                $statsTableHead = $('<thead>').append($('<tr>'));
-                $statsTableBody = $('<tbody>').append($('<tr>'));
+                var $statsTableHead = $('<thead>').append($('<tr>'));
+                var $statsTableBody = $('<tbody>').append($('<tr>'));
 
                 $.map(pyData.stats, function (stat, idx) {
                     $statsTableHead.find('tr').append($('<th>').html(idx).attr('scope', 'col'));
@@ -193,7 +194,7 @@ $(document).ready(function () {
                                 name: 'Polynomial line',
                                 type: 'polynomial',
                                 color: 'rgba(223, 183, 83, .9)',
-                                dashStyle: 'dash',
+                                dashStyle: 'dash'
                             },
                             name: 'Residual vs. Fitted',
                             color: 'rgba(223, 83, 83, .5)',
@@ -217,9 +218,9 @@ $(document).ready(function () {
                 $.each(corr_keys, function (key, value) {
                     $.each(pyData.corr_matrix[value], function (idx, val) {
                         matrix[count] = [key, idx, val];
-                        count+= 1;
-                    });
-                })
+                        count+= 1
+                    })
+                });
 
                 // Create correlation matrix
                 Highcharts.chart('corrMatrix', {

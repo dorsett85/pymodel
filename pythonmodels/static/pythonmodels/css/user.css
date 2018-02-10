@@ -45,34 +45,8 @@
     background: rgba(0, 66, 201, 0.3);
 }
 
-.varsToggle {
-    cursor: pointer;
-}
-
-.listVars {
-    display: none;
-}
-
-.varInfoIcon {
-    position: relative;
-    font-size: 50%;
-    top: -2px;
-}
-
-.varCard {
-    list-style: none;
-    margin-left: -40px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
 .descripForm {
     display: none;
-}
-
-.list-group-item {
-    padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 .buttonSpace {

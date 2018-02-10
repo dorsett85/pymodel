@@ -27,90 +27,25 @@ Dropzone.options.uploadData = {
                 '<i class="fas fa-table"></i> ' + data.name
             );
 
-            // Make variable info div
-
-            // Initiate variables to iterate
-            var $varLi = $('<li/>', {'class': 'list-group-item'});
-            var $varSpan = $('<span/>', {'class': 'font-weight-bold'});
-
-            // Function to return completed variable info item
-            function varInfo(varType, spanText, liText) {
-                var $varItem = $varLi.clone();
-                var $spanItem = $varSpan.clone();
-                if (typeof varType !== 'undefined') {
-                    $varItem.addClass('list-group-item text-center');
-                    if (varType === 'boolean') {
-                        $varItem.addClass('list-group-item-danger')
-                    }
-                    else if (varType === 'character') {
-                        $varItem.addClass('list-group-item-success')
-                    }
-                    else if (varType === 'numeric') {
-                        $varItem.addClass('list-group-item-primary')
-                    }
-                    else {
-                        $varItem.addClass('list-group-item-warning')
-                    }
-                } else {
-                }
-                $varItem.append($spanItem.text(spanText), liText);
-                return $varItem
-            }
-
-            // Declare list and iterate over variable info
-            var $dataVariables = $('<ol/>', {'class': 'listVars'});
-            $.each(data.var_info, function (key, variable) {
-
-                var $varUl = $('<ul/>', {'class': 'listVars list-group varCard'}).append(
-                    varInfo(variable.type, variable.type),
-                    varInfo(undefined, 'Non-NA\'s: ', variable.count),
-                    varInfo(undefined, 'NA\'s: ', variable.nan)
-                );
-                if (variable.type in {'boolean': 0, 'character': 0, 'datetime': 0}) {
-                    $varUl.append(
-                        varInfo(undefined, 'Non-NA\'s: ', variable.count),
-                        varInfo(undefined, 'Unique Values: ', variable.unique),
-                        varInfo(undefined, 'Most Frequent: ', variable.top + ' (' + variable.freq + ')')
-                    )
-                    if (variable.type === 'datetime') {
-                    $varUl.append(
-                        varInfo(undefined, 'Earliest: ', variable.first_date),
-                        varInfo(undefined, 'Latest: ', variable.last_date)
-                    )}
-                } else if (variable.type === 'numeric') {
-                    $varUl.append(
-                        varInfo(undefined, 'Mean: ', variable.mean),
-                        varInfo(undefined, 'Std: ', variable.std),
-                        varInfo(undefined, 'Min: ', variable.min),
-                        varInfo(undefined, 'Q1: ', variable.Q1),
-                        varInfo(undefined, 'Median: ', variable.median),
-                        varInfo(undefined, 'Q3: ', variable.Q3),
-                        varInfo(undefined, 'Max: ', variable.max)
-                    )
-                }
-
-                $dataVariables.append(
-                    $('<li/>').append(
-                        '<span class="varsToggle">' + variable.name + ' <i class="varInfoIcon fas fa-plus"></i></span>',
-                        $varUl
-                    )
+            // Add description ul
+            var $descripUl = $('<ul/>', {'class': 'list-group list-group-flush'}).append(
+                $('<li/>', {'class': 'list-group-item'}).append(
+                    $('<a/>', {'class': 'text-dark addDescrip', 'href': ''}).append(
+                        '<span class="font-weight-bold">Add Description</span>',
+                        ' <i class="fas fa-pencil-alt"></i>'
+                    ),
+                    $('.descripForm').last().clone()
                 )
-            });
-
-            // Make variable info list
-            var $listVars = $('<li/>').append(
-                '<span class="varsToggle">Variable Info <i class="fas fa-arrow-alt-circle-right"></i>',
-                $dataVariables
-            );
+            )
 
             // Make model button and clone hidden deleteUpload form
             var $dataButtons = $('<div/>', {'class': 'btn-toolbar'}).append(
                 $('<a/>', {
                     'class': 'btn btn-dark buttonSpace',
-                    'href': '/home/Clayton/create/' + data.pk,
-                    'text': 'Make Model'
+                    'href': '/home/Clayton/dataset/' + data.pk,
+                    'text': 'View Dataset'
                 }),
-                $('#deleteUpload').clone().attr({
+                $('.deleteUpload').last().clone().attr({
                     'action': '/datasetdelete/' + data.pk
                 }).css("visibility", "visible")
             );
@@ -119,8 +54,7 @@ Dropzone.options.uploadData = {
             var $dataBody = $('<div/>', {'class': 'card-body'}).append(
                 $('<ul/>', {'class': 'list-unstyled'}).append(
                     '<li>Number of Variables <span class="badge badge-dark">' + data.vars + '</span></li>',
-                    '<li>Number of Observations <span class="badge badge-dark">' + data.observations + '</span></li>',
-                    $listVars
+                    '<li>Number of Observations <span class="badge badge-dark">' + data.observations + '</span></li>'
                 ),
                 $dataButtons
             );
@@ -131,6 +65,7 @@ Dropzone.options.uploadData = {
             $('#newUpload').prepend(
                 $dataDiv.append(
                     $dataHeader,
+                    $descripUl,
                     $dataBody
                 ).hide().fadeIn(1000)
             );

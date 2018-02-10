@@ -77,7 +77,7 @@ class DatasetDescriptionForm(forms.ModelForm):
         })
         self.fields['description'].label = 'Dataset Description'
         self.helper = FormHelper()
-        self.helper.form_show_labels = False
+        self.helper.form_show_labels = True
         self.helper.attrs = {'class': 'descripForm', 'action': '/datasetdescription'}
         self.helper.layout = Layout(
             Field('description', css_class='datasetDescripBox'),

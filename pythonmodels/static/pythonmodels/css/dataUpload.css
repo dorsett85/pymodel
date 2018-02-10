@@ -12,6 +12,6 @@
      background-color: rgba(1, 201, 0, 0.3);
  }
 
-#deleteUpload {
+.deleteUpload {
     visibility: hidden;
 }

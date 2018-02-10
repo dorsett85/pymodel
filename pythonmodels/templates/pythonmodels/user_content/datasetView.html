@@ -8,20 +8,20 @@
 {% block pagecss %}
 
     {# Other user css #}
-    <link rel="stylesheet" href="{% static 'pythonmodels/css/modelCreate.css' %}">
+    <link rel="stylesheet" href="{% static 'pythonmodels/css/datasetView.css' %}">
 
 {% endblock %}
 
 {% block pagejs %}
 
     {# Other user js #}
-    <script src="{% static 'pythonmodels/js/modelCreate.js' %}"></script>
+    <script src="{% static 'pythonmodels/js/datasetView.js' %}"></script>
 
 {% endblock %}
 
 {% block userBody %}
 
-    <div id="modelBodyDiv">
+    <div id="datasetBodyDiv">
 
         <h2>Create a Model</h2>
 
@@ -95,10 +95,8 @@
         {# Python model charts #}
         <div id="modelOutput">
             <div class="row">
-                <div id="outputHeader" class="text-center">
-                    <h2>
-                        {# Model type header #}
-                    </h2>
+                <div id="outputHeader" class=" col-md-12 text-center">
+                    {# Model type header #}
                 </div>
             </div>
             <br>

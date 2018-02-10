@@ -24,9 +24,24 @@ def forwards_func(apps, schema_editor):
         elif file.endswith('xlsx'):
             df = pd.read_excel(os.path.join(pub_path, file))
 
+        if file.startswith('cars'):
+            description = '<span class="font-weight-bold">Mileage per gallon performances of various cars.</span> - ' \
+                          '<a href="https://www.kaggle.com/uciml/autompg-dataset" ' \
+                          'target="_blank">Kaggle</a></h4>'
+        elif file.startswith('iris'):
+            description = '<span class="font-weight-bold">Classify iris plants into three species in ' \
+                          'this classic dataset.</span> - ' \
+                          '<a href="https://www.kaggle.com/uciml/iris" target="_blank">Kaggle</a>'
+        elif file.startswith('wine'):
+            description = '<span class="font-weight-bold">Simple and clean practice dataset for ' \
+                          'regression or classification modelling.</span> - ' \
+                          '<a href="https://www.kaggle.com/uciml/' \
+                          'red-wine-quality-cortez-et-al-2009" target="_blank">Kaggle</a>' \
+
         # Save dataset to database
         newdataset = Dataset.objects.create(
             name=file,
+            description=description,
             file=os.path.join(pub_path, file),
             vars=df.shape[1],
             observations=df.shape[0],
