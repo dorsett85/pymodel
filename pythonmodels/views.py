@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, Http404
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 
@@ -137,6 +137,11 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context = super(DataUpload, self).get_context_data()
         context['descripForm'] = DatasetDescriptionForm(user=self.request.user.id)
+
+        # Get datasets names for view datasets dropdown
+        context['user_datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
+        context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
+
         return context
 
     def get_success_url(self):
@@ -158,12 +163,14 @@ class DatasetDescription(LoginRequiredMixin, generic.FormView):
             return super(DatasetDescription, self).form_valid(form)
 
     def form_invalid(self, form):
-        response = super(DatasetDescription, self).form_invalid(form)
         if self.request.is_ajax():
             print(form.errors.as_data())
             return JsonResponse(form.errors, status=400)
         else:
-            return response
+            return super(DatasetDescription, self).form_invalid(form)
+
+    def get(self, request, *args, **kwargs):
+        raise Http404
 
 
 class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
@@ -177,10 +184,39 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
         self.object.delete()
         return JsonResponse({'id': dataset_id})
 
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
 
 class DatasetViewTest(LoginRequiredMixin, generic.DetailView):
     template_name = 'pythonmodels/user_content/datasetViewTest.html'
     model = Dataset
+
+    def get_context_data(self, **kwargs):
+        context = super(DatasetViewTest, self).get_context_data()
+        context['form'] = DatasetDescriptionForm(user=self.request.user.id)
+
+        # Raise error if dataset is another users
+        if self.get_object().user_id_id != self.request.user.id and self.get_object().user_id is not None:
+            raise Http404()
+
+        # Get datasets names for view datasets dropdown
+        context['user_datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
+        context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
+
+        # Get table table for specific variable type
+        numeric = DatasetVariable.objects.filter(dataset_id=self.get_object().pk, type='numeric')
+        other = DatasetVariable.objects.filter(
+            dataset_id=self.get_object().pk, type__in=['boolean', 'character', 'datetime']
+        )
+        context['vars_numeric'] = numeric.values(
+            'name', 'count', 'nan', 'mean', 'std', 'min', 'Q1', 'median', 'Q3', 'max'
+        )
+        context['vars_other'] = other.values(
+            'name', 'type', 'count', 'nan', 'unique', 'top', 'freq', 'first_date', 'last_date'
+        )
+
+        return context
 
 
 class DatasetView(LoginRequiredMixin, generic.TemplateView):

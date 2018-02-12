@@ -7,9 +7,11 @@ $(document).ready(function () {
      */
     var path = window.location.pathname;
     if (path.match(/dataset/i)) {
-        path = path.replace(/\d+$/, "0")
+        var activeTab = $("a[href='" + path + "']").closest('li');
+    } else {
+        var activeTab = $("a[href='" + path + "']").parent();
+
     }
-    var activeTab = $("a[href='" + path + "']").parent();
     activeTab.addClass('active');
 
     // Hide collapsed navigation after click

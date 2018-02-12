@@ -16,5 +16,51 @@
 
     {# Other user js #}
     <script src="{% static 'pythonmodels/js/datasetView.js' %}"></script>
+    <script src="{% static 'pythonmodels/js/datasetViewTest.js' %}"></script>
+
+{% endblock %}
+
+{% block userBody %}
+
+    <div id="datasetBodyDiv">
+
+        <div class="jumbotron">
+            <div id="dataset_{{ object.id }}" class="datasetDiv">
+                <h1 class="display-5">{{ object.name }}</h1>
+                <br>
+                <div class="lead">
+                    {% if object.user_id is not None and object.description == '' %}
+                        <a href="" class="text-dark addDescrip">
+                            <span class="font-weight-bold">Add Description</span>
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                    {% else %}
+                        {% if object.user_id is None %}
+                            {{ object.description |safe }}
+                        {% elif object.user_id is not None %}
+                            <span class="font-weight-bold datasetDescrip">{{ object.description }}<br></span>
+                            <a href="" class="text-muted addDescrip"><i class="fas fa-pencil-alt"></i></a>
+                        {% endif %}
+                    {% endif %}
+
+                    {% crispy form %}
+                </div>
+                <br>
+                <p>Number of Variables <span class="badge badge-dark">{{ object.vars }}</span></p>
+                <p>Number of Observations <span class="badge badge-dark">{{ object.observations }}</span></p>
+
+                <hr class="my-4">
+
+                <p class="lead font-weight-bold">Variable Info</p>
+
+                {% include 'pythonmodels/user_content/datasetInfoTables.html' %}
+
+                <hr class="my-4">
+
+            </div>
+        </div>
+
+
+    </div>
 
 {% endblock %}

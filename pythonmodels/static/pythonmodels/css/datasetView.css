@@ -1,6 +1,15 @@
 
 #datasetBodyDiv {
-    margin-top: 50px;
+    margin-top: 20px;
+}
+
+#varTables {
+    opacity: 0;
+}
+
+.varNav {
+    margin-bottom: 20px;
+    border-bottom-color: lightgray;
 }
 
 .formErrorHighlight {

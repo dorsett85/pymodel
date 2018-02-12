@@ -86,7 +86,7 @@ $(document).ready(function () {
                     } else {
                         var $datasetDescrip = $('<span/>', {
                             'class': 'font-weight-bold datasetDescrip', 'text': data.datasetDescrip
-                        }).append('<br>').hide();
+                        }).hide();
                         var $addDescripIcon = $('<a/>', {'class': 'text-muted addDescrip', 'href': ""}).append(
                             ' <i class="fas fa-pencil-alt"></i>'
                         ).hide();

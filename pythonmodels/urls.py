@@ -20,8 +20,8 @@ urlpatterns = [
     path('datasetdescription/<int:pk>', views.DatasetDescription.as_view(), name='dataset_description'),
     path('datasetdelete/<int:pk>', views.DatasetDelete.as_view(), name='dataset_delete'),
 
-    path('home/<str:username>/dataset/<int:pk>', views.DatasetView.as_view(), name='dataset_view'),
-    # path('home/<str:username>/dataset/<int:pk>', views.DatasetViewTest.as_view(), name='dataset_view'),
+    # path('home/<str:username>/dataset/<int:pk>', views.DatasetView.as_view(), name='dataset_view'),
+    path('home/<str:username>/dataset/<int:pk>', views.DatasetViewTest.as_view(), name='dataset_view'),
 
     # Practice View
     path('practice/', views.Practice.as_view(), name='practice')

@@ -1,0 +1,89 @@
+<div id="varTables">
+
+    <ul class="nav nav-tabs varNav" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link">Select Type</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" id="numeric-tab" data-toggle="tab" href="#numTableDiv" role="tab"
+               aria-controls="home"
+               aria-selected="true">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="other-tab" data-toggle="tab" href="#OtherTableDiv" role="tab"
+               aria-controls="profile"
+               aria-selected="false">Profile</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="numTableDiv" role="tabpanel" aria-labelledby="numeric-tab">
+            <div class="table-responsive">
+                <table id="varNumTable" class="display compact">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Non-Na's</th>
+                        <th>Na's</th>
+                        <th>Mean</th>
+                        <th>Std</th>
+                        <th>Min</th>
+                        <th>Q1</th>
+                        <th>Median</th>
+                        <th>Q3</th>
+                        <th>Max</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in vars_numeric %}
+                        <tr>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.count }}</td>
+                            <td>{{ row.na }}</td>
+                            <td>{{ row.mean }}</td>
+                            <td>{{ row.std }}</td>
+                            <td>{{ row.min }}</td>
+                            <td>{{ row.Q1 }}</td>
+                            <td>{{ row.median }}</td>
+                            <td>{{ row.Q3 }}</td>
+                            <td>{{ row.max }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="OtherTableDiv" role="tabpanel" aria-labelledby="other-tab">
+            <div class="table-responsive">
+                <table id="varOtherTable" class="display compact">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Non-Na's</th>
+                        <th>Na's</th>
+                        <th>Unique</th>
+                        <th>Top</th>
+                        <th>First Date</th>
+                        <th>Last Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in vars_other %}
+                        <tr>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.type }}</td>
+                            <td>{{ row.count }}</td>
+                            <td>{{ row.na }}</td>
+                            <td>{{ row.unique }}</td>
+                            <td>{{ row.top }} ({{ row.freq }})</td>
+                            <td>{{ row.first_date }}</td>
+                            <td>{{ row.last_date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

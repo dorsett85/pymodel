@@ -11,7 +11,7 @@
             {% if data.user_id is None %}
                 {{ data.description |safe }}
             {% elif data.user_id is not None %}
-                <span class="font-weight-bold datasetDescrip">{{ data.description }}<br></span>
+                <span class="font-weight-bold datasetDescrip">{{ data.description }}</span>
                 <a href="" class="text-muted addDescrip"><i class="fas fa-pencil-alt"></i></a>
             {% endif %}
         {% endif %}
