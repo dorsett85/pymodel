@@ -7,12 +7,12 @@
         <li class="nav-item">
             <a class="nav-link active" id="numeric-tab" data-toggle="tab" href="#numTableDiv" role="tab"
                aria-controls="home"
-               aria-selected="true">Home</a>
+               aria-selected="true">Numeric</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="other-tab" data-toggle="tab" href="#OtherTableDiv" role="tab"
                aria-controls="profile"
-               aria-selected="false">Profile</a>
+               aria-selected="false">Other</a>
         </li>
     </ul>
     <div class="tab-content">
@@ -22,7 +22,6 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Non-Na's</th>
                         <th>Na's</th>
                         <th>Mean</th>
                         <th>Std</th>
@@ -37,7 +36,6 @@
                     {% for row in vars_numeric %}
                         <tr>
                             <td>{{ row.name }}</td>
-                            <td>{{ row.count }}</td>
                             <td>{{ row.na }}</td>
                             <td>{{ row.mean }}</td>
                             <td>{{ row.std }}</td>
@@ -59,7 +57,6 @@
                     <tr>
                         <th>Name</th>
                         <th>Type</th>
-                        <th>Non-Na's</th>
                         <th>Na's</th>
                         <th>Unique</th>
                         <th>Top</th>
@@ -72,7 +69,6 @@
                         <tr>
                             <td>{{ row.name }}</td>
                             <td>{{ row.type }}</td>
-                            <td>{{ row.count }}</td>
                             <td>{{ row.na }}</td>
                             <td>{{ row.unique }}</td>
                             <td>{{ row.top }} ({{ row.freq }})</td>

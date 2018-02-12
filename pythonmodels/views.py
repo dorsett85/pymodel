@@ -210,10 +210,10 @@ class DatasetViewTest(LoginRequiredMixin, generic.DetailView):
             dataset_id=self.get_object().pk, type__in=['boolean', 'character', 'datetime']
         )
         context['vars_numeric'] = numeric.values(
-            'name', 'count', 'nan', 'mean', 'std', 'min', 'Q1', 'median', 'Q3', 'max'
+            'name', 'nan', 'mean', 'std', 'min', 'Q1', 'median', 'Q3', 'max'
         )
         context['vars_other'] = other.values(
-            'name', 'type', 'count', 'nan', 'unique', 'top', 'freq', 'first_date', 'last_date'
+            'name', 'type', 'nan', 'unique', 'top', 'freq', 'first_date', 'last_date'
         )
 
         return context
