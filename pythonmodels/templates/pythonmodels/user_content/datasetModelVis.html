@@ -1,0 +1,94 @@
+<div id="modelVis">
+
+    <ul class="nav nav-tabs subNav" id="modelVisTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="model-tab" data-toggle="tab" href="#modelDiv" role="tab"
+               aria-controls="model"
+               aria-selected="true">Model</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="vis-tab" data-toggle="tab" href="#visDiv" role="tab"
+               aria-controls="vis"
+               aria-selected="false">Visualize</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="modelDiv" role="tabpanel" aria-labelledby="numeric-tab">
+
+            <form id="modelCreateForm" role="form" method="post">
+                {% csrf_token %}
+                <input name="model" value="{{ object.pk }}" hidden>
+
+                <div class="form-group">
+                    <label for="modelType">What type of model?</label>
+                    <select id="modelType" class="form-control" name="modelType">
+                        <optgroup label="Regression">
+                            <option value="Simple Linear Regression">Simple Linear</option>
+                        </optgroup>
+                        <optgroup label="Classification">
+                            <option value="Multinomial Logistic">Multinomial Logistic</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-row">
+
+                        <div class="col-md-6">
+                            <label for="predictorVars">Select predictor variables</label>
+                            <select multiple id="predictorVars" class="form-control" name="predictorVars[]">
+                                {% for var in object.datasetvariable_set.all %}
+                                    <option value="{{ var }}">{{ var }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="responseVar">Select response variable</label>
+                            <select id="responseVar" class="form-control" name="responseVar">
+                                {% for var in object.datasetvariable_set.all %}
+                                    <option value="{{ var }}">{{ var }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button id="modelPost" type="submit" class="btn btn-dark">
+                    Create Model <i id="fa-spinner"></i>
+                </button>
+
+            </form>
+
+            {# Python model charts #}
+            <div id="modelOutput">
+                <div class="row">
+                    <div id="outputHeader" class=" col-md-12 text-center">
+                        {# Model type header #}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="summaryStats" class="table">
+                            {# Python model summary stats #}
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="residVsFitted" class="col-md-6"></div>
+                    <div id="corrMatrix" class="col-md-6"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="visDiv" role="tabpanel" aria-labelledby="other-tab">
+
+            {# Visualization div #}
+
+
+        </div>
+    </div>
+
+</div>

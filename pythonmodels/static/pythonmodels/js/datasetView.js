@@ -39,6 +39,13 @@ $(document).ready(function () {
 
 
     /**
+     * Create datatables and add back opacity to show them
+     */
+    $('#varNumTable, #varOtherTable').DataTable({'dom': 'ftip'});
+    $('#varTables').css('opacity', 1);
+
+
+    /**
      * MathJax inline math setup
      */
     MathJax.Hub.Config({
@@ -53,63 +60,6 @@ $(document).ready(function () {
 
 
     /**
-     * Function to add or change dataset ID in window url.
-     * Don't change if it already matches the dataset ID
-     */
-    function changeURL(IdMatch) {
-        if (/\/0$/.test(window.location.pathname)) {
-            window.history.pushState("", "", window.location.pathname.replace(/\d+$/, $('#dataID').val()));
-        } else if (!IdMatch) {
-            window.history.pushState("", "", window.location.pathname.replace(/\d+$/, $('#dataID').val()));
-        }
-    }
-
-
-    /**
-     * Function to populate predictor and response variables
-     */
-    function populateVars() {
-        changeURL(new RegExp($('#dataID').val() + "$"));
-
-        // Remove errors
-        $('#createModelErrors').remove();
-
-        $.post({
-            url: "/home/" + $('#userName').val() + '/dataset/' + $('#dataID').val(),
-            success: function (data) {
-                $.each(data, function (i, item) {
-                    $('#predictorVars').append($('<option>', {
-                        value: item,
-                        text: item
-                    }));
-                    $('#responseVar').append($('<option>', {
-                        value: item,
-                        text: item
-                    }));
-                });
-            },
-            error: function () {
-                console.log("fail");
-            }
-        });
-    }
-
-
-    /**
-     * Populate predictor and response variables on load and
-     * repopulate on dataID change
-     */
-    populateVars();
-
-    $("#dataID").change(function () {
-        changeURL();
-        $('#predictorVars').empty();
-        $('#responseVar').empty();
-        populateVars();
-    });
-
-
-    /**
      * Remove form errors when form is changed
      */
     $('#modelCreateForm').change(function () {
@@ -117,35 +67,35 @@ $(document).ready(function () {
         $('#createModelErrors').remove()
     });
 
-    /**
+
+        /**
      * Run Python script with form input
      */
-    $('#pyGet').click(function (e) {
+    $('#modelPost').click(function (e) {
         e.preventDefault();
 
         // Start spinner icon while dashboard loads, disable button
         $('#fa-spinner').addClass('fa fa-spinner fa-spin');
-        $('#pyGet').attr('disabled', true);
+        $('#modelPost').attr('disabled', true);
 
         // Remove errors
         $('#createModelErrors').remove();
 
         $.post({
-            url: "/home/" + $('#userName').val() + '/dataset/' + $('#dataID').val(),
+            url: window.location.pathname,
             data: $("#modelCreateForm").serialize(),
             dataType: 'JSON',
             success: function (pyData) {
                 console.log(pyData);
 
-                // Stop spinner after chart loads, enable button, add <hr>
+                // Stop spinner after chart loads, enable button
                 $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
-                $('#pyGet').attr('disabled', false);
-                $('#outputDivider').attr('hidden', false);
+                $('#modelPost').attr('disabled', false);
 
                 // Add title for model type and response variable
                 $('#outputHeader').empty().append(
-                    '<h2>' + $('#modelType').val() + '</h2>',
-                    '<h4>Predicting ' + $('#responseVar').val() + '</h4>'
+                    '<h3>' + $('#modelType').val() + '</h3>',
+                    '<h5>Predicting ' + $('#responseVar').val() + '</h5>'
                 );
 
                 /**
@@ -272,14 +222,12 @@ $(document).ready(function () {
 
                 // Stop spinner and enable button
                 $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
-                $('#pyGet').attr('disabled', false);
+                $('#modelPost').attr('disabled', false);
 
                 // Show errors
                 $('#modelCreateForm').after(
-                    $('<div>').attr(
-                        {id: 'createModelErrors', class: 'alert alert-danger'}
-                    ).append(
-                        $('<ul>').append($('<li>').html(data.responseJSON.message))
+                    $('<div/>', {'id': 'createModelErrors', 'class': 'alert alert-danger'}).append(
+                        $('<ul/>').append($('<li/>').html(data.responseJSON.message))
                     )
                 );
 

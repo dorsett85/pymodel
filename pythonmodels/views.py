@@ -188,15 +188,15 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
         raise Http404
 
 
-class DatasetViewTest(LoginRequiredMixin, generic.DetailView):
-    template_name = 'pythonmodels/user_content/datasetViewTest.html'
+class DatasetView(LoginRequiredMixin, generic.DetailView):
+    template_name = 'pythonmodels/user_content/datasetView.html'
     model = Dataset
 
     def get_context_data(self, **kwargs):
-        context = super(DatasetViewTest, self).get_context_data()
+        context = super(DatasetView, self).get_context_data()
         context['form'] = DatasetDescriptionForm(user=self.request.user.id)
 
-        # Raise error if dataset is another users
+        # Raise error if dataset in url belongs to another user
         if self.get_object().user_id_id != self.request.user.id and self.get_object().user_id is not None:
             raise Http404()
 
@@ -218,24 +218,12 @@ class DatasetViewTest(LoginRequiredMixin, generic.DetailView):
 
         return context
 
-
-class DatasetView(LoginRequiredMixin, generic.TemplateView):
-    template_name = 'pythonmodels/user_content/datasetView.html'
-
-    def get_context_data(self, **kwargs):
-        return model_create.model_create_context(DatasetView, self, **kwargs)
-
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
 
             # Run pythonmodel function if form is submitted
-            if 'dataID' in self.request.POST:
+            if 'model' in self.request.POST:
                 return model_create.pythonmodel(self.request.POST)
-
-            # Update variables on dataset change
-            variables_query = DatasetVariable.objects.filter(dataset_id__exact=self.kwargs['pk']).values_list('name')
-            variables = [dat for dat in variables_query]
-            return JsonResponse(variables, safe=False)
 
 
 class Practice(generic.View):
