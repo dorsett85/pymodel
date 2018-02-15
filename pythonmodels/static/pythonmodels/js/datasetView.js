@@ -70,7 +70,7 @@ $(document).ready(function () {
     });
 
 
-        /**
+    /**
      * Run Python script with form input
      */
     $('#modelPost').click(function (e) {
@@ -229,7 +229,7 @@ $(document).ready(function () {
                 // Show errors
                 $('#modelCreateForm').after(
                     $('<div/>', {'id': 'createModelErrors', 'class': 'alert alert-danger'}).append(
-                        $('<ul/>').append($('<li/>').html(data.responseJSON.message))
+                        data.responseJSON.message
                     )
                 );
 
