@@ -32,9 +32,33 @@ def pythonmodel(request):
             status=400
         )
 
-    # Select columns based on user input, remove NaN's, create design matrix and add constant to predictor variables
+    # Select columns based on user input and remove NaN's
     var_names = pred_vars + [resp_var]
     df_clean = pd_dat[var_names].dropna()
+
+    # Return error if predictor and response variables are datetime or have too many categories
+    for var in df_clean.drop(resp_var, axis=1):
+        col = df_clean[var]
+        if col.dtype in ['O', 'datetime64[ns]']:
+            if col.dtype == 'datetime64[ns]':
+                return JsonResponse(
+                    {'error': 'predictorVars',
+                     'message': 'Datetime variables not supported with modeling, <b>' + col.name + '</b>'},
+                    status=400
+                )
+            if col.nunique() > col.shape[0] / 2:
+                return JsonResponse(
+                    {'error': 'predictorVars', 'message': '<b>' + col.name + '</b>' + ' has too many categories'},
+                    status=400
+                )
+    if df_clean[resp_var].dtype == 'datetime64[ns]':
+        return JsonResponse(
+            {'error': 'responseVar',
+             'message': 'Datetime variables not supported with modeling, <b>' + df_clean[resp_var].name + '</b>'},
+            status=400
+        )
+
+    # Create design matrix and add constant to predictor variables
     df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1))
     df_x = sm.add_constant(df_x).rename(columns={'const': '(Intercept)'})
     df_y = df_clean[resp_var]
