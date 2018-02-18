@@ -2,6 +2,7 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from pythonmodels.models import Dataset
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_score, cross_validate
 
 import numpy as np
 import pandas as pd
@@ -59,7 +60,7 @@ def pythonmodel(request):
         )
 
     # Create design matrix and add constant to predictor variables
-    df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1))
+    df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
     df_x = sm.add_constant(df_x).rename(columns={'const': '(Intercept)'})
     df_y = df_clean[resp_var]
 
@@ -84,6 +85,13 @@ def pythonmodel(request):
                 {'error': 'responseVar', 'message': 'Response variable must be numeric for this model type'},
                 status=400
             )
+
+        # Sklearn testing
+        # lm = LinearRegression()
+        # cv_score = cross_validate(lm, df_clean.drop(resp_var, axis=1), df_y, cv=5)
+        # lm.fit(df_clean.drop(resp_var, axis=1), df_y)
+        # print(lm.score(df_clean.drop(resp_var, axis=1), df_y))
+        # print(cv_score)
 
         # Fit model and get statistics output as dictionary
         lm_fit = sm.OLS(df_y, df_x).fit()
