@@ -138,7 +138,7 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
         context = super(DataUpload, self).get_context_data()
         context['descripForm'] = DatasetDescriptionForm(user=self.request.user.id)
 
-        # Get datasets names for view datasets dropdown
+        # Get dataset names for view datasets dropdown
         context['user_datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
         context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
 
@@ -179,8 +179,7 @@ class DatasetDelete(LoginRequiredMixin, generic.DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         dataset_id = self.object.pk
-        user_folder_path = "user_{0}/{1}".format(self.request.user.id, self.object.name)
-        os.remove(os.path.join(settings.MEDIA_ROOT, user_folder_path))
+        os.remove(self.object.file.path)
         self.object.delete()
         return JsonResponse({'id': dataset_id})
 

@@ -19,10 +19,7 @@ def forwards_func(apps, schema_editor):
     pub_path = os.path.join(settings.MEDIA_ROOT, 'public')
 
     for file in os.listdir(pub_path):
-        if file.endswith('csv'):
-            df = pd.read_csv(os.path.join(pub_path, file))
-        elif file.endswith('xlsx'):
-            df = pd.read_excel(os.path.join(pub_path, file))
+        df = pd.read_pickle(os.path.join(pub_path, file))
 
         if file.startswith('cars'):
             description = '<span class="font-weight-bold">Mileage per gallon performances of various cars.</span> - ' \
@@ -40,7 +37,7 @@ def forwards_func(apps, schema_editor):
 
         # Save dataset to database
         newdataset = Dataset.objects.create(
-            name=file,
+            name=os.path.splitext(file)[0],
             description=description,
             file=os.path.join(pub_path, file),
             vars=df.shape[1],

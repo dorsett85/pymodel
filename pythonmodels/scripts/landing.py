@@ -9,13 +9,13 @@ import pandas as pd
 def landing_charts(first_chart):
     """
     Get random data to populate landing page charts
-    :return:
+    :return: json of dataset variables data
     """
     def highcharts(cols):
         dataset_ids = Dataset.objects.filter(user_id=None).values_list('id', flat=True)
         rand_dataset = randint(1, max(dataset_ids) + 1)
         dataset = Dataset.objects.get(pk=rand_dataset)
-        df = pd.read_csv(dataset.file).dropna()
+        df = pd.read_pickle(dataset.file).dropna()
         df = df.select_dtypes(exclude='object')
         rand_cols = sample(list(df.columns.values), cols)
         df = df[rand_cols]

@@ -1,8 +1,13 @@
 from collections import OrderedDict
 from django.http import JsonResponse
 from pythonmodels.models import Dataset
+
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_val_score, cross_validate
+from sklearn.metrics import mean_squared_error, classification_report
+from sklearn.model_selection import cross_val_score, cross_validate, cross_val_predict, GridSearchCV, train_test_split, KFold
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import scale, StandardScaler
 
 import numpy as np
 import pandas as pd
@@ -13,10 +18,7 @@ import warnings
 def pythonmodel(request):
     # Load dataset to memory, get predictor and response variables
     dataset = Dataset.objects.get(pk=request['model'])
-    if dataset.name.endswith('.csv'):
-        pd_dat = pd.read_csv(dataset.file.path)
-    else:
-        pd_dat = pd.read_excel(dataset.file.path)
+    df = pd.read_pickle(dataset.file)
 
     pred_vars = request.getlist('predictorVars[]')
     resp_var = request['responseVar']
@@ -35,7 +37,7 @@ def pythonmodel(request):
 
     # Select columns based on user input and remove NaN's
     var_names = pred_vars + [resp_var]
-    df_clean = pd_dat[var_names].dropna()
+    df_clean = df[var_names].dropna()
 
     # Return error if predictor and response variables are datetime or have too many categories
     for var in df_clean.drop(resp_var, axis=1):
@@ -73,6 +75,28 @@ def pythonmodel(request):
         corr_dict[cols] = values
 
     """
+    Sklearn testing
+    """
+    sk_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
+    sk_y = df_y
+
+    # Cross-validation pipeline for classification
+    steps = [('scaler', StandardScaler()),
+             ('knn', KNeighborsClassifier())]
+
+    pipeline = Pipeline(steps)
+    parameters = {'knn__n_neighbors': np.arange(1, 50)}
+
+    # X_train, X_test, y_train, y_test = train_test_split(sk_x, sk_y, test_size=0.2, random_state=1, stratify=True)
+
+    cv = GridSearchCV(pipeline, param_grid=parameters)
+    # cv.fit(X_train, y_train)
+    # y_pred = cv.predict(X_test)
+    # print(cv.score(X_test, y_test))
+    # print(classification_report(y_test, y_pred))
+    # print(cv.best_params_)
+
+    """
     Return model that user selected
     """
 
@@ -86,12 +110,30 @@ def pythonmodel(request):
                 status=400
             )
 
-        # Sklearn testing
-        # lm = LinearRegression()
-        # cv_score = cross_validate(lm, df_clean.drop(resp_var, axis=1), df_y, cv=5)
-        # lm.fit(df_clean.drop(resp_var, axis=1), df_y)
-        # print(lm.score(df_clean.drop(resp_var, axis=1), df_y))
-        # print(cv_score)
+        # Linear regression
+        steps = [('scaler', StandardScaler()),
+                 ('lm', LinearRegression())]
+
+        pipeline = Pipeline(steps)
+        parameters = {}
+
+        kf = KFold(n_splits=5)
+
+        pred = []
+        resid = []
+        mse_mean = []
+        r_square_mean = []
+        for train_index, test_index in kf.split(df_x):
+            X_train, X_test = df_x.iloc[train_index], df_x.iloc[test_index]
+            y_train, y_test = df_y.iloc[train_index], df_y.iloc[test_index]
+            cv = GridSearchCV(pipeline, param_grid=parameters)
+            cv.fit(X_test, y_test)
+            y_pred = cv.predict(X_test)
+            print(y_test.head(), y_pred[:10])
+            mse = mean_squared_error(y_test, y_pred)
+
+            print(mse)
+
 
         # Fit model and get statistics output as dictionary
         lm_fit = sm.OLS(df_y, df_x).fit()
