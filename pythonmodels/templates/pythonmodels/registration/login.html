@@ -1,8 +1,16 @@
 {% extends 'pythonmodels/layout/master.html' %}
 
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block title %}PyModels - Login{% endblock %}
+
+{% block css %}
+
+    {# Other user css #}
+    <link rel="stylesheet" href="{% static 'pythonmodels/css/landing.css' %}">
+
+{% endblock %}
 
 {% block content %}
 
