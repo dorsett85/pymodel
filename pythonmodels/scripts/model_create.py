@@ -119,7 +119,7 @@ def pythonmodel(request):
                  ('lm', LinearRegression())]
         pipeline = Pipeline(steps)
         parameters = {}
-        kf = KFold(n_splits=5)
+        kf = KFold(n_splits=10)
 
         # Initialize predictions, residuals, and model metrics
         pred = []
