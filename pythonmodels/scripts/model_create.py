@@ -146,7 +146,7 @@ def pythonmodel(request):
         # Create output table
         stats = OrderedDict()
         stats['Observations'] = sk_x.shape[0]
-        stats['Features (w/ dummies)'] = len(sk_x.columns)
+        stats['Predictors (w/ dummies)'] = len(sk_x.columns)
         stats['$r^2$'] = np.round(np.mean(r_squared), 3)
         stats['adj $r^2$'] = np.round(np.mean(adj_r_squared), 3)
         stats['rmse'] = np.round(np.mean(rmse), 3)
@@ -161,7 +161,8 @@ def pythonmodel(request):
             'model': 'ols',
             'stats': stats,
             'residual': fit_vs_resid,
-            'corr_matrix': corr_dict
+            'corr_matrix': corr_dict,
+            'kfolds': kf.n_splits
         })
 
     # Multinomial logistic

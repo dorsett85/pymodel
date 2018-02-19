@@ -41,9 +41,15 @@ $(document).ready(function () {
                 $('#modelPost').attr('disabled', false);
 
                 // Add title for model type and response variable
+                if (pyData.kfolds) {
+                    var kfolds = ' (' + pyData.kfolds + '-fold cv)';
+                } else {
+                    var kfolds = ''
+                }
+
                 $('#outputHeader').empty().append(
                     '<h3>' + $('#modelType').val() + '</h3>',
-                    '<h5>Predicting ' + $('#responseVar').val() + '</h5>'
+                    '<h5>Predicting ' + $('#responseVar').val() + kfolds + '</h5>'
                 );
 
                 /**
