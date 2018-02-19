@@ -14,8 +14,12 @@
 
 {% block pagejs %}
 
+    {# Highcharts theme #}
+    <script src="{% static 'pythonmodels/js/highchartsDarkTheme.js' %}"></script>
+
     {# Other user js #}
     <script src="{% static 'pythonmodels/js/datasetView.js' %}"></script>
+    <script src="{% static 'pythonmodels/js/datasetViewModel.js' %}"></script>
 
 {% endblock %}
 
@@ -53,13 +57,13 @@
                 <p class="lead font-weight-bold">Variable Info <i
                         class="fa fa-spinner fa-pulse fa-fw varTableSpinner"></i></p>
 
-                {% include 'pythonmodels/user_content/datasetInfoTables.html' %}
+                {% include 'pythonmodels/user_content/datasetViewInfoTables.html' %}
 
                 <hr class="my-4">
 
                 <p class="lead font-weight-bold">Model / Visualize Data</p>
 
-                {% include 'pythonmodels/user_content/datasetModelVis.html' %}
+                {% include 'pythonmodels/user_content/datasetViewModel.html' %}
 
             </div>
         </div>

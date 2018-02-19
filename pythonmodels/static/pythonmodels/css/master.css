@@ -11,42 +11,8 @@ Indie+Flower|Bree+Serif');
     font-size: 28px;
 }
 
-.landing {
-    margin-top: 50px;
-    margin-bottom: 150px;
-    font-family: "Bree Serif";
-}
-
 hr {
     border-color: #9b9b9b;
-}
-
-#landingTitle {
-    font-size: 50px;
-}
-
-#featureList {
-    font-size: 20px;
-    margin-bottom: 25px;
-}
-
-.landingSpinner {
-    height: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 60px;
-    color: darkslategrey;
-}
-
-#plot1, #plot2 {
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.bottomH1 {
-    margin-top: 25px;
-    margin-bottom: 50px;
 }
 
 footer {

@@ -1,5 +1,25 @@
 {% extends 'pythonmodels/layout/master.html' %}
 
+{% load static %}
+
+{% block css %}
+
+    {# Other user css #}
+    <link rel="stylesheet" href="{% static 'pythonmodels/css/landing.css' %}">
+
+{% endblock %}
+
+{% block js %}
+
+    {# Highcharts theme #}
+    <script src="{% static 'pythonmodels/js/highchartsDarkTheme.js' %}"></script>
+
+    {# Other user js #}
+    <script src="{% static 'pythonmodels/js/landing.js' %}"></script>
+
+{% endblock %}
+
+
 {% block content %}
 
     <div class="landing col-md-8 offset-md-2">

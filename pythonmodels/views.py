@@ -113,7 +113,7 @@ class UserIndex(LoginRequiredMixin, generic.ListView):
 class DataUpload(LoginRequiredMixin, generic.CreateView):
     login_url = '/login/'
     form_class = DatasetUploadForm
-    template_name = 'pythonmodels/user_content/dataUpload.html'
+    template_name = 'pythonmodels/user_content/datasetUpload.html'
 
     def get_form_kwargs(self):
         kwargs = super(DataUpload, self).get_form_kwargs()
@@ -199,11 +199,11 @@ class DatasetView(LoginRequiredMixin, generic.DetailView):
         if self.get_object().user_id_id != self.request.user.id and self.get_object().user_id is not None:
             raise Http404()
 
-        # Get datasets names for view datasets dropdown
+        # Get dataset names for view datasets dropdown
         context['user_datasets'] = Dataset.objects.filter(user_id__id=self.request.user.id)
         context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
 
-        # Get table table for specific variable type
+        # Get table for specific variable type
         numeric = DatasetVariable.objects.filter(dataset_id=self.get_object().pk, type='numeric')
         other = DatasetVariable.objects.filter(
             dataset_id=self.get_object().pk, type__in=['boolean', 'character', 'datetime']

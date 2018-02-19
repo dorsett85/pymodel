@@ -16,8 +16,6 @@
 
 {% block js %}
 
-    {% block pagejs %}{% endblock %}
-
     {# Datatable js #}
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
@@ -25,6 +23,7 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 
     {# Other user js #}
+    {% block pagejs %}{% endblock %}
     <script src="{% static 'pythonmodels/js/user.js' %}"></script>
 
 {% endblock %}

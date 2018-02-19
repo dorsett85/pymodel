@@ -3,11 +3,11 @@ from django.http import JsonResponse
 from pythonmodels.models import Dataset
 
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, classification_report
-from sklearn.model_selection import cross_val_score, cross_validate, cross_val_predict, GridSearchCV, train_test_split, KFold
+from sklearn.metrics import mean_squared_error, classification_report, r2_score
+from sklearn.model_selection import GridSearchCV, train_test_split, KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import scale, StandardScaler
+from sklearn.preprocessing import StandardScaler
 
 import numpy as np
 import pandas as pd
@@ -77,19 +77,19 @@ def pythonmodel(request):
     """
     Sklearn testing
     """
-    sk_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
-    sk_y = df_y
+    # sk_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
+    # sk_y = df_y
 
     # Cross-validation pipeline for classification
-    steps = [('scaler', StandardScaler()),
-             ('knn', KNeighborsClassifier())]
-
-    pipeline = Pipeline(steps)
-    parameters = {'knn__n_neighbors': np.arange(1, 50)}
+    # steps = [('scaler', StandardScaler()),
+    #          ('lm', KNeighborsClassifier())]
+    #
+    # pipeline = Pipeline(steps)
+    # parameters = {'knn__n_neighbors': np.arange(1, 50)}
 
     # X_train, X_test, y_train, y_test = train_test_split(sk_x, sk_y, test_size=0.2, random_state=1, stratify=True)
 
-    cv = GridSearchCV(pipeline, param_grid=parameters)
+    # cv = GridSearchCV(pipeline, param_grid=parameters)
     # cv.fit(X_train, y_train)
     # y_pred = cv.predict(X_test)
     # print(cv.score(X_test, y_test))
@@ -110,45 +110,51 @@ def pythonmodel(request):
                 status=400
             )
 
-        # Linear regression
+        # Sklearn linear regression
+        sk_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
+        sk_y = df_y
+
+        # Setup pipeline with optional hyperparemeters, data scaled as default with 5-fold cv
         steps = [('scaler', StandardScaler()),
                  ('lm', LinearRegression())]
-
         pipeline = Pipeline(steps)
         parameters = {}
-
         kf = KFold(n_splits=5)
 
+        # Initialize predictions, residuals, and model metrics
         pred = []
         resid = []
-        mse_mean = []
-        r_square_mean = []
-        for train_index, test_index in kf.split(df_x):
-            X_train, X_test = df_x.iloc[train_index], df_x.iloc[test_index]
-            y_train, y_test = df_y.iloc[train_index], df_y.iloc[test_index]
+        rmse = []
+        r_squared = []
+        adj_r_squared = []
+
+        # Run cross validation with optional hyperparameter tuning
+        for train_index, test_index in kf.split(sk_x):
+            X_train, X_test = sk_x.iloc[train_index], sk_x.iloc[test_index]
+            y_train, y_test = sk_y.iloc[train_index], sk_y.iloc[test_index]
             cv = GridSearchCV(pipeline, param_grid=parameters)
             cv.fit(X_test, y_test)
             y_pred = cv.predict(X_test)
-            print(y_test.head(), y_pred[:10])
-            mse = mean_squared_error(y_test, y_pred)
 
-            print(mse)
+            pred.extend(y_pred)
+            resid.extend(y_test - y_pred)
+            r2_sample = r2_score(y_test, y_pred)
+            r_squared.append(r2_sample)
+            adj_r_squared.append(adj_r_square(r2_sample, y_pred, sk_x.columns))
+            rmse.append(np.sqrt(mean_squared_error(y_test, y_pred)))
 
-
-        # Fit model and get statistics output as dictionary
-        lm_fit = sm.OLS(df_y, df_x).fit()
-
+        # Create output table
         stats = OrderedDict()
-        stats['Observations'] = lm_fit.nobs
-        stats['$r^2$'] = np.round(lm_fit.rsquared, 3)
-        stats['adj $r^2$'] = np.round(lm_fit.rsquared_adj, 3)
-        stats['mse'] = np.round(lm_fit.mse_model, 3)
-        stats['aic'] = np.round(lm_fit.aic, 3)
-        stats['bic'] = np.round(lm_fit.bic, 3)
+        stats['Observations'] = sk_x.shape[0]
+        stats['Features (w/ dummies)'] = len(sk_x.columns)
+        stats['$r^2$'] = np.round(np.mean(r_squared), 3)
+        stats['adj $r^2$'] = np.round(np.mean(adj_r_squared), 3)
+        stats['rmse'] = np.round(np.mean(rmse), 3)
 
+        # Create dictionary for fitted vs. residual plot
         fit_vs_resid = pd.DataFrame({
-            'pred': np.round(lm_fit.fittedvalues, 2),
-            'resid': np.round(lm_fit.resid, 2)
+            'pred': pred,
+            'resid': resid
         }).to_dict(orient='records')
 
         return JsonResponse({
@@ -210,3 +216,7 @@ def pythonmodel(request):
             'residual': 1,
             'corr_matrix': corr_dict
         })
+
+
+def adj_r_square(r2, n, k):
+    return 1 - ((1 - r2) * (len(n) - 1) / (len(n) - len(k) - 1))

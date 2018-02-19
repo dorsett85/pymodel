@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Bree+Serif');
+
+.landing {
+    margin-top: 50px;
+    margin-bottom: 150px;
+    font-family: "Bree Serif";
+}
+
+#landingTitle {
+    font-size: 50px;
+}
+
+#featureList {
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.landingSpinner {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    color: darkslategrey;
+}
+
+#plot1, #plot2 {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.bottomH1 {
+    margin-top: 25px;
+    margin-bottom: 50px;
+}
