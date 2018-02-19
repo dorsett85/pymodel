@@ -31,55 +31,48 @@
 {% block content %}
 
     <div class="container-fluid">
-        <div class="row content">
-            <div class="col-md-2 sidenav">
-                {# Fill with create model form #}
-            </div>
-
-            <div class="col-md-8 text-left userBody">
-                <ul class="nav nav-tabs userNav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'pythonmodels:user_index' user.username %}">
-                            {{ user.username }} Home <i class="fas fa-home"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'pythonmodels:dataset_upload' user.username %}">
-                            Upload Data <i class="fas fa-database"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                           aria-haspopup="true" aria-expanded="false">View Datasets
-                            <i class="fas fa-chart-bar"></i></a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <h6 class="dropdown-header">User Datasets</h6>
-                            {% if user_datasets %}
-                                {% for data in user_datasets %}
-                                    <a href="{% url 'pythonmodels:dataset_view' user.username data.id %}"
-                                       class="dropdown-item">{{ data.name }}</a>
-                                {% endfor %}
-                            {% else %}
-                                <button class="dropdown-item" type="button" disabled>No Datasets Uploaded</button>
-                            {% endif %}
-                            <div class="dropdown-divider"></div>
-                            <h6 class="dropdown-header">Public Datasets</h6>
-                            {% for data in public_datasets %}
+        <div class="col-md-8 offset-md-2">
+            <ul class="nav nav-tabs userNav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pythonmodels:user_index' user.username %}">
+                        {{ user.username }} Home <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pythonmodels:dataset_upload' user.username %}">
+                        Upload Data <i class="fas fa-database"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false">View Datasets
+                        <i class="fas fa-chart-bar"></i></a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <h6 class="dropdown-header">User Datasets</h6>
+                        {% if user_datasets %}
+                            {% for data in user_datasets %}
                                 <a href="{% url 'pythonmodels:dataset_view' user.username data.id %}"
                                    class="dropdown-item">{{ data.name }}</a>
                             {% endfor %}
-                        </div>
-                    </li>
-                </ul>
-                <div class="container-fluid">
-                    {% block userBody %}
-                    {% endblock %}
-                </div>
-            </div>
+                        {% else %}
+                            <button class="dropdown-item" type="button" disabled>No Datasets Uploaded</button>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <h6 class="dropdown-header">Public Datasets</h6>
+                        {% for data in public_datasets %}
+                            <a href="{% url 'pythonmodels:dataset_view' user.username data.id %}"
+                               class="dropdown-item">{{ data.name }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-            <div class="col-md-2 sidenav text-center">
-                {# Add sidenav content #}
-            </div>
+    <div class="container-fluid">
+        <div class="userBody">
+            {% block userBody %}
+            {% endblock %}
         </div>
     </div>
 

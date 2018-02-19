@@ -4,7 +4,7 @@ $(document).ready(function () {
     /**
      * Hide Highcharts containers on load
      */
-    $('#residVsFitted, #container2').hide();
+    $('#residVsFitted, #container2').hide().height(350);
 
 
     /**
@@ -47,6 +47,8 @@ $(document).ready(function () {
                     var kfolds = ''
                 }
 
+                // Remove no output header and add new output header
+                $('#noOutputHeader').hide();
                 $('#outputHeader').empty().append(
                     '<h3>' + $('#modelType').val() + '</h3>',
                     '<h5>Predicting ' + $('#responseVar').val() + kfolds + '</h5>'

@@ -10,9 +10,11 @@
 
 {% endblock %}
 
+
 {% block userBody %}
 
-    <div id="welcome">
+    <div id="welcome" class="col-md-8 offset-md-2">
+
         <h1>Welcome {{ user.username }}</h1>
 
         Please view your available datasets below:
@@ -30,7 +32,8 @@
                         {% for data in user_datasets %}
 
                             <div id="dataset_{{ data.id }}" class="card border-dark datasetDiv">
-                                <h4 class="card-header oldDataset"><i class="fas fa-table"></i> {{ data.name }}</h4>
+                                <h4 class="card-header oldDataset"><i class="fas fa-table"></i> {{ data.name }}
+                                </h4>
                                 {% include 'pythonmodels/user_content/datasetInfo.html' %}
                             </div>
 
@@ -56,10 +59,8 @@
 
                 </div>
             </div>
-
         </div>
 
     </div>
-
 
 {% endblock %}

@@ -16,10 +16,10 @@ $(document).ready(function () {
     // Show dataset description or addDescription div on cancel
     $('.userBody').on('click', '.cancelDescrip', function () {
         $closestForm = $(this).closest('.descripForm');
-        $closestForm.slideUp();
-        $closestForm.prev().slideDown();
+        $closestForm.hide();
+        $closestForm.prev().show();
         if ($closestForm.prev().prev().hasClass('datasetDescrip')) {
-            $closestForm.prev().prev().slideDown();
+            $closestForm.prev().prev().show();
         }
     });
 
