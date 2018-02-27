@@ -76,7 +76,7 @@ class Register(views.AnonymousRequiredMixin, generic.CreateView):
         return reverse('pythonmodels:user_index', args=(self.request.user.username,))
 
     def get_success_url(self):
-        login_message = self.object.username + ', you have successfully logged in!'
+        login_message = self.object.username + ', you have successfully registered!'
         messages.success(self.request, login_message, 'loginFlash')
         return reverse('pythonmodels:user_index', args=(self.object.username,))
 
