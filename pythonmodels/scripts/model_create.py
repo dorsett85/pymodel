@@ -2,9 +2,9 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from pythonmodels.models import Dataset
 
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, classification_report, r2_score
-from sklearn.model_selection import GridSearchCV, train_test_split, KFold
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.metrics import mean_squared_error, accuracy_score, r2_score
+from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -114,7 +114,7 @@ def pythonmodel(request):
         sk_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
         sk_y = df_y
 
-        # Setup pipeline with optional hyperparemeters, data scaled as default with 5-fold cv
+        # Setup pipeline with optional hyperparemeters, data scaled as default
         steps = [('scaler', StandardScaler()),
                  ('lm', LinearRegression())]
         pipeline = Pipeline(steps)
@@ -174,6 +174,34 @@ def pythonmodel(request):
                 {'error': 'responseVar', 'message': 'Response variable must be categorical'},
                 status=400
             )
+
+        # Sklearn logistic regression
+        sk_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
+        sk_y = df_y
+
+        # Setup pipeline with optional hyperparemeters, data scaled as default
+        steps = [('scaler', StandardScaler()),
+                 ('log', LogisticRegression())]
+        pipeline = Pipeline(steps)
+        parameters = {}
+        skf = StratifiedKFold(n_splits=10, shuffle=True)
+
+        # Initialize predictions, true values (because of stratified cv), and model metrics
+        pred = []
+        true = []
+
+        # Run cross validation with optional hyperparameter tuning
+        for train_index, test_index in skf.split(sk_x, sk_y):
+            X_train, X_test = sk_x.iloc[train_index], sk_x.iloc[test_index]
+            y_train, y_test = sk_y.iloc[train_index], sk_y.iloc[test_index]
+            cv = GridSearchCV(pipeline, param_grid=parameters)
+            cv.fit(X_test, y_test)
+            y_pred = cv.predict(X_test)
+
+            pred.extend(y_pred)
+            true.extend(y_test)
+
+        print(accuracy_score(true, pred))
 
         # Loop through all fit methods until one doesn't cause a warning.  If none work, return an error message.
         with warnings.catch_warnings():
