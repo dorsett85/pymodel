@@ -4,7 +4,7 @@ $(document).ready(function () {
     /**
      * Hide Highcharts containers on load
      */
-    $('#residVsFitted, #container2').hide().height(350);
+    $('#modelPlot, #corrMatrix').hide().height(350);
 
 
     /**
@@ -49,8 +49,9 @@ $(document).ready(function () {
 
                 // Remove no output header and add new output header
                 $('#noOutputHeader').hide();
+                var $modelType= $('#modelType').find(':selected');
                 $('#outputHeader').empty().append(
-                    '<h3>' + $('#modelType').val() + '</h3>',
+                    '<h3>' + $modelType.text() + ' ' + $modelType.parent().attr('label') + '</h3>',
                     '<h5>Predicting ' + $('#responseVar').val() + kfolds + '</h5>'
                 );
 
@@ -71,11 +72,13 @@ $(document).ready(function () {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('summaryStats')]);
 
                 /**
-                 * Residuals vs. fitted plot
+                 * Model specific plot
                  */
-                $('#residVsFitted').show().empty();
-                if (pyData.model === 'ols') {
-                    var residVsFitted = Highcharts.chart('residVsFitted', {
+                $('#modelPlot').show().empty();
+
+                // Residuals vs. fitted plot
+                if (pyData.model === 'ols' || pyData.model === 'rf_regressor') {
+                    var modelPlot = Highcharts.chart('modelPlot', {
                         chart: {
                             type: 'scatter',
                             zoomType: 'xy'
@@ -102,20 +105,23 @@ $(document).ready(function () {
                                 color: 'rgba(223, 183, 83, .9)',
                                 dashStyle: 'dash'
                             },
-                            name: 'Residual vs. Fitted',
+                            name: 'Residuals vs. Fitted',
                             color: 'rgba(223, 83, 83, .5)',
-                            data: pyData.residual.map(function (data) {
+                            data: pyData.resid_vs_fit.map(function (data) {
                                 return [data.pred, data.resid];
                             })
                         }]
                     });
+                } else if (pyData.model === 'log') {
+                    console.log("logistic");
+
                 }
 
 
                 /**
                  * Correlation matrix
                  */
-                $('#corMatrix').show().empty();
+                $('#corrMatrix').show().empty();
 
                 // Setup correlation matrix data
                 var corr_keys = Object.keys(pyData.corr_matrix);

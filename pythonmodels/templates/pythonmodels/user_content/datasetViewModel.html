@@ -25,10 +25,12 @@
                             <label for="modelType">What type of model?</label>
                             <select id="modelType" class="form-control" name="modelType">
                                 <optgroup label="Regression">
-                                    <option value="Simple Linear Regression">Simple Linear</option>
+                                    <option value="ols">Ordinary Least Squares</option>
+                                    <option value="rf_regressor">Random Forest</option>
                                 </optgroup>
                                 <optgroup label="Classification">
-                                    <option value="Multinomial Logistic">Multinomial Logistic</option>
+                                    <option value="log">Logistic Regression</option>
+                                    <option value="rf_classifier">Random Forest</option>
                                 </optgroup>
                             </select>
                         </div>
@@ -81,7 +83,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div id="residVsFitted" class="col-md-6"></div>
+                            <div id="modelPlot" class="col-md-6"></div>
                             <div id="corrMatrix" class="col-md-6"></div>
                         </div>
                     </div>

@@ -23,7 +23,7 @@
     margin-top: 150px;
 }
 
-#residVsFitted, #corrMatrix {
+#modelPlot, #corrMatrix {
     margin-top: 25px;
     margin-bottom: 25px;
 }

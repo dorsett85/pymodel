@@ -31,6 +31,13 @@ class Landing(generic.TemplateView):
 
 class Guest(View):
     def get(self, request):
+
+        # If user is already authenticated, redirect to their welcome page
+        if request.user.is_authenticated:
+            print(request.user)
+            return HttpResponseRedirect(reverse('pythonmodels:user_index', args=[request.user]))
+
+        # If not authenticated, login as guest
         user = authenticate(username='Guest', password='guest')
         login(self.request, user)
         login_message = self.request.user.username + ', you have successfully logged in!'
