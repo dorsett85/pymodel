@@ -129,7 +129,6 @@ def pythonmodel(request):
                 'resid': np.array(true) - np.array(pred)
             }).to_dict(orient='records')
             json_dict.update({'resid_vs_fit': fit_vs_resid})
-            print(fit_vs_resid)
 
         elif model_name in ['log', 'rf_classifier']:
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
