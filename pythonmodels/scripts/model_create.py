@@ -130,7 +130,7 @@ def pythonmodel(request):
             }).to_dict(orient='records')
             json_dict.update({'resid_vs_fit': fit_vs_resid})
 
-        elif model_name in ['log', 'rf_classifier']:
+        elif model_name in ['log', 'rf_classifier', 'knn']:
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
 
         # Add final variables to json_dict
@@ -162,7 +162,7 @@ def pythonmodel(request):
             return model_output('rf_regressor', RandomForestRegressor())
 
     # Classification
-    elif request['modelType'] in ['log', 'rf_classifier']:
+    elif request['modelType'] in ['log', 'rf_classifier', 'knn']:
 
         # Check for errors
         # if df_y.dtype not in ['object']:
@@ -170,6 +170,10 @@ def pythonmodel(request):
         #         {'error': 'responseVar', 'message': 'Response variable must be categorical'},
         #         status=400
         #     )
+
+        # K Nearest Neighbor
+        if request['modelType'] == 'knn':
+            return model_output('knn', KNeighborsClassifier(), stratified_kf=True)
 
         # Logistic Regression
         if request['modelType'] == 'log':

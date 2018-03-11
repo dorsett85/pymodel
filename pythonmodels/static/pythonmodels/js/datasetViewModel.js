@@ -8,9 +8,15 @@ $(document).ready(function () {
 
 
     /**
-     * Remove form errors when form is changed
+     * Form change listeners
      */
     $('#modelCreateForm').change(function () {
+
+        // Print model type below model type selector
+        var type = $('#modelType').find(':selected').parent().attr('label');
+        $('#modelTypePara').empty().html(type)
+
+        // Remove form errors
         $('.formErrorHighlight').removeClass('formErrorHighlight');
         $('#createModelErrors').remove()
     });
