@@ -7,8 +7,6 @@ import io
 import pandas as pd
 import os
 
-from copy import copy
-
 
 def datasetcreate(self, form):
     file = form.cleaned_data['file']
@@ -24,25 +22,10 @@ def datasetcreate(self, form):
     # Check if file is .csv or .xlsx and read file into Pandas dataframe
     # Check for delimiter if file is csv and process
     if file.name.endswith('.csv'):
-        csv_file = io.TextIOWrapper(copy(file))
-        dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=";,\t|")
-        csv_file.seek(0)
-        reader = csv.reader(csv_file, dialect)
-        data = []
-
-        for row in reader:
-            data.append(row)
-
-        header = data[0]
-        df = pd.DataFrame(data[1:], columns=header)
-
-        # Save and load csv to remove quotes when reading Pandas dataframe
-        file_csv_path = os.path.join(user_path, file_name)
-        df.to_csv(file_csv_path, index=False)
-        df = pd.read_csv(file_csv_path)
-
-        # Delete csv file as it will be saved as pkl
-        os.remove(file_csv_path)
+        file.seek(0)
+        csv_text = file.read().decode()
+        dialect = csv.Sniffer().sniff(csv_text, delimiters=",;\t|")
+        df = pd.read_csv(io.StringIO(csv_text), delimiter=dialect.delimiter)
 
     else:
         df = pd.read_excel(file)
@@ -58,10 +41,6 @@ def datasetcreate(self, form):
     newdataset.vars = df.shape[1]
     newdataset.observations = df.shape[0]
     newdataset.save()
-
-    # Reload dataset if it's a csv to get appropriate dtypes
-    if file.name.endswith('.csv'):
-        df = pd.read_pickle(newdataset.file.path)
 
     # Save variables from new dataset
     new_dataset_variables(df, newdataset)
