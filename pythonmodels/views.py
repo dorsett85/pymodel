@@ -11,7 +11,7 @@ from django.views import generic, View
 
 from .models import Dataset, DatasetVariable
 from .forms import LoginForm, RegistrationForm, DatasetUploadForm, DatasetDescriptionForm
-from pythonmodels.scripts import data_upload, model_create, landing, helper_funs
+from pythonmodels.scripts import dataset_upload, model_create, landing, helper_funs
 
 import os
 
@@ -137,7 +137,7 @@ class DataUpload(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         if self.request.is_ajax:
-            return data_upload.datasetcreate(self, form)
+            return dataset_upload.datasetcreate(self, form)
         else:
             return super(DataUpload, self).form_valid(form)
 

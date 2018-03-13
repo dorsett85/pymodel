@@ -15,7 +15,7 @@ import pandas as pd
 
 
 def pythonmodel(request):
-    # Load dataset to memory, get predictor and response variables
+    # Load dataset, get predictor and response variables
     dataset = Dataset.objects.get(pk=request['model'])
     df = pd.read_pickle(dataset.file)
 
@@ -60,7 +60,7 @@ def pythonmodel(request):
             status=400
         )
 
-    # Create design matrix and add constant to predictor variables
+    # Create design matrix
     df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
     df_y = df_clean[resp_var]
 
@@ -92,11 +92,11 @@ def pythonmodel(request):
             kf = StratifiedKFold(n_splits=10, shuffle=True)
             kf_splits = kf.split(df_x, df_y)
 
-        # Initialize predictions and true values (need for shuffled cv)
+        # Initialize predictions and true values (needed for shuffled cv)
         pred = []
         true = []
 
-        # Run cross validation with optional hyperparameter tuning
+        # Run cross validation, catch cv errors
         try:
             for train_index, test_index in kf_splits:
                 X_train, X_test = df_x.iloc[train_index], df_x.iloc[test_index]

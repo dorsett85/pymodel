@@ -7,6 +7,8 @@ import io
 import pandas as pd
 import os
 
+from copy import copy
+
 
 def datasetcreate(self, form):
     file = form.cleaned_data['file']
@@ -22,8 +24,8 @@ def datasetcreate(self, form):
     # Check if file is .csv or .xlsx and read file into Pandas dataframe
     # Check for delimiter if file is csv and process
     if file.name.endswith('.csv'):
-        csv_file = io.TextIOWrapper(file)
-        dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=";,")
+        csv_file = io.TextIOWrapper(copy(file))
+        dialect = csv.Sniffer().sniff(csv_file.read(), delimiters=";,\t|")
         csv_file.seek(0)
         reader = csv.reader(csv_file, dialect)
         data = []
