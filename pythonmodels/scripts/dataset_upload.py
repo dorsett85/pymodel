@@ -20,12 +20,12 @@ def datasetcreate(self, form):
         os.makedirs(user_path)
 
     # Check if file is .csv or .xlsx and read file into Pandas dataframe
-    # Check for delimiter if file is csv and process
+    # If file is csv, check delimiter
     if file.name.endswith('.csv'):
         file.seek(0)
         csv_text = file.read().decode()
         dialect = csv.Sniffer().sniff(csv_text, delimiters=",;\t|")
-        df = pd.read_csv(io.StringIO(csv_text), delimiter=dialect.delimiter)
+        df = pd.read_csv(io.StringIO(csv_text), sep=dialect.delimiter)
 
     else:
         df = pd.read_excel(file)

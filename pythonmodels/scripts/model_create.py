@@ -4,7 +4,7 @@ from pythonmodels.models import Dataset
 
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.metrics import mean_squared_error, accuracy_score, r2_score, confusion_matrix, classification_report
+from sklearn.metrics import mean_squared_error, accuracy_score, r2_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
@@ -35,7 +35,7 @@ def pythonmodel(request):
         )
 
     # Select columns based on user input and remove NaN's
-    var_names = pred_vars + [resp_var]
+    var_names = [resp_var] + pred_vars
     df_clean = df[var_names].dropna()
 
     # Return error if predictor and response variables are datetime or have too many categories
@@ -69,8 +69,8 @@ def pythonmodel(request):
     corr_list = corr_df.values.tolist()
 
     corr_dict = OrderedDict()
-    for cols, values in zip(corr_df, corr_list):
-        corr_dict[cols] = values
+    for col, value in zip(corr_df, corr_list):
+        corr_dict[col] = value
 
     """
     Function to run model pipeline and output to json
@@ -133,6 +133,15 @@ def pythonmodel(request):
         elif model_name in ['log', 'rf_classifier', 'knn']:
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
 
+            # Create confusion matrix
+            cf_matrix = pd.DataFrame(confusion_matrix(true, pred))
+            cf_list = cf_matrix.values.tolist()
+            cf_dict = OrderedDict()
+            for col, value in zip(list(set(true)), cf_list):
+                cf_dict[col] = value
+
+            json_dict.update({'cf_matrix': cf_dict})
+
         # Add final variables to json_dict
         json_dict.update({'stats': stats, 'corr_matrix': corr_dict, 'kfolds': kf.n_splits})
 
@@ -140,7 +149,7 @@ def pythonmodel(request):
         return JsonResponse(json_dict)
 
     """
-    Return model that user selected
+    Return user selected model output
     """
 
     # Regression

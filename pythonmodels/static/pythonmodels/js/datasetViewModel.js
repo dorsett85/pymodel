@@ -78,12 +78,13 @@ $(document).ready(function () {
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('summaryStats')]);
 
                 /**
-                 * Model specific plot
+                 * Model specific plots
                  */
                 $('#modelPlot').show().empty();
 
-                // Residuals vs. fitted plot
                 if (pyData.model === 'ols' || pyData.model === 'rf_regressor') {
+
+                    // Residuals vs. fitted plot
                     var modelPlot = Highcharts.chart('modelPlot', {
                         chart: {
                             type: 'scatter',
@@ -118,11 +119,57 @@ $(document).ready(function () {
                             })
                         }]
                     });
-                } else if (pyData.model === 'log') {
-                    console.log("logistic");
+                } else if (pyData.model === 'log' || pyData.model === 'rf_classifier' || pyData.model === 'knn') {
+
+                    // Setup confusion matrix data
+                    var cf_keys = Object.keys(pyData.cf_matrix);
+                    var matrix = [];
+                    var count = 0;
+                    $.each(cf_keys, function (key, value) {
+                        $.each(pyData.cf_matrix[value], function (idx, val) {
+                            matrix[count] = [key, idx, val];
+                            count += 1
+                        })
+                    });
+
+                    // Create confusion matrix
+                    Highcharts.chart('modelPlot', {
+                        chart: {
+                            type: 'heatmap',
+                            marginTop: 40,
+                            marginBottom: 80,
+                            marginRight: 70,
+                            plotBorderWidth: 1
+                        },
+                        title: {
+                            text: 'Confusion Matrix'
+                        },
+                        xAxis: {
+                            title: {text: 'Predicted'},
+                            categories: cf_keys
+                        },
+                        yAxis: {
+                            title: {text: 'True'},
+                            categories: cf_keys,
+                            reversed: true
+                        },
+                        colorAxis: {
+                            color: '#FFFFFF',
+                            maxColor: '#FFFFFF'
+                        },
+                        legend: {enabled: false},
+                        series: [{
+                            name: 'Confusion',
+                            borderWidth: 1,
+                            data: matrix,
+                            dataLabels: {
+                                enabled: true,
+                                color: '#000000'
+                            }
+                        }]
+                    });
 
                 }
-
 
                 /**
                  * Correlation matrix
@@ -152,11 +199,12 @@ $(document).ready(function () {
                         text: 'Correlation Matrix'
                     },
                     xAxis: {
-                        categories: corr_keys
+                        categories: corr_keys,
                     },
                     yAxis: {
                         categories: corr_keys,
-                        title: null
+                        title: null,
+                        reversed: true
                     },
                     colorAxis: {
                         min: -1,
@@ -164,8 +212,9 @@ $(document).ready(function () {
                         stops: [
                             [0, '#ff0000'],
                             [.5, '#FFFFFF'],
-                            [1, '#00FF0B']
-                        ]
+                            [1, '#00FF0B'],
+                        ],
+                        reversed: false
                     },
                     legend: {
                         align: 'right',
