@@ -36,14 +36,14 @@
                     {% for row in vars_numeric %}
                         <tr>
                             <td>{{ row.name }}</td>
-                            <td>{{ row.na }}</td>
-                            <td>{{ row.mean }}</td>
-                            <td>{{ row.std }}</td>
-                            <td>{{ row.min }}</td>
-                            <td>{{ row.Q1 }}</td>
-                            <td>{{ row.median }}</td>
-                            <td>{{ row.Q3 }}</td>
-                            <td>{{ row.max }}</td>
+                            <td>{{ row.nan }}</td>
+                            {% if row.mean is None %}<td></td>{% else %}<td>{{ row.mean }}</td>{% endif %}
+                            {% if row.std is None %}<td></td>{% else %}<td>{{ row.std }}</td>{% endif %}
+                            {% if row.min is None %}<td></td>{% else %}<td>{{ row.min }}</td>{% endif %}
+                            {% if row.Q1 is None %}<td></td>{% else %}<td>{{ row.Q1 }}</td>{% endif %}
+                            {% if row.median is None %}<td></td>{% else %}<td>{{ row.median }}</td>{% endif %}
+                            {% if row.Q3 is None %}<td></td>{% else %}<td>{{ row.Q3 }}</td>{% endif %}
+                            {% if row.max is None %}<td></td>{% else %}<td>{{ row.max }}</td>{% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -59,7 +59,7 @@
                         <th>Type</th>
                         <th>Na's</th>
                         <th>Unique</th>
-                        <th>Top</th>
+                        <th>Most Frequent</th>
                         <th>First Date</th>
                         <th>Last Date</th>
                     </tr>
@@ -69,7 +69,7 @@
                         <tr>
                             <td>{{ row.name }}</td>
                             <td>{{ row.type }}</td>
-                            <td>{{ row.na }}</td>
+                            <td>{{ row.nan }}</td>
                             <td>{{ row.unique }}</td>
                             <td>{{ row.top }} ({{ row.freq }})</td>
                             <td>{{ row.first_date }}</td>

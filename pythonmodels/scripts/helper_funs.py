@@ -4,6 +4,8 @@ from pythonmodels.models import Dataset, DatasetVariable
 
 
 def new_dataset_variables(df, newdataset):
+
+    # Loop over columns to get summary metrics
     for column in df:
         col = df[column]
         col_info = col.describe()
@@ -30,13 +32,14 @@ def new_dataset_variables(df, newdataset):
 
         elif col.dtype in ['float64', 'int64']:
             new_dataset_variable.type = 'numeric'
-            new_dataset_variable.mean = round(col_info['mean'], 3)
-            new_dataset_variable.std = round(col_info['std'], 3)
-            new_dataset_variable.min = round(col_info['min'], 3)
-            new_dataset_variable.Q1 = round(col_info['25%'], 3)
-            new_dataset_variable.median = round(col_info['50%'], 3)
-            new_dataset_variable.Q3 = round(col_info['75%'], 3)
-            new_dataset_variable.max = round(col_info['max'], 3)
+            if col_info['count'] != 0:
+                new_dataset_variable.mean = round(col_info['mean'], 3)
+                new_dataset_variable.std = round(col_info['std'], 3)
+                new_dataset_variable.min = round(col_info['min'], 3)
+                new_dataset_variable.Q1 = round(col_info['25%'], 3)
+                new_dataset_variable.median = round(col_info['50%'], 3)
+                new_dataset_variable.Q3 = round(col_info['75%'], 3)
+                new_dataset_variable.max = round(col_info['max'], 3)
 
         new_dataset_variable.save()
 
