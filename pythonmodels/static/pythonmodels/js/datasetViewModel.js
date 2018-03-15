@@ -82,7 +82,11 @@ $(document).ready(function () {
                  */
                 $('#modelPlot').show().empty();
 
-                if (pyData.model === 'ols' || pyData.model === 'rf_regressor') {
+                if (pyData.model === 'ols' ||
+                    pyData.model === 'rfr' ||
+                    pyData.model === 'en' ||
+                    pyData.model === 'gbr' ||
+                    pyData.model === 'svr') {
 
                     // Residuals vs. fitted plot
                     var modelPlot = Highcharts.chart('modelPlot', {
@@ -119,7 +123,11 @@ $(document).ready(function () {
                             })
                         }]
                     });
-                } else if (pyData.model === 'log' || pyData.model === 'rf_classifier' || pyData.model === 'knn') {
+                } else if (pyData.model === 'log' ||
+                    pyData.model === 'rfc' ||
+                    pyData.model === 'knn' ||
+                    pyData.model === 'gbc' ||
+                    pyData.model === 'svc') {
 
                     // Setup confusion matrix data
                     var cf_keys = Object.keys(pyData.cf_matrix);

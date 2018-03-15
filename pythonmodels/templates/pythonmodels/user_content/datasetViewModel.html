@@ -25,13 +25,18 @@
                             <label for="modelType">What type of model?</label>
                             <select id="modelType" class="form-control" name="modelType">
                                 <optgroup label="Regression">
+                                    <option value="gbr">Gradient Boosting</option>
+                                    <option value="en">Elastic Net</option>
                                     <option value="ols">Ordinary Least Squares</option>
-                                    <option value="rf_regressor">Random Forest</option>
+                                    <option value="rfr">Random Forest</option>
+                                    <option value="svr">Support Vector</option>
                                 </optgroup>
                                 <optgroup label="Classification">
+                                    <option value="gbc">Gradient Boosting</option>
                                     <option value="knn">K Nearest Neighbor</option>
                                     <option value="log">Logistic Regression</option>
-                                    <option value="rf_classifier">Random Forest</option>
+                                    <option value="rfc">Random Forest</option>
+                                    <option value="svc">Support Vector</option>
                                 </optgroup>
                             </select>
                             <p id="modelTypePara">Regression</p>

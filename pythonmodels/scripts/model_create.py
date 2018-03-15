@@ -2,13 +2,16 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from pythonmodels.models import Dataset
 
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.ensemble import (
+    RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
+)
+from sklearn.linear_model import LinearRegression, LogisticRegression, ElasticNet
 from sklearn.metrics import mean_squared_error, accuracy_score, r2_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold, StratifiedKFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC, SVR
 
 import numpy as np
 import pandas as pd
@@ -118,7 +121,7 @@ def pythonmodel(request):
         stats['Observations'] = df_x.shape[0]
         stats['Predictors (w/ dummies)'] = df_x.shape[1]
 
-        if model_name in ['ols', 'rf_regressor']:
+        if model_name in ['ols', 'rfr', 'en', 'gbr', 'svr']:
             stats['$r^2$'] = np.round(r2_score(true, pred), 3)
             stats['adj $r^2$'] = np.round(adj_r_square(stats['$r^2$'], pred, df_x.columns), 3)
             stats['rmse'] = np.round(np.sqrt(mean_squared_error(true, pred)), 3)
@@ -130,7 +133,7 @@ def pythonmodel(request):
             }).to_dict(orient='records')
             json_dict.update({'resid_vs_fit': fit_vs_resid})
 
-        elif model_name in ['log', 'rf_classifier', 'knn']:
+        elif model_name in ['log', 'rfc', 'knn', 'gbc', 'svc']:
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
 
             # Create confusion matrix
@@ -153,7 +156,7 @@ def pythonmodel(request):
     """
 
     # Regression
-    if request['modelType'] in ['ols', 'rf_regressor']:
+    if request['modelType'] in ['ols', 'rfr', 'en', 'gbr', 'svr']:
 
         # Check for errors
         if df_y.dtype not in ['float64', 'int64']:
@@ -162,35 +165,36 @@ def pythonmodel(request):
                 status=400
             )
 
-        # Simple linear regression
-        if request['modelType'] == 'ols':
-            return model_output('ols', LinearRegression())
+        # Create tuple of classification models
+        regression_tuple = (
+            ('ols', LinearRegression()),
+            ('rfr', RandomForestRegressor()),
+            ('en', ElasticNet()),
+            ('gbr', GradientBoostingRegressor()),
+            ('svr', SVR())
+        )
 
-        # Random forest regression
-        if request['modelType'] == 'rf_regressor':
-            return model_output('rf_regressor', RandomForestRegressor())
+        # Return requested model output
+        for id, model in regression_tuple:
+            if request['modelType'] == id:
+                return model_output(id, model)
 
     # Classification
-    elif request['modelType'] in ['log', 'rf_classifier', 'knn']:
+    elif request['modelType'] in ['log', 'rfc', 'knn', 'gbc', 'svc']:
 
-        # Check for errors
-        # if df_y.dtype not in ['object']:
-        #     return JsonResponse(
-        #         {'error': 'responseVar', 'message': 'Response variable must be categorical'},
-        #         status=400
-        #     )
+        # Create tuple of classification models
+        classification_tuple = (
+            ('knn', KNeighborsClassifier()),
+            ('log', LogisticRegression()),
+            ('rfc', RandomForestClassifier()),
+            ('gbc', GradientBoostingClassifier()),
+            ('svc', SVC())
+        )
 
-        # K Nearest Neighbor
-        if request['modelType'] == 'knn':
-            return model_output('knn', KNeighborsClassifier(), stratified_kf=True)
-
-        # Logistic Regression
-        if request['modelType'] == 'log':
-            return model_output('log', LogisticRegression(), stratified_kf=True)
-
-        # Random Forest
-        if request['modelType'] == 'rf_classifier':
-            return model_output('rf_classifier', RandomForestClassifier(), stratified_kf=True)
+        # Return requested model output
+        for id, model in classification_tuple:
+            if request['modelType'] == id:
+                return model_output(id, model, stratified_kf=True)
 
 
 """
