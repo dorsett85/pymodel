@@ -88,41 +88,31 @@ $(document).ready(function () {
                     pyData.model === 'gbr' ||
                     pyData.model === 'svr') {
 
-                    // Residuals vs. fitted plot
-                    var modelPlot = Highcharts.chart('modelPlot', {
-                        chart: {
-                            type: 'scatter',
-                            zoomType: 'xy'
-                        },
+                    // Predicted vs. actual
+                    Highcharts.chart('modelPlot', {
                         title: {
-                            text: 'Residuals vs. Fitted'
+                            text: 'Predicted vs. Actual'
                         },
-                        xAxis: {
-                            title: {
-                                text: 'Fitted Values'
-                            }
-                        },
-                        yAxis: {
-                            title: {
-                                text: 'Residuals'
-                            }
-                        },
-                        legend: {enabled: false},
+                        xAxis: {title: {text: 'Actual'}},
+                        yAxis: {title: {text: 'Predicted'}},
+                        // legend: {enabled: false},
                         series: [{
-                            regression: true,
-                            regressionSettings: {
-                                name: 'Polynomial line',
-                                type: 'polynomial',
-                                color: 'rgba(223, 183, 83, .9)',
-                                dashStyle: 'dash'
-                            },
-                            name: 'Residuals vs. Fitted',
-                            color: 'rgba(223, 83, 83, .5)',
-                            data: pyData.resid_vs_fit.map(function (data) {
-                                return [data.pred, data.resid];
-                            })
+                            name: 'Predicted vs. Actual',
+                            type: 'scatter',
+                            data: pyData.pred_vs_true.map(function (data) {
+                                return [data.true, data.pred];
+                            }),
+                            color: 'rgba(73, 191, 238, 0.5)',
+                            showInLegend: false
+                        }, {
+                            name: 'Perfect Fit',
+                            type: 'line',
+                            data: [[pyData.min, pyData.min], [pyData.max, pyData.max]],
+                            color: 'rgba(228, 228, 51, 0.75)',
+                            marker: {enabled: false}
                         }]
                     });
+
                 } else if (pyData.model === 'log' ||
                     pyData.model === 'rfc' ||
                     pyData.model === 'knn' ||

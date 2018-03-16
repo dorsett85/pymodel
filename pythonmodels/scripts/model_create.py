@@ -126,12 +126,15 @@ def pythonmodel(request):
             stats['adj $r^2$'] = np.round(adj_r_square(stats['$r^2$'], pred, df_x.columns), 3)
             stats['rmse'] = np.round(np.sqrt(mean_squared_error(true, pred)), 3)
 
-            # Create dictionary for fitted vs. residual plot
-            fit_vs_resid = pd.DataFrame({
-                'pred': pred,
-                'resid': np.array(true) - np.array(pred)
+            # Create dictionary for predicted vs. actual plot
+            pred_vs_true = pd.DataFrame({
+                'pred': np.round(pred, 2),
+                'true': np.round(true, 2)
             }).to_dict(orient='records')
-            json_dict.update({'resid_vs_fit': fit_vs_resid})
+            json_dict.update({
+                'pred_vs_true': pred_vs_true,
+                'min': round(min(min(pred), min(true))),
+                'max': round(max(max(pred), max(true)))})
 
         elif model_name in ['log', 'rfc', 'knn', 'gbc', 'svc']:
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
