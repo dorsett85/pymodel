@@ -1,8 +1,9 @@
 from django.http import JsonResponse
-from numpy import histogram, linspace, round
+from numpy import histogram, linspace, round, exp
 from numpy.random import randint
 from pythonmodels.models import Dataset
 from random import sample
+from sklearn.neighbors import KernelDensity
 
 import pandas as pd
 
@@ -27,13 +28,20 @@ def landing_charts(first_chart):
         # Add to json_dict depending on chart type
         if cols == 1:
 
+            # Highcharts density plot data
+            kde = KernelDensity(bandwidth=1.0, kernel='gaussian')
+            kde.fit(df.values)
+            dist_space = linspace(min(df.values), max(df.values), len(df.values))
+            logprob = kde.score_samples(dist_space[:, None])
+            df_den = pd.DataFrame({'space': dist_space, 'prob': exp(logprob)}).to_dict(orient='records')
+            json_dict.update({'density': df_den})
+
             # Highcharts histogram data
             count, bins = histogram(df)
             space = linspace(min(bins), max(bins), len(count))
             bins = round(bins, 3)
             bins = ['{0} - {1}'.format(bins[x], bins[x + 1]) for x in range(len(bins)) if x < len(bins) - 1]
-            df_hist = pd.DataFrame({'count': count, 'space': space, 'bins': bins})
-            df_hist = df_hist.to_dict(orient='records')
+            df_hist = pd.DataFrame({'count': count, 'space': space, 'bins': bins}).to_dict(orient='records')
             json_dict.update({'hist': df_hist, 'var': rand_cols})
 
         else:

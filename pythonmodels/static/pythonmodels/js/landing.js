@@ -50,8 +50,15 @@ $(document).ready(function () {
                 data: {chart2: "chart2"},
                 success: function (data) {
                     console.log(data);
+
+                    // Histogram data
                     var bins = data.hist.map(function (bin) {
                         return {x: bin.space, y: bin.count, range: bin.bins}
+                    });
+
+                    // Density data
+                    var dens = data.density.map(function (den) {
+                        return {x: den.space, y: den.prob}
                     });
 
                     // Create second chart
