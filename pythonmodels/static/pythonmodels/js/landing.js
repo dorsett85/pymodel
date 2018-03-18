@@ -7,9 +7,9 @@ $(document).ready(function () {
     $.getJSON({
         url: "/",
         success: function (data) {
-            var keys = Object.keys(data[0]);
-            var dataPoints = data.map(function (points) {
-                return [points[keys[0]], points[keys[1]]]
+            var keys = Object.keys(data.scatter[0]);
+            var dataPoints = data.scatter.map(function (point) {
+                return [point[keys[0]], point[keys[1]]]
             });
 
             // Remove load spinner
@@ -22,7 +22,7 @@ $(document).ready(function () {
                     type: 'scatter'
                 },
                 title: {
-                    text: keys[0] + ' vs. ' + keys[1]
+                    text: keys[1] + ' vs. ' + keys[0]
                 },
                 xAxis: {
                     title: {
@@ -49,30 +49,43 @@ $(document).ready(function () {
                 url: '/',
                 data: {chart2: "chart2"},
                 success: function (data) {
-                    var key = Object.keys(data[0]);
-                    var dataPoints = data.map(function (points) {
-                        return points[key[0]]
+                    console.log(data);
+                    var bins = data.hist.map(function (bin) {
+                        return {x: bin.space, y: bin.count, range: bin.bins}
                     });
 
                     // Create second chart
                     Highcharts.chart('plot2', {
                         title: {
-                            text: key[0] + ' Histogram'
+                            text: data.var + ' Histogram'
+                        },
+                        plotOptions: {
+                            column: {
+                                groupPadding: 0,
+                                pointPadding: 0
+                            }
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                var s = '';
+
+                                $.each(this.points, function(i, point) {
+                                    s += '<br/><span style="color:' + point.color + '">\u25CF</span> ' +
+                                        point.series.name + ': ' + point.y + '<br>' +
+                                        point.point.range;
+                                });
+
+                                return s;
+                            },
+                            shared: true
                         },
                         xAxis: [{}, {}],
-                        yAxis: [{title: ''}, {title: {text: 'Frequency'}}],
+                        yAxis: [{title: {text: 'Frequency'}}],
                         series: [{
-                            name: key[0],
-                            type: 'histogram',
+                            name: 'Count',
+                            type: 'column',
                             color: 'rgb(34, 126, 230)',
-                            xAxis: 1,
-                            yAxis: 1,
-                            baseSeries: 's1',
-                            zIndex: -1
-                        }, {
-                            data: dataPoints,
-                            id: 's1',
-                            visible: false
+                            data: bins
                         }],
                         legend: {enabled: false}
                     });
