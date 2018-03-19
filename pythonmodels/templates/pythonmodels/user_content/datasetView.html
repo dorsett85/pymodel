@@ -63,8 +63,35 @@
 
                 <p class="lead font-weight-bold">Model / Visualize Data</p>
 
-                {% include 'pythonmodels/user_content/datasetViewModel.html' %}
+                <div id="modelVis">
 
+                    <ul class="nav nav-tabs subNav" id="modelVisTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="model-tab" data-toggle="tab" href="#modelDiv" role="tab"
+                               aria-controls="model"
+                               aria-selected="true">Model</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="vis-tab" data-toggle="tab" href="#visDiv" role="tab"
+                               aria-controls="vis"
+                               aria-selected="false">Visualize</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="modelDiv" role="tabpanel"
+                             aria-labelledby="numeric-tab">
+
+                            {% include 'pythonmodels/user_content/datasetViewModel.html' %}
+
+                        </div>
+                        <div class="tab-pane fade" id="visDiv" role="tabpanel" aria-labelledby="other-tab">
+
+                            {% include 'pythonmodels/user_content/datasetViewVis.html' %}
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 

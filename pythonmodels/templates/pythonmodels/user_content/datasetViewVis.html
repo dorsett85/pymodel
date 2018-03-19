@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-lg-3">
+        <form id="modelCreateForm" role="form" method="post">
+            {% csrf_token %}
+            <input name="vis" value="{{ object.pk }}" hidden>
+
+
+            <div class="form-group">
+                <label for="xVar">Select variable</label>
+                <select multiple id="xVar" class="form-control" name="xVar">
+                    {% for var in object.datasetvariable_set.all %}
+                        <option value="{{ var }}">{{ var }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="yVar">Select variable 2</label>
+                <select id="yVar" class="form-control" name="yVar">
+                    {% for var in object.datasetvariable_set.all %}
+                        <option value="{{ var }}">{{ var }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button id="visPost" type="submit" class="btn btn-dark" disabled>
+                Create Chart <i id="fa-spinner"></i>
+            </button>
+
+        </form>
+    </div>
+
+    {# Python exploratory charts #}
+    <div class="col-lg-9">
+        <div id="exploreVis" class="container-fluid">
+            <div class="row">
+                <div id="noOutputHeader" class="col-md-12 text-center">
+                    <h3>Under development</h3>
+                </div>
+                <div id="outputHeader" class=" col-md-12 text-center">
+                    {# Chart type header #}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div id="visPlot1" class="col-md-6"></div>
+                <div id="visPlot2" class="col-md-6"></div>
+            </div>
+        </div>
+    </div>
+</div>

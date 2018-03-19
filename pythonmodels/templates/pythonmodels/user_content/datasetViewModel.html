@@ -1,109 +1,82 @@
-<div id="modelVis">
+<div class="row">
+    <div class="col-lg-3">
+        <form id="modelCreateForm" role="form" method="post">
+            {% csrf_token %}
+            <input name="model" value="{{ object.pk }}" hidden>
 
-    <ul class="nav nav-tabs subNav" id="modelVisTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="model-tab" data-toggle="tab" href="#modelDiv" role="tab"
-               aria-controls="model"
-               aria-selected="true">Model</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="vis-tab" data-toggle="tab" href="#visDiv" role="tab"
-               aria-controls="vis"
-               aria-selected="false">Visualize</a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="modelDiv" role="tabpanel" aria-labelledby="numeric-tab">
+            <div class="form-group">
+                <label for="modelType">What type of model?</label>
+                <select id="modelType" class="form-control" name="modelType">
+                    <optgroup label="Regression">
+                        <option value="gbr">Gradient Boosting</option>
+                        <option value="en">Elastic Net</option>
+                        <option value="ols">Ordinary Least Squares</option>
+                        <option value="rfr">Random Forest</option>
+                        <option value="svr">Support Vector</option>
+                    </optgroup>
+                    <optgroup label="Classification">
+                        <option value="gbc">Gradient Boosting</option>
+                        <option value="knn">K Nearest Neighbor</option>
+                        <option value="log">Logistic Regression</option>
+                        <option value="rfc">Random Forest</option>
+                        <option value="svc">Support Vector</option>
+                    </optgroup>
+                </select>
+                <p id="modelTypePara">Regression</p>
+            </div>
 
+            <div class="form-group">
+
+                <label for="predictorVars">Select predictor variables</label>
+                <select multiple id="predictorVars" class="form-control"
+                        name="predictorVars[]">
+                    {% for var in object.datasetvariable_set.all %}
+                        <option value="{{ var }}">{{ var }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="responseVar">Select response variable</label>
+                <select id="responseVar" class="form-control" name="responseVar">
+                    {% for var in object.datasetvariable_set.all %}
+                        <option value="{{ var }}">{{ var }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button id="modelPost" type="submit" class="btn btn-dark">
+                Create Model <i id="fa-spinner"></i>
+            </button>
+
+        </form>
+    </div>
+
+    {# Python model charts #}
+    <div class="col-lg-9">
+        <div id="modelOutput" class="container-fluid">
             <div class="row">
-                <div class="col-lg-3">
-                    <form id="modelCreateForm" role="form" method="post">
-                        {% csrf_token %}
-                        <input name="model" value="{{ object.pk }}" hidden>
-
-                        <div class="form-group">
-                            <label for="modelType">What type of model?</label>
-                            <select id="modelType" class="form-control" name="modelType">
-                                <optgroup label="Regression">
-                                    <option value="gbr">Gradient Boosting</option>
-                                    <option value="en">Elastic Net</option>
-                                    <option value="ols">Ordinary Least Squares</option>
-                                    <option value="rfr">Random Forest</option>
-                                    <option value="svr">Support Vector</option>
-                                </optgroup>
-                                <optgroup label="Classification">
-                                    <option value="gbc">Gradient Boosting</option>
-                                    <option value="knn">K Nearest Neighbor</option>
-                                    <option value="log">Logistic Regression</option>
-                                    <option value="rfc">Random Forest</option>
-                                    <option value="svc">Support Vector</option>
-                                </optgroup>
-                            </select>
-                            <p id="modelTypePara">Regression</p>
-                        </div>
-
-                        <div class="form-group">
-
-                            <label for="predictorVars">Select predictor variables</label>
-                            <select multiple id="predictorVars" class="form-control" name="predictorVars[]">
-                                {% for var in object.datasetvariable_set.all %}
-                                    <option value="{{ var }}">{{ var }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="responseVar">Select response variable</label>
-                            <select id="responseVar" class="form-control" name="responseVar">
-                                {% for var in object.datasetvariable_set.all %}
-                                    <option value="{{ var }}">{{ var }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <button id="modelPost" type="submit" class="btn btn-dark">
-                            Create Model <i id="fa-spinner"></i>
-                        </button>
-
-                    </form>
+                <div id="noOutputHeader" class="col-md-12 text-center">
+                    <h3>Click "Create Model" button to show output</h3>
                 </div>
-
-                {# Python model charts #}
-                <div class="col-lg-9">
-                    <div id="modelOutput" class="container-fluid">
-                        <div class="row">
-                            <div id="noOutputHeader" class="col-md-12 text-center">
-                                <h3>Click "Create Model" button to show output</h3>
-                            </div>
-                            <div id="outputHeader" class=" col-md-12 text-center">
-                                {# Model type header #}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="table-responsive">
-                                    <table id="summaryStats" class="table table-sm">
-                                        {# Python model summary stats #}
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div id="modelPlot" class="col-md-6"></div>
-                            <div id="corrMatrix" class="col-md-6"></div>
-                        </div>
+                <div id="outputHeader" class=" col-md-12 text-center">
+                    {# Model type header #}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="summaryStats" class="table table-sm">
+                            {# Python model summary stats #}
+                        </table>
                     </div>
                 </div>
             </div>
-
-        </div>
-        <div class="tab-pane fade" id="visDiv" role="tabpanel" aria-labelledby="other-tab">
-
-            {# Visualization div #}
-
-
+            <div class="row">
+                <div id="modelPlot" class="col-md-6"></div>
+                <div id="corrMatrix" class="col-md-6"></div>
+            </div>
         </div>
     </div>
-
 </div>
