@@ -44,8 +44,8 @@ def pythonmodel(request):
             if col.dtype == 'datetime64[ns]':
                 return form_errors('predictorVars',
                                    'Datetime variables not supported with modeling, <b>' + col.name + '</b>', 400)
-            if col.nunique() > col.shape[0] / 2:
-                return form_errors('predictorVars', '<b>' + col.name + '</b>' + ' has too many categories', 400)
+            # if col.nunique() > col.shape[0] / 2:
+            #     return form_errors('predictorVars', '<b>' + col.name + '</b>' + ' has too many categories', 400)
     if df_clean[resp_var].dtype == 'datetime64[ns]':
         return form_errors('responseVar',
                            'Datetime variables not supported with modeling, <b>' + df_clean[resp_var].name + '</b>',
@@ -99,7 +99,9 @@ def pythonmodel(request):
                 pred.extend(y_pred)
                 true.extend(y_test)
         except ValueError:
-            form_errors('responseVar', 'Not enough response members in each train / test split', 400)
+            return form_errors('responseVar',
+                               'Not enough categories in each train / test split, <b>' + resp_var + '</b>',
+                               400)
 
         # Create output table
         stats = OrderedDict()
@@ -125,7 +127,7 @@ def pythonmodel(request):
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
 
             # Create confusion matrix
-            cf_matrix = pd.DataFrame(confusion_matrix(true, pred))
+            cf_matrix = pd.DataFrame(confusion_matrix(true, pred)).transpose()
             cf_list = cf_matrix.values.tolist()
             cf_dict = OrderedDict()
             for col, value in zip(list(set(true)), cf_list):

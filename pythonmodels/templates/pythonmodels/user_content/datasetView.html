@@ -64,6 +64,12 @@
 
                 <p class="lead font-weight-bold">Model / Visualize Data</p>
 
+                {% if vars_rm_count %}
+                    <div id="emptyVars">
+                        <span class="badge badge-dark">{{ vars_rm_count }}</span>
+                        empty variables removed</div>
+                {% endif %}
+
                 <div id="modelVis">
 
                     <ul class="nav nav-tabs subNav" id="modelVisTab" role="tablist">

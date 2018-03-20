@@ -9,16 +9,21 @@ import pandas as pd
 
 
 def vis_create(request):
-    dataset = Dataset.objects.get(pk=request['vis'])
-    x_db = DatasetVariable.objects.filter(dataset_id=dataset).get(name=request['xVar'])
 
+    # Get dataset
+    dataset = Dataset.objects.get(pk=request['vis'])
     df = pd.read_pickle(dataset.file)
-    x_df = df[[request['xVar']]]
-    x_dtype = df[request['xVar']].dtype
-    y_df = df[[request['yVar']]] if request['yVar'] else None
+
+    # Define variable 1 objects
+    x_rq = request['xVar']
+    x_db = DatasetVariable.objects.filter(dataset_id=dataset).get(name=x_rq)
+
+    x_df = df[[x_rq]]
+    x_series = df[x_rq]
+    x_dtype = df[x_rq].dtype
 
     # Check if variables are different
-    if request['xVar'] == request['yVar']:
+    if x_rq == request['yVar']:
         return form_errors('yVar', 'Variables must be different', 400)
 
     # Initialize dictionary to return as JSON

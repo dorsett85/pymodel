@@ -12,6 +12,10 @@
     border-bottom-color: lightgray;
 }
 
+#emptyVars {
+    margin-bottom: 15px;
+}
+
 .formErrorHighlight {
     box-shadow: 0px 0px 10px 10px #ac2925;
 }

@@ -136,7 +136,7 @@ $(document).ready(function () {
                             marginTop: 40,
                             marginBottom: 80,
                             marginRight: 70,
-                            plotBorderWidth: 1
+                            plotBorderWidth: 1,
                         },
                         title: {
                             text: 'Confusion Matrix'

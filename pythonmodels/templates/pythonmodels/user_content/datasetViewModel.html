@@ -30,7 +30,7 @@
                 <label for="predictorVars">Select predictor variables</label>
                 <select multiple id="predictorVars" class="form-control"
                         name="predictorVars[]">
-                    {% for var in object.datasetvariable_set.all %}
+                    {% for var in vars_non_empty %}
                         <option value="{{ var }}">{{ var }}</option>
                     {% endfor %}
                 </select>
@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label for="responseVar">Select response variable</label>
                 <select id="responseVar" class="form-control" name="responseVar">
-                    {% for var in object.datasetvariable_set.all %}
+                    {% for var in vars_non_empty %}
                         <option value="{{ var }}">{{ var }}</option>
                     {% endfor %}
                 </select>

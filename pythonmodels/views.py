@@ -211,16 +211,14 @@ class DatasetView(LoginRequiredMixin, generic.DetailView):
         context['public_datasets'] = Dataset.objects.filter(user_id__isnull=True)
 
         # Get table for specific variable type
-        numeric = DatasetVariable.objects.filter(dataset_id=self.get_object().pk, type='numeric')
-        other = DatasetVariable.objects.filter(
-            dataset_id=self.get_object().pk, type__in=['boolean', 'character', 'datetime']
-        )
-        context['vars_numeric'] = numeric.values(
-            'name', 'nan', 'mean', 'std', 'min', 'Q1', 'median', 'Q3', 'max'
-        )
-        context['vars_other'] = other.values(
-            'name', 'type', 'nan', 'unique', 'top', 'freq', 'first_date', 'last_date'
-        )
+        vars_all = self.get_object().datasetvariable_set.all()
+        vars_non_empty = vars_all.exclude(count=0)
+        numeric = vars_all.filter(type='numeric')
+        other = vars_all.filter(type__in=['boolean', 'character', 'datetime'])
+        context['vars_non_empty'] = vars_non_empty
+        context['vars_numeric'] = numeric.values('name', 'nan', 'mean', 'std', 'min', 'Q1', 'median', 'Q3', 'max')
+        context['vars_other'] = other.values('name', 'type', 'nan', 'unique', 'top', 'freq', 'first_date', 'last_date')
+        context['vars_rm_count'] = vars_all.count() - vars_non_empty.count()
 
         return context
 
