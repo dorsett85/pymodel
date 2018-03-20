@@ -11,7 +11,7 @@ from django.views import generic, View
 
 from .models import Dataset, DatasetVariable
 from .forms import LoginForm, RegistrationForm, DatasetUploadForm, DatasetDescriptionForm
-from pythonmodels.scripts import dataset_upload, model_create, landing, helper_funs
+from pythonmodels.scripts import dataset_upload, model_create, landing, helper_funs, vis_create
 
 import os
 
@@ -227,9 +227,13 @@ class DatasetView(LoginRequiredMixin, generic.DetailView):
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
 
-            # Run pythonmodel function if form is submitted
+            # Run pythonmodel function if model form is submitted
             if 'model' in self.request.POST:
                 return model_create.pythonmodel(self.request.POST)
+
+            # Run pythonvis function if vis form is submitted
+            if 'vis' in self.request.POST:
+                return vis_create.vis_create(self.request.POST)
 
 
 class Practice(generic.View):

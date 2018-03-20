@@ -1,9 +1,10 @@
 from django.http import JsonResponse
 from numpy import histogram, linspace, round, exp
 from numpy.random import randint
-from pythonmodels.models import Dataset
 from random import sample
 from sklearn.neighbors import KernelDensity
+
+from pythonmodels.models import Dataset
 
 import pandas as pd
 

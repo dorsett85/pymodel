@@ -24,7 +24,7 @@ def forwards_func(apps, schema_editor):
         if file.startswith('cars'):
             description = '<span class="font-weight-bold">Mileage per gallon performances of various cars.</span> - ' \
                           '<a href="https://www.kaggle.com/uciml/autompg-dataset" ' \
-                          'target="_blank">Kaggle</a></h4>'
+                          'target="_blank">Kaggle</a>'
         elif file.startswith('iris'):
             description = '<span class="font-weight-bold">Classify iris plants into three species in ' \
                           'this classic dataset.</span> - ' \

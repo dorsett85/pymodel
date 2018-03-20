@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from django.http import JsonResponse
-from pythonmodels.models import Dataset
 
 from sklearn.ensemble import (
     RandomForestClassifier, RandomForestRegressor, GradientBoostingClassifier, GradientBoostingRegressor
@@ -12,6 +11,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC, SVR
+
+from .helper_funs import form_errors
+from pythonmodels.models import Dataset
 
 import numpy as np
 import pandas as pd
@@ -27,15 +29,9 @@ def pythonmodel(request):
 
     # Return error if no predictor variables selected or response variable is in the predictor variables
     if not pred_vars:
-        return JsonResponse(
-            {'error': 'predictorVars', 'message': 'Select at least one predictor variable'},
-            status=400
-        )
+        return form_errors('predictorVars', 'Select at least one predictor variable', 400)
     elif resp_var in pred_vars:
-        return JsonResponse(
-            {'error': 'predictorVars', 'message': 'Predictor variables cannot contain the response variable'},
-            status=400
-        )
+        return form_errors('predictorVars', 'Predictor variables cannot contain the response variable', 400)
 
     # Select columns based on user input and remove NaN's
     var_names = [resp_var] + pred_vars
@@ -46,22 +42,14 @@ def pythonmodel(request):
         col = df_clean[var]
         if col.dtype in ['O', 'datetime64[ns]']:
             if col.dtype == 'datetime64[ns]':
-                return JsonResponse(
-                    {'error': 'predictorVars',
-                     'message': 'Datetime variables not supported with modeling, <b>' + col.name + '</b>'},
-                    status=400
-                )
+                return form_errors('predictorVars',
+                                   'Datetime variables not supported with modeling, <b>' + col.name + '</b>', 400)
             if col.nunique() > col.shape[0] / 2:
-                return JsonResponse(
-                    {'error': 'predictorVars', 'message': '<b>' + col.name + '</b>' + ' has too many categories'},
-                    status=400
-                )
+                return form_errors('predictorVars', '<b>' + col.name + '</b>' + ' has too many categories', 400)
     if df_clean[resp_var].dtype == 'datetime64[ns]':
-        return JsonResponse(
-            {'error': 'responseVar',
-             'message': 'Datetime variables not supported with modeling, <b>' + df_clean[resp_var].name + '</b>'},
-            status=400
-        )
+        return form_errors('responseVar',
+                           'Datetime variables not supported with modeling, <b>' + df_clean[resp_var].name + '</b>',
+                           400)
 
     # Create design matrix
     df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
@@ -111,10 +99,7 @@ def pythonmodel(request):
                 pred.extend(y_pred)
                 true.extend(y_test)
         except ValueError:
-            return JsonResponse(
-                {'error': 'responseVar', 'message': 'Not enough response members in each train / test split'},
-                status=400
-            )
+            form_errors('responseVar', 'Not enough response members in each train / test split', 400)
 
         # Create output table
         stats = OrderedDict()
@@ -163,10 +148,7 @@ def pythonmodel(request):
 
         # Check for errors
         if df_y.dtype not in ['float64', 'int64']:
-            return JsonResponse(
-                {'error': 'responseVar', 'message': 'Response variable must be numeric for this model type'},
-                status=400
-            )
+            return form_errors('responseVar', 'Response variable must be numeric for this model type', 400)
 
         # Create tuple of classification models
         regression_tuple = (

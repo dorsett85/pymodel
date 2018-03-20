@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         // Remove form errors
         $('.formErrorHighlight').removeClass('formErrorHighlight');
-        $('#createModelErrors').remove()
+        $('.formErrors').remove()
     });
 
 
@@ -33,7 +33,7 @@ $(document).ready(function () {
         $('#modelPost').attr('disabled', true);
 
         // Remove errors
-        $('#createModelErrors').remove();
+        $('.formErrors').remove();
 
         $.post({
             url: window.location.pathname,
@@ -54,9 +54,9 @@ $(document).ready(function () {
                 }
 
                 // Remove no output header and add new output header
-                $('#noOutputHeader').hide();
+                $('#modelNoOutputHeader').hide();
                 var $modelType= $('#modelType').find(':selected');
-                $('#outputHeader').empty().append(
+                $('#modelOutputHeader').empty().append(
                     '<h3>' + $modelType.text() + ' ' + $modelType.parent().attr('label') + '</h3>',
                     '<h5>Predicting ' + $('#responseVar').val() + kfolds + '</h5>'
                 );
@@ -95,7 +95,6 @@ $(document).ready(function () {
                         },
                         xAxis: {title: {text: 'Actual'}},
                         yAxis: {title: {text: 'Predicted'}},
-                        // legend: {enabled: false},
                         series: [{
                             name: 'Predicted vs. Actual',
                             type: 'scatter',
@@ -241,7 +240,7 @@ $(document).ready(function () {
 
                 // Show errors
                 $('#modelCreateForm').after(
-                    $('<div/>', {'id': 'createModelErrors', 'class': 'alert alert-danger'}).append(
+                    $('<div/>', {'class': 'alert alert-danger formErrors'}).append(
                         data.responseJSON.message
                     )
                 );

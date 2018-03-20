@@ -53,3 +53,10 @@ def dataset_description(dataset_id, description):
         'datasetFormID': 'dataset_' + str(dataset_id),
         'datasetDescrip': description
     })
+
+
+def form_errors(input, message, status):
+    return JsonResponse(
+        {'error': input, 'message': message},
+        status=status
+    )
