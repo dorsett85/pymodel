@@ -14,7 +14,7 @@ $(document).ready(function () {
 
         // Print model type below model type selector
         var type = $('#modelType').find(':selected').parent().attr('label');
-        $('#modelTypePara').empty().html(type)
+        $('#modelTypePara').empty().html(type);
 
         // Remove form errors
         $('.formErrorHighlight').removeClass('formErrorHighlight');
@@ -209,7 +209,7 @@ $(document).ready(function () {
                         stops: [
                             [0, '#ff0000'],
                             [.5, '#FFFFFF'],
-                            [1, '#00FF0B'],
+                            [1, '#00FF0B']
                         ],
                         reversed: false
                     },
@@ -255,4 +255,4 @@ $(document).ready(function () {
     })
 
 
-})
+});

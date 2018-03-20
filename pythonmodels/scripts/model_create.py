@@ -37,21 +37,26 @@ def pythonmodel(request):
     var_names = [resp_var] + pred_vars
     df_clean = df[var_names].dropna()
 
-    # Return error if predictor and response variables are datetime or have too many categories
-    for var in df_clean.drop(resp_var, axis=1):
+    # Return error if predictor and response variables have one value or are datetime
+    for var in df_clean:
         col = df_clean[var]
-        if col.dtype in ['O', 'datetime64[ns]']:
-            if col.dtype == 'datetime64[ns]':
+        if col.nunique() == 1:
+            if col.name == resp_var:
+                return form_errors('responseVar', 'Variable must have more than one value, <b>' + col.name + '</b>',
+                                   400)
+            else:
+                return form_errors('predictorVars', 'Variable must have more than one value, <b>' + col.name + '</b>',
+                                   400)
+        if col.dtype == 'datetime64[ns]':
+            if col.name == resp_var:
+                return form_errors('responseVar',
+                                   'Datetime variables not supported with modeling, <b>' + col.name + '</b>',
+                                   400)
+            else:
                 return form_errors('predictorVars',
                                    'Datetime variables not supported with modeling, <b>' + col.name + '</b>', 400)
-            # if col.nunique() > col.shape[0] / 2:
-            #     return form_errors('predictorVars', '<b>' + col.name + '</b>' + ' has too many categories', 400)
-    if df_clean[resp_var].dtype == 'datetime64[ns]':
-        return form_errors('responseVar',
-                           'Datetime variables not supported with modeling, <b>' + df_clean[resp_var].name + '</b>',
-                           400)
 
-    # Create design matrix
+    # Create design matrix and separate y variable
     df_x = pd.get_dummies(df_clean.drop(resp_var, axis=1), drop_first=True)
     df_y = df_clean[resp_var]
 
@@ -98,7 +103,7 @@ def pythonmodel(request):
 
                 pred.extend(y_pred)
                 true.extend(y_test)
-        except ValueError:
+        except ValueError as ve:
             return form_errors('responseVar',
                                'Not enough categories in each train / test split, <b>' + resp_var + '</b>',
                                400)
