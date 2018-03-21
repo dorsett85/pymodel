@@ -29,7 +29,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         // Start spinner icon while dashboard loads, disable button
-        $('#fa-spinner').addClass('fa fa-spinner fa-spin');
+        $(this).children('.createBtnSpin').addClass('fa fa-spinner fa-spin');
         $('#modelPost').attr('disabled', true);
 
         // Remove errors
@@ -43,7 +43,7 @@ $(document).ready(function () {
                 console.log(pyData);
 
                 // Stop spinner after chart loads, enable button
-                $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
+                $('.fa-spinner').removeClass('fa fa-spinner fa-spin');
                 $('#modelPost').attr('disabled', false);
 
                 // Add title for model type and response variable
@@ -235,7 +235,7 @@ $(document).ready(function () {
             error: function (data, error) {
 
                 // Stop spinner and enable button
-                $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
+                $('.fa-spinner').removeClass('fa fa-spinner fa-spin');
                 $('#modelPost').attr('disabled', false);
 
                 // Show errors

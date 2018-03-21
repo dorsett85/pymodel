@@ -25,7 +25,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         // Start spinner icon while dashboard loads, disable button
-        $('#fa-spinner').addClass('fa fa-spinner fa-spin');
+        $(this).children('.createBtnSpin').addClass('fa fa-spinner fa-spin');
         $('#visPost').attr('disabled', true);
 
         // Remove errors
@@ -39,7 +39,7 @@ $(document).ready(function () {
                 console.log(pyData);
 
                 // Stop spinner after chart loads, enable button
-                $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
+                $('.fa-spinner').removeClass('fa fa-spinner fa-spin');
                 $('#visPost').attr('disabled', false);
 
                 // Remove no output header and add new output header
@@ -61,12 +61,10 @@ $(document).ready(function () {
                     xAxis: {title: {text: 'Value'}},
                     yAxis: {title: {text: 'Probability'}},
                     series: [{
-                        name: 'Density vs. Value',
+                        name: 'Probability vs. Value',
                         type: 'area',
-                        data: pyData.density.map(function (data) {
-                            return [data.space, data.prob];
-                        }),
-                        color: 'rgba(73, 191, 238, 0.5)',
+                        data: pyData.x_den,
+                        color: 'rgba(34, 126, 230, 0.5)',
                         showInLegend: false
                     }]
                 });
@@ -80,29 +78,13 @@ $(document).ready(function () {
                     title: {
                         text: $('#xVar').val() + ' Values'
                     },
-                    yAxis: {
-                        title: {text: ''},
-                        plotBands: [{
-                            color: 'rgba(228, 228, 51, 0.75)',
-                            from: pyData.x_q1,
-                            to: pyData.x_q3,
-                            label: {text: 'IQR'},
-                            zIndex: 5
-                        }],
-                        plotLines: [{
-                            value: pyData.x_mean,
-                            color: 'red',
-                            label: {text: 'Mean'},
-                            dashStyle: 'shortdash',
-                            zIndex: 6
-                        }]},
+                    xAxis: {title: {text: 'Observation'}},
+                    yAxis: {title: {text: ''}},
                     series: [{
                         name: $('#xVar').val(),
                         type: 'scatter',
-                        data: pyData.x_vals.map(function (data) {
-                            return [data.space, data.value];
-                        }),
-                        color: 'rgba(73, 191, 238, 0.5)',
+                        data: pyData.x_vals,
+                        color: 'rgba(34, 230, 34, 0.5)',
                         showInLegend: false
                     }]
                 });
@@ -110,7 +92,7 @@ $(document).ready(function () {
             error: function (data, error) {
 
                 // Stop spinner and enable button
-                $('#fa-spinner').removeClass('fa fa-spinner fa-spin');
+                $('.fa-spinner').removeClass('fa fa-spinner fa-spin');
                 $('#visPost').attr('disabled', false);
 
                 // Show errors
