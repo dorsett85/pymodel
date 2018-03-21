@@ -98,15 +98,13 @@ $(document).ready(function () {
                         series: [{
                             name: 'Predicted vs. Actual',
                             type: 'scatter',
-                            data: pyData.pred_vs_true.map(function (data) {
-                                return [data.true, data.pred];
-                            }),
+                            data: pyData.pred_vs_true.scatter,
                             color: 'rgba(73, 191, 238, 0.5)',
                             showInLegend: false
                         }, {
                             name: 'Perfect Fit',
                             type: 'line',
-                            data: [[pyData.min, pyData.min], [pyData.max, pyData.max]],
+                            data: pyData.pred_vs_true.fit,
                             color: 'rgba(228, 228, 51, 0.75)',
                             marker: {enabled: false}
                         }]
@@ -118,18 +116,7 @@ $(document).ready(function () {
                     pyData.model === 'gbc' ||
                     pyData.model === 'svc') {
 
-                    // Setup confusion matrix data
-                    var cf_keys = Object.keys(pyData.cf_matrix);
-                    var matrix = [];
-                    var count = 0;
-                    $.each(cf_keys, function (key, value) {
-                        $.each(pyData.cf_matrix[value], function (idx, val) {
-                            matrix[count] = [key, idx, val];
-                            count += 1
-                        })
-                    });
-
-                    // Create confusion matrix
+                    // Confusion matrix
                     Highcharts.chart('modelPlot', {
                         chart: {
                             type: 'heatmap',
@@ -143,11 +130,11 @@ $(document).ready(function () {
                         },
                         xAxis: {
                             title: {text: 'Predicted'},
-                            categories: cf_keys
+                            categories: pyData.cf_matrix.categories
                         },
                         yAxis: {
                             title: {text: 'True'},
-                            categories: cf_keys,
+                            categories: pyData.cf_matrix.categories,
                             reversed: true
                         },
                         colorAxis: {
@@ -158,7 +145,7 @@ $(document).ready(function () {
                         series: [{
                             name: 'Confusion',
                             borderWidth: 1,
-                            data: matrix,
+                            data: pyData.cf_matrix.matrix,
                             dataLabels: {
                                 enabled: true,
                                 color: '#000000'
@@ -173,17 +160,6 @@ $(document).ready(function () {
                  */
                 $('#corrMatrix').show().empty();
 
-                // Setup correlation matrix data
-                var corr_keys = Object.keys(pyData.corr_matrix);
-                var matrix = [];
-                var count = 0;
-                $.each(corr_keys, function (key, value) {
-                    $.each(pyData.corr_matrix[value], function (idx, val) {
-                        matrix[count] = [key, idx, val];
-                        count += 1
-                    })
-                });
-
                 // Create correlation matrix
                 Highcharts.chart('corrMatrix', {
                     chart: {
@@ -196,10 +172,10 @@ $(document).ready(function () {
                         text: 'Correlation Matrix'
                     },
                     xAxis: {
-                        categories: corr_keys,
+                        categories: pyData.corr_matrix.vars,
                     },
                     yAxis: {
-                        categories: corr_keys,
+                        categories: pyData.corr_matrix.vars,
                         title: null,
                         reversed: true
                     },
@@ -224,7 +200,7 @@ $(document).ready(function () {
                     series: [{
                         name: 'Correlation',
                         borderWidth: 1,
-                        data: matrix,
+                        data: pyData.corr_matrix.matrix,
                         dataLabels: {
                             enabled: true,
                             color: '#000000'

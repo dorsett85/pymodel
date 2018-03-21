@@ -61,12 +61,12 @@ def pythonmodel(request):
     df_y = df_clean[resp_var]
 
     # Create correlation matrix
+    corr_list = []
     corr_df = df_clean.corr().round(2)
-    corr_list = corr_df.values.tolist()
-
-    corr_dict = OrderedDict()
-    for col, value in zip(corr_df, corr_list):
-        corr_dict[col] = value
+    for x, list in enumerate(corr_df.values):
+        for y, v in enumerate(list):
+            corr_list.append([x, y, v])
+    corr_dict = {'matrix': corr_list, 'vars': df_clean.columns.values.tolist()}
 
     """
     Function to run model pipeline and output to json
@@ -119,26 +119,30 @@ def pythonmodel(request):
             stats['rmse'] = np.round(np.sqrt(mean_squared_error(true, pred)), 3)
 
             # Create dictionary for predicted vs. actual plot
-            pred_vs_true = pd.DataFrame({
-                'pred': np.round(pred, 2),
-                'true': np.round(true, 2)
-            }).to_dict(orient='records')
+            pred_vs_true = [(p, t) for p, t in zip(np.round(pred, 2).astype(float), np.round(true, 2).astype(float))]
             json_dict.update({
-                'pred_vs_true': pred_vs_true,
-                'min': round(min(min(pred), min(true))),
-                'max': round(max(max(pred), max(true)))})
+                'pred_vs_true': {
+                    'scatter': pred_vs_true,
+                    'fit': [[round(min(pred + true))] * 2, [round(max(pred + true))] * 2]
+                }
+            })
 
         elif model_name in ['log', 'rfc', 'knn', 'gbc', 'svc']:
             stats['Accuracy'] = '{:.2%}'.format(np.round(accuracy_score(true, pred), 4))
 
             # Create confusion matrix
-            cf_matrix = pd.DataFrame(confusion_matrix(true, pred)).transpose()
-            cf_list = cf_matrix.values.tolist()
-            cf_dict = OrderedDict()
-            for col, value in zip(list(set(true)), cf_list):
-                cf_dict[col] = value
+            cf_list = []
+            cf_matrix = pd.DataFrame(confusion_matrix(true, pred)).transpose().astype(float)
+            for x, list in enumerate(cf_matrix.values):
+                for y, v in enumerate(list):
+                    cf_list.append([x, y, v])
 
-            json_dict.update({'cf_matrix': cf_dict})
+            json_dict.update({
+                'cf_matrix': {
+                    'matrix': cf_list,
+                    'categories': np.unique(np.array(true)).tolist()
+                }
+            })
 
         # Add final variables to json_dict
         json_dict.update({'stats': stats, 'corr_matrix': corr_dict, 'kfolds': kf.n_splits})
