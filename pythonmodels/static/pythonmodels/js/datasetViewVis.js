@@ -29,7 +29,7 @@ $(document).ready(function () {
         $('#visPost').attr('disabled', true);
 
         // Remove errors
-        $('#createVisErrors').remove();
+        $('.formErrors').remove();
 
         $.post({
             url: window.location.pathname,

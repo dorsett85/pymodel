@@ -17,9 +17,9 @@ def vis_create(request):
     # Define variable 1 objects
     x_rq = request['xVar']
     x_db = DatasetVariable.objects.filter(dataset_id=dataset).get(name=x_rq)
-    x_df = df[[x_rq]]
-    x_series = df[x_rq]
-    x_dtype = df[x_rq].dtype
+    x_df = df[[x_rq]].dropna()
+    x_series = x_df[x_rq]
+    x_dtype = x_series.dtype
 
     # Check if variables are different
     # if x_rq == request['yVar']:
@@ -32,6 +32,9 @@ def vis_create(request):
     Plots for numeric variables
     """
     if x_dtype in ['float64', 'int64']:
+
+        if x_series.nunique() == 1:
+            return form_errors('xVars', 'Select a variable with more than one value', status=400)
 
         # Xaxis space
         space = linspace(min(x_series), max(x_series), len(x_series))
