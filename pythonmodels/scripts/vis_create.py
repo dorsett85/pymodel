@@ -46,7 +46,7 @@ def vis_create(request):
         x_den = [(s, p) for s, p in zip(space, exp(logprob))]
 
         # Highcharts scatter and summary lines
-        x_vals = [(s, v) for s, v in zip(space, x_series)]
+        x_vals = [(s, v) for s, v in zip(range(x_series.size), x_series)]
 
         # Update json_dict
         json_dict.update({
