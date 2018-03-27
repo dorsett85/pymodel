@@ -64,7 +64,7 @@ $(document).ready(function () {
                         name: 'Probability vs. Value',
                         type: 'area',
                         data: pyData.x_den,
-                        color: 'rgba(34, 126, 230, 0.5)',
+                        color: 'rgba(73, 191, 238, 0.5)',
                         showInLegend: false
                     }]
                 });
@@ -84,7 +84,7 @@ $(document).ready(function () {
                         name: $('#xVar').val(),
                         type: 'scatter',
                         data: pyData.x_vals,
-                        color: 'rgba(34, 230, 34, 0.5)',
+                        color: 'rgba(228, 228, 51, 0.75)',
                         showInLegend: false
                     }]
                 });
