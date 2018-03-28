@@ -21,10 +21,6 @@ def vis_create(request):
     x_series = x_df[x_rq]
     x_dtype = x_series.dtype
 
-    # Check if variables are different
-    # if x_rq == request['yVar']:
-    #     return form_errors('yVar', 'Variables must be different', 400)
-
     # Initialize dictionary to return as JSON
     json_dict = {}
 
@@ -36,10 +32,8 @@ def vis_create(request):
         if x_series.nunique() == 1:
             return form_errors('xVars', 'Select a variable with more than one value', status=400)
 
-        # Xaxis space
-        space = linspace(min(x_series), max(x_series), len(x_series))
-
         # Highcharts density plot data
+        space = linspace(min(x_series), max(x_series), len(x_series))
         kde = KernelDensity(bandwidth=1.0, kernel='gaussian')
         kde.fit(x_df.values)
         logprob = kde.score_samples(space[:, None])
@@ -50,8 +44,7 @@ def vis_create(request):
 
         # Update json_dict
         json_dict.update({
-            'x_den': x_den, 'x_vals': x_vals, 'x_mean': x_db.mean,
-            'x_median': x_db.median, 'x_q1': x_db.Q1, 'x_q3': x_db.Q3
+            'x_den': x_den, 'x_vals': x_vals
         })
     else:
         return form_errors('xVar', 'Currently supports numeric variables only', 400)
@@ -59,7 +52,6 @@ def vis_create(request):
     """
     Plots for categorical variables
     """
-
 
     return JsonResponse(json_dict)
 
