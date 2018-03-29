@@ -76,18 +76,34 @@ $(document).ready(function () {
 
                 Highcharts.chart('visPlot2', {
                     title: {
-                        text: $('#xVar').val() + ' Values'
+                        text: $('#xVar').val() + ' Boxplot'
                     },
-                    xAxis: {title: {text: 'Observation'}},
-                    yAxis: {title: {text: ''}},
+                    xAxis: {
+                        categories: [''],
+                        visible: false
+                    },
+                    yAxis: {title: {text: 'Values'}},
+                    plotOptions: {
+                        boxplot: {
+                            pointPadding: 0.9,
+                            groupPadding: 0.9,
+                            stacking: 'percent'
+                        }
+                    },
                     series: [{
                         name: $('#xVar').val(),
-                        type: 'scatter',
-                        data: pyData.x_vals,
+                        type: 'boxplot',
+                        data: pyData.x_box.box,
                         color: 'rgba(228, 228, 51, 0.75)',
                         showInLegend: false
+                    }, {
+                        name: 'Outliers',
+                        type: 'scatter',
+                        data: pyData.x_box.out,
+                        color: 'rgba(228, 228, 51, 0.75)'
                     }]
                 });
+
             },
             error: function (data, error) {
 

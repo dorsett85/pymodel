@@ -34,18 +34,27 @@ def vis_create(request):
 
         # Highcharts density plot data
         space = linspace(min(x_series), max(x_series), len(x_series))
-        kde = KernelDensity(bandwidth=1.0, kernel='gaussian')
+        kde = KernelDensity(bandwidth=1.0)
         kde.fit(x_df.values)
-        logprob = kde.score_samples(space[:, None])
-        x_den = [(s, p) for s, p in zip(space, exp(logprob))]
+        prob = exp(kde.score_samples(space[:, None]))
+        x_den = [(s, p) for s, p in zip(space, prob)]
 
-        # Highcharts scatter and summary lines
-        x_vals = [(s, v) for s, v in zip(range(x_series.size), x_series)]
+        # Highcharts boxplot
+        IQR = x_db.Q3 - x_db.Q1
+        upper = max(x_series[x_series <= x_db.Q3 + (1.5 * IQR)])
+        lower = min(x_series[x_series >= x_db.Q1 - (1.5 * IQR)])
+        outliers = x_series[(x_series > upper) | (x_series < lower)]
+        x_outliers = [[0, x] for x in outliers]
+        boxplot = {
+            'box': [[lower, x_db.Q1, x_db.median, x_db.Q3, upper]],
+            'out': x_outliers
+        }
 
         # Update json_dict
         json_dict.update({
-            'x_den': x_den, 'x_vals': x_vals
+            'x_den': x_den, 'x_box': boxplot
         })
+        
     else:
         return form_errors('xVar', 'Currently supports numeric variables only', 400)
 

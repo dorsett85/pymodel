@@ -5,7 +5,7 @@
             <input name="vis" value="{{ object.pk }}" hidden>
 
 
-            <div id="xVarGroup" class="form-group">
+            <div class="form-group">
                 <label for="xVar">Select variable</label>
                 <select id="xVar" class="form-control" name="xVar">
                     {% for var in vars_non_empty %}
@@ -13,6 +13,7 @@
                     {% endfor %}
                 </select>
             </div>
+
 
 {#            <div id="yVarGroup" class="form-group">#}
 {#                <label for="yVar">Select variable 2</label>#}
@@ -24,7 +25,7 @@
 {#            </div>#}
 
             <button id="visPost" type="submit" class="btn btn-dark">
-                Create Chart <i class="createBtnSpin"></i>
+                Create Charts <i class="createBtnSpin"></i>
             </button>
 
         </form>
@@ -35,7 +36,7 @@
         <div id="exploreVis" class="container-fluid">
             <div class="row">
                 <div id="visNoOutputHeader" class="col-md-12 text-center">
-                    <h3>Click "Create Chart" button to show output</h3>
+                    <h3>Click "Create Charts" button to show output</h3>
                 </div>
                 <div id="visOutputHeader" class=" col-md-12 text-center">
                     {# Chart type header#}
