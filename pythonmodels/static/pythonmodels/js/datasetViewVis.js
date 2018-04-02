@@ -64,7 +64,7 @@ $(document).ready(function () {
                         name: 'Probability vs. Value',
                         type: 'area',
                         data: pyData.x_den,
-                        color: 'rgba(73, 191, 238, 0.5)',
+                        color: 'rgba(73, 191, 238, 0.75)',
                         showInLegend: false
                     }]
                 });

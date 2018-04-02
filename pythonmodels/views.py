@@ -21,10 +21,7 @@ class Landing(generic.TemplateView):
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.is_ajax():
-            if "chart2" not in self.request.GET:
-                return landing.landing_charts(True)
-            else:
-                return landing.landing_charts(False)
+            return landing.landing_charts()
         else:
             return super(Landing, self).render_to_response(context, **response_kwargs)
 
