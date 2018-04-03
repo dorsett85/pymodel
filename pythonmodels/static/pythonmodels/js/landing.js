@@ -21,70 +21,44 @@ $(document).ready(function () {
                     type: 'scatter'
                 },
                 title: {
-                    text: data.y_var + ' vs. ' + data.x_var
+                    text: data.scatter.y_var + ' vs. ' + data.scatter.x_var
                 },
                 xAxis: {
                     title: {
-                        text: data.x_var
+                        text: data.scatter.x_var
                     }
                 },
                 yAxis: {
                     title: {
-                        text: data.y_var
+                        text: data.scatter.y_var
                     }
                 },
                 legend: {
-                    title: {text: '<span style="color: #a0a0a3">' + data.cat_var + '</span>'},
+                    title: {text: '<span style="color: #a0a0a3">' + data.scatter.cat_var + '</span>'},
                     layout: 'vertical',
                     verticalAlign: 'middle',
                     align: 'right',
                     margin: 5,
                     padding: 5
-
                 },
-                series: data.scatter
+                series: data.scatter.points
             });
 
             /**
-             * Histogram
+             * Density plot
              */
             Highcharts.chart('plot2', {
                 chart: {type: 'area'},
                 title: {
-                    text: data.x_var + ' Histogram'
+                    text: data.density.x_var + ' Density'
                 },
-                plotOptions: {
-                    column: {
-                        groupPadding: 0,
-                        pointPadding: 0
-                    }
-                },
-                // tooltip: {
-                //     formatter: function() {
-                //         var s = '';
-                //
-                //         $.each(this.points, function(i, point) {
-                //             s += '<br/><span style="color:' + point.color + '">\u25CF</span> ' +
-                //                 point.series.name + ': ' + point.y + '<br>' +
-                //                 point.point.range;
-                //         });
-                //
-                //         return s;
-                //     },
-                //     shared: true
-                // },
-                xAxis: [{}, {}],
-                yAxis: [{title: {text: 'Frequency'}}],
+                yAxis: [{title: {text: 'Probability'}}],
                 legend: {
-                    title: {text: '<span style="color: #a0a0a3">' + data.cat_var + '</span>'},
-                    layout: 'vertical',
-                    verticalAlign: 'middle',
-                    align: 'right',
+                    title: {text: '<span style="color: #a0a0a3">' + data.density.cat_var + '</span>'},
                     margin: 5,
                     padding: 5
-
                 },
-                series: data.den,
+                series: data.density.points,
             });
 
         }
