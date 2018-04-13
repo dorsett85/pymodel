@@ -11,7 +11,7 @@ from django.views import generic, View
 
 from .models import Dataset, DatasetVariable
 from .forms import LoginForm, RegistrationForm, DatasetUploadForm, DatasetDescriptionForm
-from pythonmodels.scripts import dataset_upload, model_create, landing, helper_funs, vis_create
+from pythonmodels.scripts import dataset_upload, model_create, landing, helper_funs, vis_create, helper_classes
 
 import os
 
@@ -234,5 +234,6 @@ class DatasetView(LoginRequiredMixin, generic.DetailView):
 class Practice(generic.View):
 
     def get(self, request, *args, **kwargs):
-        os.makedirs('{0}/user_{1}'.format(settings.MEDIA_ROOT, self.request.user.id))
+
+        DatasetModel = helper_classes.DatasetModel('dataset', self.request)
         return HttpResponse(self.request.user.username)
