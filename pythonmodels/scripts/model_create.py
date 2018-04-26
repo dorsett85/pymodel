@@ -106,7 +106,13 @@ def pythonmodel(request):
         # Return model output
         for id, model in classification_tuple:
             if request['modelType'] == id:
-                json_dict.update(model_output(df_x, df_y, id, model, stratified_kf=True))
+                mo = model_output(df_x, df_y, id, model, stratified_kf=True)
+
+                # Check if model output returned a JsonResponse error
+                if type(mo) is JsonResponse:
+                    return mo
+                else:
+                    json_dict.update(mo)
 
     # Create correlation matrix
     corr_list = []
