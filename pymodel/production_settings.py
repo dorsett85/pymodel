@@ -25,7 +25,7 @@ SECRET_KEY = 'x%d9)vcu6y&x^bxv8#r)))(te$3#+cu48413l%l2p(cm^jhh)l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'pymodel.cphillipsdorsett.com']
+ALLOWED_HOSTS = ['localhost', 'quickmodel.cphillipsdorsett.com']
 
 
 # Application definition
