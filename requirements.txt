@@ -4,7 +4,7 @@ django-braces==1.12.0
 django-crispy-forms==1.7.0
 matplotlib==2.1.1
 mysqlclient==1.4.6
-numpy==1.13.3
+numpy==1.22.0
 pandas==0.22.0
 patsy==0.4.1
 pyparsing==2.2.0
