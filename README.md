@@ -2,7 +2,7 @@
 
 A Django web application to upload datasets, visualize variables, and run statistical models.
 
-[QuickModel](https://quickmodel.cphillipsdorsett.com/)
+[QuickModel](https://quickmodel.claytonbuilds.com/)
 
 ## setup
 
